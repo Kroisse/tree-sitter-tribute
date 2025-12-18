@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "tribute",
+      "camelcase": "Tribute",
+      "title": "Tribute",
+      "scope": "source.tribute",
+      "file-types": ["trb"],
+      "injection-regex": "^tribute$",
+      "class-name": "TreeSitterTribute"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "This is not the greatest language in the world, no. This is just a tribute.",
+    "authors": [
+      {
+        "name": "Eunchong Yu",
+        "email": "kroisse@gmail.com",
+        "url": "https://github.com/Kroisse"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/Kroisse/tree-sitter-tribute",
+      "funding": "https://github.com/Kroisse"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "java": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": true
+  }
+}
