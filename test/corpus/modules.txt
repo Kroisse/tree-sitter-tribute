@@ -1,0 +1,413 @@
+================================================================================
+Simple use declaration
+================================================================================
+
+use std
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier))))
+
+================================================================================
+Use declaration with path
+================================================================================
+
+use std::io
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)))))
+
+================================================================================
+Use declaration with deep path
+================================================================================
+
+use std::collections::HashMap
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)
+        (use_tree
+          (type_identifier))))))
+
+================================================================================
+Use declaration with group
+================================================================================
+
+use std::collections::{List, Map, Set}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)
+        (use_group
+          (use_tree
+            (type_identifier))
+          (use_tree
+            (type_identifier))
+          (use_tree
+            (type_identifier)))))))
+
+================================================================================
+Pub use declaration
+================================================================================
+
+pub use internal::api
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)))))
+
+================================================================================
+Use with alias
+================================================================================
+
+use std::io::read as file_read
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)
+        (use_tree
+          (identifier)
+          (keyword_as)
+          alias: (identifier))))))
+
+================================================================================
+Use with pkg path keyword
+================================================================================
+
+use pkg::utils::helper
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (path_keyword)
+      (use_tree
+        (identifier)
+        (use_tree
+          (identifier))))))
+
+================================================================================
+Use with super path keyword
+================================================================================
+
+use super::parent_func
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (path_keyword)
+      (use_tree
+        (identifier)))))
+
+================================================================================
+Use group with aliases
+================================================================================
+
+use std::collections::{List, HashMap as Map}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)
+        (use_group
+          (use_tree
+            (type_identifier))
+          (use_tree
+            (type_identifier)
+            (keyword_as)
+            alias: (type_identifier)))))))
+
+================================================================================
+Complex nested use with groups and aliases
+================================================================================
+
+use a::{b::{self, c as d, e as f}, g::h as i, j as k}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_group
+        (use_tree
+          (identifier)
+          (use_group
+            (use_tree
+              (path_keyword))
+            (use_tree
+              (identifier)
+              (keyword_as)
+              alias: (identifier))
+            (use_tree
+              (identifier)
+              (keyword_as)
+              alias: (identifier))))
+        (use_tree
+          (identifier)
+          (use_tree
+            (identifier)
+            (keyword_as)
+            alias: (identifier)))
+        (use_tree
+          (identifier)
+          (keyword_as)
+          alias: (identifier))))))
+
+================================================================================
+Simple mod declaration
+================================================================================
+
+mod foo
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (keyword_mod)
+    name: (identifier)))
+
+================================================================================
+Pub mod declaration
+================================================================================
+
+pub mod api
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_mod)
+    name: (identifier)))
+
+================================================================================
+Mod with inline body
+================================================================================
+
+mod utils {
+    fn helper() {
+        42
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (keyword_mod)
+    name: (identifier)
+    body: (mod_body
+      (function_definition
+        (keyword_fn)
+        name: (identifier)
+        body: (block
+          (expression_statement
+            (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Nested mod declarations
+================================================================================
+
+mod outer {
+    mod inner {
+        const value = 100
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (keyword_mod)
+    name: (identifier)
+    body: (mod_body
+      (mod_declaration
+        (keyword_mod)
+        name: (identifier)
+        body: (mod_body
+          (const_declaration
+            (keyword_const)
+            name: (identifier)
+            value: (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Pub function inside mod
+================================================================================
+
+pub mod math {
+    pub fn add(x: Int, y: Int) -> Int {
+        x + y
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_mod)
+    name: (identifier)
+    body: (mod_body
+      (function_definition
+        (visibility_marker
+          (keyword_pub))
+        (keyword_fn)
+        name: (identifier)
+        params: (parameter_list
+          (parameter
+            name: (identifier)
+            type: (type_identifier))
+          (parameter
+            name: (identifier)
+            type: (type_identifier)))
+        return_type: (return_type_annotation
+          (type_identifier))
+        body: (block
+          (expression_statement
+            (binary_expression
+              (primary_expression
+                (identifier))
+              (primary_expression
+                (identifier)))))))))
+
+================================================================================
+Path expression with pkg
+================================================================================
+
+fn test() {
+    pkg::utils::helper()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (path_expression
+            (path_keyword)
+            (path_segment
+              (identifier))
+            (path_segment
+              (identifier))))))))
+
+================================================================================
+Path expression with super
+================================================================================
+
+fn test() {
+    super::parent_func()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (path_expression
+            (path_keyword)
+            (path_segment
+              (identifier))))))))
+
+================================================================================
+Visibility pub(pkg)
+================================================================================
+
+pub(pkg) fn internal_helper() {
+    42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (visibility_marker
+      (keyword_pub))
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (primary_expression
+          (nat_literal))))))
+
+================================================================================
+Visibility pub(super)
+================================================================================
+
+pub(super) struct LocalConfig {
+    value: Int
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_struct)
+    name: (type_identifier)
+    body: (struct_body
+      (struct_fields
+        (struct_field
+          name: (identifier)
+          type: (type_identifier))))))

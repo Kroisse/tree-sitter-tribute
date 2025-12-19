@@ -70,22 +70,54 @@ export default grammar({
     // use std::io
     // use std::collections::List
     // use std::math::{sin, cos, tan}
+    // use foo::bar as baz
+    // use a::{b::{self, c as d}, e::f as g}
     // pub use internal::api
     use_declaration: ($) =>
-      seq(optional($.visibility_marker), $.keyword_use, field("path", $.use_path)),
-
-    use_path: ($) =>
       seq(
-        $._name,
-        repeat(seq("::", $.use_path_segment)),
-        optional(seq("::", $.use_group)),
+        optional($.visibility_marker),
+        $.keyword_use,
+        field("tree", $.use_tree),
       ),
 
-    use_path_segment: ($) => $._name,
+    // Recursive use tree structure supporting:
+    // - self, self as alias
+    // - name, name as alias
+    // - path::to::item, path::to::item as alias
+    // - path::{nested, groups}
+    use_tree: ($) =>
+      choice(
+        // self with optional alias: self, self as foo
+        seq(
+          alias("self", $.path_keyword),
+          optional(seq($.keyword_as, field("alias", $._name))),
+        ),
+        // path-based trees
+        seq(
+          choice($._name, alias(choice("pkg", "super"), $.path_keyword)),
+          optional(
+            choice(
+              // Just an alias: foo as bar
+              seq($.keyword_as, field("alias", $._name)),
+              // Continue with :: followed by more tree or group
+              seq(
+                "::",
+                choice(
+                  $.use_group,
+                  $.use_tree,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
 
-    // ::{item1, item2, Item3}
+    // Use group: {A, B::C, self as me, D as E}
     use_group: ($) =>
-      seq("{", $._name, repeat(seq(",", $._name)), optional(","), "}"),
+      seq("{", $.use_tree, repeat(seq(",", $.use_tree)), optional(","), "}"),
+
+    // Path keywords for module-relative paths (used in expressions)
+    path_keyword: ($) => choice("pkg", "super", "self"),
 
     // struct User { name: String, age: Nat }
     // struct Box(a) { value: a }
@@ -646,13 +678,14 @@ export default grammar({
       ),
 
     // Path expression: std::io, Int::to_string, Std::Collections::List
+    // Also supports: pkg::module, super::item, self::helper
     // Keywords (True, False, Nil) won't match because identifier is lowercase-only
     // Note: path_segment wraps identifier/type_identifier due to tree-sitter lexer limitations
     path_expression: ($) =>
       prec.right(
         11,
         seq(
-          alias($._name, $.path_segment),
+          choice(alias($._name, $.path_segment), $.path_keyword),
           repeat1(seq("::", alias($._name, $.path_segment))),
         ),
       ),

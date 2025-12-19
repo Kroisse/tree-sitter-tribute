@@ -465,7 +465,8 @@ pub struct Container(a) {
 
 (source_file
   (struct_declaration
-    (keyword_pub)
+    (visibility_marker
+      (keyword_pub))
     (keyword_struct)
     name: (type_identifier)
     type_params: (type_parameters
@@ -609,176 +610,13 @@ pub const version = "0.1.0"
 
 (source_file
   (const_declaration
-    (keyword_pub)
+    (visibility_marker
+      (keyword_pub))
     (keyword_const)
     name: (identifier)
     value: (primary_expression
       (string
         (string_segment)))))
-
-================================================================================
-Simple use declaration
-================================================================================
-
-use std
-
---------------------------------------------------------------------------------
-
-(source_file
-  (use_declaration
-    (keyword_use)
-    path: (use_path
-      (identifier))))
-
-================================================================================
-Use declaration with path
-================================================================================
-
-use std::io
-
---------------------------------------------------------------------------------
-
-(source_file
-  (use_declaration
-    (keyword_use)
-    path: (use_path
-      (identifier)
-      (use_path_segment
-        (identifier)))))
-
-================================================================================
-Use declaration with deep path
-================================================================================
-
-use std::collections::HashMap
-
---------------------------------------------------------------------------------
-
-(source_file
-  (use_declaration
-    (keyword_use)
-    path: (use_path
-      (identifier)
-      (use_path_segment
-        (identifier))
-      (use_path_segment
-        (type_identifier)))))
-
-================================================================================
-Use declaration with group
-================================================================================
-
-use std::collections::{List, Map, Set}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (use_declaration
-    (keyword_use)
-    path: (use_path
-      (identifier)
-      (use_path_segment
-        (identifier))
-      (use_group
-        (type_identifier)
-        (type_identifier)
-        (type_identifier)))))
-
-================================================================================
-Pub use declaration
-================================================================================
-
-pub use internal::api
-
---------------------------------------------------------------------------------
-
-(source_file
-  (use_declaration
-    (keyword_pub)
-    (keyword_use)
-    path: (use_path
-      (identifier)
-      (use_path_segment
-        (identifier)))))
-
-================================================================================
-Simple mod declaration
-================================================================================
-
-mod foo
-
---------------------------------------------------------------------------------
-
-(source_file
-  (mod_declaration
-    (keyword_mod)
-    name: (identifier)))
-
-================================================================================
-Pub mod declaration
-================================================================================
-
-pub mod api
-
---------------------------------------------------------------------------------
-
-(source_file
-  (mod_declaration
-    (keyword_pub)
-    (keyword_mod)
-    name: (identifier)))
-
-================================================================================
-Mod with inline body
-================================================================================
-
-mod utils {
-    fn helper() {
-        42
-    }
-}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (mod_declaration
-    (keyword_mod)
-    name: (identifier)
-    body: (mod_body
-      (function_definition
-        (keyword_fn)
-        name: (identifier)
-        body: (block
-          (expression_statement
-            (primary_expression
-              (nat_literal))))))))
-
-================================================================================
-Nested mod declarations
-================================================================================
-
-mod outer {
-    mod inner {
-        const value = 100
-    }
-}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (mod_declaration
-    (keyword_mod)
-    name: (identifier)
-    body: (mod_body
-      (mod_declaration
-        (keyword_mod)
-        name: (identifier)
-        body: (mod_body
-          (const_declaration
-            (keyword_const)
-            name: (identifier)
-            value: (primary_expression
-              (nat_literal))))))))
 
 ================================================================================
 True literal
@@ -1156,7 +994,8 @@ pub ability Http {
 
 (source_file
   (ability_declaration
-    (keyword_pub)
+    (visibility_marker
+      (keyword_pub))
     (keyword_ability)
     name: (type_identifier)
     body: (ability_body

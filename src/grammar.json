@@ -129,63 +129,141 @@
         },
         {
           "type": "FIELD",
-          "name": "path",
+          "name": "tree",
           "content": {
             "type": "SYMBOL",
-            "name": "use_path"
+            "name": "use_tree"
           }
         }
       ]
     },
-    "use_path": {
-      "type": "SEQ",
+    "use_tree": {
+      "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "_name"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "::"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "use_path_segment"
-              }
-            ]
-          }
-        },
-        {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SEQ",
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "self"
+              },
+              "named": true,
+              "value": "path_keyword"
+            },
+            {
+              "type": "CHOICE",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "::"
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "keyword_as"
+                    },
+                    {
+                      "type": "FIELD",
+                      "name": "alias",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_name"
+                      }
+                    }
+                  ]
                 },
                 {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
                   "type": "SYMBOL",
-                  "name": "use_group"
+                  "name": "_name"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "pkg"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "super"
+                      }
+                    ]
+                  },
+                  "named": true,
+                  "value": "path_keyword"
                 }
               ]
             },
             {
-              "type": "BLANK"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "keyword_as"
+                        },
+                        {
+                          "type": "FIELD",
+                          "name": "alias",
+                          "content": {
+                            "type": "SYMBOL",
+                            "name": "_name"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "::"
+                        },
+                        {
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "use_group"
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "use_tree"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           ]
         }
       ]
-    },
-    "use_path_segment": {
-      "type": "SYMBOL",
-      "name": "_name"
     },
     "use_group": {
       "type": "SEQ",
@@ -196,7 +274,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_name"
+          "name": "use_tree"
         },
         {
           "type": "REPEAT",
@@ -209,7 +287,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "_name"
+                "name": "use_tree"
               }
             ]
           }
@@ -229,6 +307,23 @@
         {
           "type": "STRING",
           "value": "}"
+        }
+      ]
+    },
+    "path_keyword": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "pkg"
+        },
+        {
+          "type": "STRING",
+          "value": "super"
+        },
+        {
+          "type": "STRING",
+          "value": "self"
         }
       ]
     },
@@ -2894,13 +2989,22 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "ALIAS",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_name"
-            },
-            "named": true,
-            "value": "path_segment"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_name"
+                },
+                "named": true,
+                "value": "path_segment"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "path_keyword"
+              }
+            ]
           },
           {
             "type": "REPEAT1",

@@ -1707,11 +1707,20 @@
       "required": true,
       "types": [
         {
+          "type": "path_keyword",
+          "named": true
+        },
+        {
           "type": "path_segment",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "path_keyword",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "path_segment",
@@ -2505,12 +2514,12 @@
     "type": "use_declaration",
     "named": true,
     "fields": {
-      "path": {
+      "tree": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "use_path",
+            "type": "use_tree",
             "named": true
           }
         ]
@@ -2540,26 +2549,45 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "type_identifier",
+          "type": "use_tree",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "use_path",
+    "type": "use_tree",
     "named": true,
-    "fields": {},
+    "fields": {
+      "alias": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "keyword_as",
+          "named": true
+        },
+        {
+          "type": "path_keyword",
           "named": true
         },
         {
@@ -2571,26 +2599,7 @@
           "named": true
         },
         {
-          "type": "use_path_segment",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "use_path_segment",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "type_identifier",
+          "type": "use_tree",
           "named": true
         }
       ]
@@ -2853,6 +2862,10 @@
   {
     "type": "rune",
     "named": true
+  },
+  {
+    "type": "self",
+    "named": false
   },
   {
     "type": "spread",
