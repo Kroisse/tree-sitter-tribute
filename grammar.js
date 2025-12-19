@@ -59,7 +59,7 @@ export default grammar({
     // pub mod foo
     mod_declaration: ($) =>
       seq(
-        optional($.keyword_pub),
+        optional($.visibility_marker),
         $.keyword_mod,
         field("name", $._name),
         optional(field("body", $.mod_body)),
@@ -72,7 +72,7 @@ export default grammar({
     // use std::math::{sin, cos, tan}
     // pub use internal::api
     use_declaration: ($) =>
-      seq(optional($.keyword_pub), $.keyword_use, field("path", $.use_path)),
+      seq(optional($.visibility_marker), $.keyword_use, field("path", $.use_path)),
 
     use_path: ($) =>
       seq(
@@ -92,7 +92,7 @@ export default grammar({
     // pub struct Point { x: Int, y: Int }
     struct_declaration: ($) =>
       seq(
-        optional($.keyword_pub),
+        optional($.visibility_marker),
         $.keyword_struct,
         field("name", $.type_identifier),
         optional(field("type_params", $.type_parameters)),
@@ -154,7 +154,7 @@ export default grammar({
     // pub enum Status { Active, Inactive }
     enum_declaration: ($) =>
       seq(
-        optional($.keyword_pub),
+        optional($.visibility_marker),
         $.keyword_enum,
         field("name", $.type_identifier),
         optional(field("type_params", $.type_parameters)),
@@ -198,7 +198,7 @@ export default grammar({
     // pub ability Http { ... }
     ability_declaration: ($) =>
       seq(
-        optional($.keyword_pub),
+        optional($.visibility_marker),
         $.keyword_ability,
         field("name", $.type_identifier),
         optional(field("type_params", $.type_parameters)),
@@ -235,7 +235,7 @@ export default grammar({
     // pub const VERSION = "0.1.0"
     const_declaration: ($) =>
       seq(
-        optional($.keyword_pub),
+        optional($.visibility_marker),
         $.keyword_const,
         field("name", $.identifier),
         optional(seq(":", field("type", $._type))),
@@ -248,6 +248,7 @@ export default grammar({
     // fn add(x: a, y) -> a { x }  -- mixed typed/untyped
     function_definition: ($) =>
       seq(
+        optional($.visibility_marker),
         $.keyword_fn,
         field("name", $.identifier),
         "(",
@@ -811,6 +812,14 @@ export default grammar({
     keyword_ability: ($) => "ability",
     keyword_const: ($) => "const",
     keyword_pub: ($) => "pub",
+
+    // Visibility marker: pub, pub(pkg), pub(super)
+    // Currently only supports 'pub', extensible for restricted visibility later
+    visibility_marker: ($) =>
+      seq(
+        $.keyword_pub,
+        optional(seq("(", choice("pkg", "super"), ")")),
+      ),
     keyword_use: ($) => "use",
     keyword_mod: ($) => "mod",
     keyword_if: ($) => "if",

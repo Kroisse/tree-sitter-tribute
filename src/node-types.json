@@ -58,7 +58,7 @@
           "named": true
         },
         {
-          "type": "keyword_pub",
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -557,7 +557,7 @@
           "named": true
         },
         {
-          "type": "keyword_pub",
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -658,7 +658,7 @@
           "named": true
         },
         {
-          "type": "keyword_pub",
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -794,11 +794,15 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "keyword_fn",
+          "named": true
+        },
+        {
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -1478,7 +1482,7 @@
           "named": true
         },
         {
-          "type": "keyword_pub",
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -2262,11 +2266,11 @@
       "required": true,
       "types": [
         {
-          "type": "keyword_pub",
+          "type": "keyword_struct",
           "named": true
         },
         {
-          "type": "keyword_struct",
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -2517,11 +2521,11 @@
       "required": true,
       "types": [
         {
-          "type": "keyword_pub",
+          "type": "keyword_use",
           "named": true
         },
         {
-          "type": "keyword_use",
+          "type": "visibility_marker",
           "named": true
         }
       ]
@@ -2606,6 +2610,21 @@
         },
         {
           "type": "tuple_fields",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "visibility_marker",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_pub",
           "named": true
         }
       ]
@@ -2820,6 +2839,10 @@
     "named": true
   },
   {
+    "type": "pkg",
+    "named": false
+  },
+  {
     "type": "raw_bytes_literal",
     "named": true
   },
@@ -2834,6 +2857,10 @@
   {
     "type": "spread",
     "named": true
+  },
+  {
+    "type": "super",
+    "named": false
   },
   {
     "type": "type_identifier",

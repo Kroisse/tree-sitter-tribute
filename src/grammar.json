@@ -51,7 +51,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "keyword_pub"
+              "name": "visibility_marker"
             },
             {
               "type": "BLANK"
@@ -116,7 +116,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "keyword_pub"
+              "name": "visibility_marker"
             },
             {
               "type": "BLANK"
@@ -240,7 +240,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "keyword_pub"
+              "name": "visibility_marker"
             },
             {
               "type": "BLANK"
@@ -516,7 +516,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "keyword_pub"
+              "name": "visibility_marker"
             },
             {
               "type": "BLANK"
@@ -743,7 +743,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "keyword_pub"
+              "name": "visibility_marker"
             },
             {
               "type": "BLANK"
@@ -927,7 +927,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "keyword_pub"
+              "name": "visibility_marker"
             },
             {
               "type": "BLANK"
@@ -988,6 +988,18 @@
     "function_definition": {
       "type": "SEQ",
       "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "visibility_marker"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
         {
           "type": "SYMBOL",
           "name": "keyword_fn"
@@ -3448,6 +3460,49 @@
     "keyword_pub": {
       "type": "STRING",
       "value": "pub"
+    },
+    "visibility_marker": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "keyword_pub"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "("
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "pkg"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "super"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
     },
     "keyword_use": {
       "type": "STRING",
