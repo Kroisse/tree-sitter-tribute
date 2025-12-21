@@ -7,7 +7,7 @@
   <groupId>io.github.tree-sitter</groupId>
   <artifactId>jtreesitter-tribute</artifactId>
   <name>JTreeSitter Tribute</name>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <description>This is not the greatest language in the world, no. This is just a tribute.</description>
   <url>https://github.com/Kroisse/tree-sitter-tribute</url>
   <licenses>
