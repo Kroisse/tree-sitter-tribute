@@ -39,6 +39,8 @@ export default grammar({
     $._error_sentinel,
   ],
 
+  conflicts: ($) => [[ $.constructor_expression ]],
+
   rules: {
     source_file: ($) => repeat($._item),
 
@@ -321,6 +323,7 @@ export default grammar({
       choice(
         $.binary_expression,
         $.lambda_expression,
+        $.constructor_expression,
         $.call_expression,
         $.method_call_expression,
         $.case_expression,
@@ -366,6 +369,15 @@ export default grammar({
         ),
       ),
 
+    constructor_expression: ($) =>
+      prec(
+        10,
+        seq(
+          field("constructor", $.type_identifier),
+          optional(seq("(", optional($.argument_list), ")")),
+        ),
+      ),
+
     // UFCS: x.f(y) -> f(x, y), x.f -> f(x)
     method_call_expression: ($) =>
       choice(
@@ -397,7 +409,13 @@ export default grammar({
         $.keyword_case,
         field("value", $._expression),
         "{",
-        repeat($.case_arm),
+        optional(
+          seq(
+            $.case_arm,
+            repeat(seq($._field_separator, $.case_arm)),
+            optional($._field_separator),
+          ),
+        ),
         "}",
       ),
 
@@ -408,7 +426,6 @@ export default grammar({
           seq("->", field("value", $._expression)), // no guard
           repeat1($.guarded_branch), // with guards
         ),
-        optional(","),
       ),
 
     guarded_branch: ($) =>
