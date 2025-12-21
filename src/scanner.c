@@ -283,30 +283,45 @@ bool tree_sitter_tribute_external_scanner_scan(
         skip(lexer);
     }
 
-    // If NEWLINE token is valid (e.g., in struct fields), emit it
-    // BUT only if followed by something that looks like another field (identifier)
+    // If NEWLINE token is valid, emit it when the next token looks like a field or pattern.
     if (valid_symbols[NEWLINE] && (lexer->lookahead == '\n' || lexer->lookahead == '\r')) {
         // Mark position before consuming newline
         lexer->mark_end(lexer);
 
-        // Consume newline(s) and whitespace
+        // Consume newline(s) and whitespace, treating CRLF as a single newline.
         while (lexer->lookahead == '\n' || lexer->lookahead == '\r' ||
                lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+            if (lexer->lookahead == '\r') {
+                advance(lexer);
+                if (lexer->lookahead == '\n') {
+                    advance(lexer);
+                }
+                continue;
+            }
+            if (lexer->lookahead == '\n') {
+                advance(lexer);
+                continue;
+            }
             advance(lexer);
         }
 
-        // Check if next char looks like start of identifier or type name
-        // (lowercase letter, uppercase letter, or underscore)
-        // This prevents consuming newline when we're at the end of fields (before '}')
+        // Accept newline as separator if the next token can start an item/pattern.
         if ((lexer->lookahead >= 'a' && lexer->lookahead <= 'z') ||
             (lexer->lookahead >= 'A' && lexer->lookahead <= 'Z') ||
-            lexer->lookahead == '_') {
+            (lexer->lookahead >= '0' && lexer->lookahead <= '9') ||
+            lexer->lookahead == '_' ||
+            lexer->lookahead == '-' ||
+            lexer->lookahead == '"' ||
+            lexer->lookahead == '\'' ||
+            lexer->lookahead == '[' ||
+            lexer->lookahead == '{' ||
+            lexer->lookahead == '(' ||
+            lexer->lookahead == '#') {
             lexer->result_symbol = NEWLINE;
             lexer->mark_end(lexer);
             return true;
         }
-        // Not followed by identifier - don't emit NEWLINE, let normal whitespace skipping handle it
-        // But we've already consumed the whitespace, so just continue
+        // Not followed by an item/pattern start - don't emit NEWLINE.
     }
 
     // Otherwise skip newlines as normal whitespace

@@ -39,7 +39,7 @@ export default grammar({
     $._error_sentinel,
   ],
 
-  conflicts: ($) => [[ $.constructor_expression ]],
+  conflicts: ($) => [[ $.constructor_expression ], [ $.case_arm ]],
 
   rules: {
     source_file: ($) => repeat($._item),
@@ -424,7 +424,10 @@ export default grammar({
         field("pattern", $.pattern),
         choice(
           seq("->", field("value", $._expression)), // no guard
-          repeat1($.guarded_branch), // with guards
+          seq(
+            $.guarded_branch,
+            repeat(seq($._newline, $.guarded_branch)),
+          ), // with guards
         ),
       ),
 
@@ -656,15 +659,22 @@ export default grammar({
     // Record with shorthand: User { name, age }
     // Record with spread: User { ..user, age: 31 }
     record_expression: ($) =>
-      seq(
-        field("type", $.type_identifier),
-        "{",
-        optional(field("fields", $.record_fields)),
-        "}",
+      prec(
+        11,
+        seq(
+          field("type", $.type_identifier),
+          "{",
+          optional(field("fields", $.record_fields)),
+          "}",
+        ),
       ),
 
     record_fields: ($) =>
-      seq($.record_field, repeat(seq(",", $.record_field)), optional(",")),
+      seq(
+        $.record_field,
+        repeat(seq($._field_separator, $.record_field)),
+        optional($._field_separator),
+      ),
 
     record_field: ($) =>
       choice(
