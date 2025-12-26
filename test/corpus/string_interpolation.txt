@@ -187,3 +187,37 @@ fn test() {
               expression: (primary_expression
                 (identifier)))
             (string_segment)))))))
+
+================================================================================
+Prefixed interpolated string
+================================================================================
+
+fn main() {
+    let name = "World"
+    s"Hello, \{name}!"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (let_statement
+        (keyword_let)
+        pattern: (pattern
+          (simple_pattern
+            (identifier_pattern
+              (identifier))))
+        value: (primary_expression
+          (string
+            (string_segment))))
+      (expression_statement
+        (primary_expression
+          (string
+            (string_segment)
+            (interpolation
+              expression: (primary_expression
+                (identifier)))
+            (string_segment)))))))

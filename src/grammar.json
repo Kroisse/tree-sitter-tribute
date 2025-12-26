@@ -2094,11 +2094,19 @@
         },
         {
           "type": "SYMBOL",
+          "name": "raw_interpolated_string"
+        },
+        {
+          "type": "SYMBOL",
           "name": "bytes_string"
         },
         {
           "type": "SYMBOL",
           "name": "raw_bytes"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "raw_interpolated_bytes"
         },
         {
           "type": "SYMBOL",
@@ -2660,6 +2668,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "raw_interpolated_string"
+        },
+        {
+          "type": "SYMBOL",
           "name": "multiline_string"
         },
         {
@@ -2669,6 +2681,10 @@
         {
           "type": "SYMBOL",
           "name": "raw_bytes"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "raw_interpolated_bytes"
         },
         {
           "type": "SYMBOL",
@@ -3319,8 +3335,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "\""
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "\""
+            },
+            {
+              "type": "STRING",
+              "value": "s\""
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -3392,6 +3417,51 @@
     "raw_string": {
       "type": "SYMBOL",
       "name": "raw_string_literal"
+    },
+    "raw_interpolated_string": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_raw_interpolated_string_start"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "raw_interpolated_string_segment"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "interpolation"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "raw_interpolated_string_segment"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_raw_interpolated_string_end"
+        }
+      ]
+    },
+    "raw_interpolated_string_segment": {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_string_content"
     },
     "bytes_string": {
       "type": "SEQ",
@@ -3470,6 +3540,51 @@
     "raw_bytes": {
       "type": "SYMBOL",
       "name": "raw_bytes_literal"
+    },
+    "raw_interpolated_bytes": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_raw_interpolated_bytes_start"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "raw_interpolated_bytes_segment"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "bytes_interpolation"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "raw_interpolated_bytes_segment"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_raw_interpolated_bytes_end"
+        }
+      ]
+    },
+    "raw_interpolated_bytes_segment": {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_bytes_content"
     },
     "multiline_string": {
       "type": "SEQ",
@@ -3875,6 +3990,30 @@
     {
       "type": "SYMBOL",
       "name": "_multiline_bytes_end"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_string_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_string_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_string_end"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_bytes_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_bytes_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_interpolated_bytes_end"
     },
     {
       "type": "SYMBOL",

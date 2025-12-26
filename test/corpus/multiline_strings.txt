@@ -17,6 +17,24 @@ fn main() { #"hello"# }
             (multiline_string_segment)))))))
 
 ================================================================================
+Prefixed multiline string
+================================================================================
+
+fn main() { s#"hello"# }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (primary_expression
+          (multiline_string
+            (multiline_string_segment)))))))
+
+================================================================================
 Multiline string spanning lines
 ================================================================================
 

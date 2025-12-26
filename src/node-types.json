@@ -1409,6 +1409,14 @@
           "named": true
         },
         {
+          "type": "raw_interpolated_bytes",
+          "named": true
+        },
+        {
+          "type": "raw_interpolated_string",
+          "named": true
+        },
+        {
           "type": "raw_string",
           "named": true
         },
@@ -1987,6 +1995,14 @@
           "named": true
         },
         {
+          "type": "raw_interpolated_bytes",
+          "named": true
+        },
+        {
+          "type": "raw_interpolated_string",
+          "named": true
+        },
+        {
           "type": "raw_string",
           "named": true
         },
@@ -2045,6 +2061,54 @@
         }
       ]
     }
+  },
+  {
+    "type": "raw_interpolated_bytes",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bytes_interpolation",
+          "named": true
+        },
+        {
+          "type": "raw_interpolated_bytes_segment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "raw_interpolated_bytes_segment",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "raw_interpolated_string",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "interpolation",
+          "named": true
+        },
+        {
+          "type": "raw_interpolated_string_segment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "raw_interpolated_string_segment",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "raw_string",
@@ -2964,6 +3028,10 @@
   {
     "type": "rune",
     "named": true
+  },
+  {
+    "type": "s\"",
+    "named": false
   },
   {
     "type": "self",

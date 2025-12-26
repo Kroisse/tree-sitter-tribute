@@ -1,0 +1,140 @@
+================================================================================
+Raw string prefixes
+================================================================================
+
+fn main() {
+  r"hello"
+  rs"hello"
+  sr"hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (primary_expression
+          (raw_string
+            (raw_string_literal))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_string
+            (raw_interpolated_string_segment))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_string
+            (raw_interpolated_string_segment)))))))
+
+================================================================================
+Raw bytes prefixes
+================================================================================
+
+fn main() {
+  rb"data"
+  br"data"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_bytes
+            (raw_interpolated_bytes_segment))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_bytes
+            (raw_interpolated_bytes_segment)))))))
+
+================================================================================
+Raw interpolated strings
+================================================================================
+
+fn main() {
+  let name = "world"
+  rs"hello \{name}"
+  sr#"hello \{name}"#
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (let_statement
+        (keyword_let)
+        pattern: (pattern
+          (simple_pattern
+            (identifier_pattern
+              (identifier))))
+        value: (primary_expression
+          (string
+            (string_segment))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_string
+            (raw_interpolated_string_segment)
+            (interpolation
+              expression: (primary_expression
+                (identifier)))
+            (raw_interpolated_string_segment))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_string
+            (raw_interpolated_string_segment)
+            (interpolation
+              expression: (primary_expression
+                (identifier)))
+            (raw_interpolated_string_segment)))))))
+
+================================================================================
+Raw interpolated bytes
+================================================================================
+
+fn main() {
+  let data = "chunk"
+  rb"data \{data}"
+  br#"data \{data}"#
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (let_statement
+        (keyword_let)
+        pattern: (pattern
+          (simple_pattern
+            (identifier_pattern
+              (identifier))))
+        value: (primary_expression
+          (string
+            (string_segment))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_bytes
+            (raw_interpolated_bytes_segment)
+            (bytes_interpolation
+              expression: (primary_expression
+                (identifier)))
+            (raw_interpolated_bytes_segment))))
+      (expression_statement
+        (primary_expression
+          (raw_interpolated_bytes
+            (raw_interpolated_bytes_segment)
+            (bytes_interpolation
+              expression: (primary_expression
+                (identifier)))
+            (raw_interpolated_bytes_segment)))))))

@@ -13,7 +13,12 @@
 
 // Helper: tagged template literal for RustRegex without double-escaping
 // Usage: re`\d+` instead of new RustRegex('\\d+')
-const re = (strings, ...values) => {
+/**
+ * @param {TemplateStringsArray} strings
+ * @param {unknown[]} values
+ * @returns {RustRegex}
+ */
+function re(strings, ...values) {
   let pattern = strings.raw[0];
   for (let i = 0; i < values.length; i++) {
     pattern += values[i] + strings.raw[i + 1];
@@ -35,6 +40,12 @@ export default grammar({
     $._multiline_bytes_start,
     $._multiline_bytes_content,
     $._multiline_bytes_end,
+    $._raw_interpolated_string_start,
+    $._raw_interpolated_string_content,
+    $._raw_interpolated_string_end,
+    $._raw_interpolated_bytes_start,
+    $._raw_interpolated_bytes_content,
+    $._raw_interpolated_bytes_end,
     $._newline, // Newline token for field separators (Go/Swift style)
     $._error_sentinel,
   ],
@@ -464,8 +475,10 @@ export default grammar({
         $.nat_literal,
         $.string,
         $.raw_string,
+        $.raw_interpolated_string,
         $.bytes_string,
         $.raw_bytes,
+        $.raw_interpolated_bytes,
         $.rune,
         $.keyword_true,
         $.keyword_false,
@@ -581,9 +594,11 @@ export default grammar({
         $.nat_literal,
         $.string,
         $.raw_string,
+        $.raw_interpolated_string,
         $.multiline_string,
         $.bytes_string,
         $.raw_bytes,
+        $.raw_interpolated_bytes,
         $.multiline_bytes,
         $.rune,
         $.path_expression,
@@ -784,7 +799,7 @@ export default grammar({
 
     string: ($) =>
       seq(
-        '"',
+        choice('"', 's"'),
         $.string_segment,
         optional(repeat1(seq($.interpolation, $.string_segment))),
         '"',
@@ -799,6 +814,20 @@ export default grammar({
     // Raw strings: r"...", r#"..."#, r##"..."##, etc.
     // Handled by external scanner for proper hash delimiter matching
     raw_string: ($) => $.raw_string_literal,
+
+    // Raw interpolated strings: rs"...", sr"...", rs#"..."#, etc.
+    // Handled by external scanner for proper hash delimiter matching
+    raw_interpolated_string: ($) =>
+      seq(
+        $._raw_interpolated_string_start,
+        $.raw_interpolated_string_segment,
+        optional(
+          repeat1(seq($.interpolation, $.raw_interpolated_string_segment)),
+        ),
+        $._raw_interpolated_string_end,
+      ),
+
+    raw_interpolated_string_segment: ($) => $._raw_interpolated_string_content,
 
     // Bytes string: b"..." with escape sequences and interpolation
     bytes_string: ($) =>
@@ -817,6 +846,20 @@ export default grammar({
     // Raw bytes: rb"...", rb#"..."#, etc.
     // Handled by external scanner for proper hash delimiter matching
     raw_bytes: ($) => $.raw_bytes_literal,
+
+    // Raw interpolated bytes: rb"...", br"...", rb#"..."#, etc.
+    // Handled by external scanner for proper hash delimiter matching
+    raw_interpolated_bytes: ($) =>
+      seq(
+        $._raw_interpolated_bytes_start,
+        $.raw_interpolated_bytes_segment,
+        optional(
+          repeat1(seq($.bytes_interpolation, $.raw_interpolated_bytes_segment)),
+        ),
+        $._raw_interpolated_bytes_end,
+      ),
+
+    raw_interpolated_bytes_segment: ($) => $._raw_interpolated_bytes_content,
 
     // Multiline strings: #"..."#, ##"..."##, etc.
     // Can span multiple lines, supports interpolation with \{expr}
