@@ -79,15 +79,20 @@ static inline void skip(TSLexer *lexer) {
     lexer->advance(lexer, true);
 }
 
+static uint8_t count_hashes_up_to(TSLexer *lexer, uint8_t limit) {
+    uint8_t count = 0;
+    while (lexer->lookahead == '#' && count < limit) {
+        advance(lexer);
+        count++;
+    }
+    return count;
+}
+
 // Scan raw literal with hash delimiters
 // Used for both raw strings (r"...", r#"..."#) and raw bytes (rb"...", rb#"..."#)
 static bool scan_raw_literal(TSLexer *lexer, enum TokenType token_type) {
     // Count opening hashes
-    uint8_t opening_hash_count = 0;
-    while (lexer->lookahead == '#') {
-        advance(lexer);
-        opening_hash_count++;
-    }
+    uint8_t opening_hash_count = count_hashes_up_to(lexer, UINT8_MAX);
 
     // Must have opening quote
     if (lexer->lookahead != '"') {
@@ -105,11 +110,8 @@ static bool scan_raw_literal(TSLexer *lexer, enum TokenType token_type) {
             advance(lexer);
 
             // Count closing hashes
-            uint8_t closing_hash_count = 0;
-            while (lexer->lookahead == '#' && closing_hash_count < opening_hash_count) {
-                advance(lexer);
-                closing_hash_count++;
-            }
+            uint8_t closing_hash_count =
+                count_hashes_up_to(lexer, opening_hash_count);
 
             // If we matched all hashes, we're done
             if (closing_hash_count == opening_hash_count) {
@@ -204,11 +206,7 @@ static bool scan_interpolated_content(TSLexer *lexer, Scanner *scanner, ScanMode
             lexer->mark_end(lexer);
             advance(lexer);
 
-            uint8_t closing_hash_count = 0;
-            while (lexer->lookahead == '#' && closing_hash_count < hash_count) {
-                advance(lexer);
-                closing_hash_count++;
-            }
+            uint8_t closing_hash_count = count_hashes_up_to(lexer, hash_count);
 
             if (closing_hash_count == hash_count) {
                 lexer->result_symbol = content_token;
@@ -233,11 +231,7 @@ static bool scan_interpolated_end(TSLexer *lexer, Scanner *scanner, ScanMode mod
     }
     advance(lexer);
 
-    uint8_t closing_hash_count = 0;
-    while (lexer->lookahead == '#' && closing_hash_count < hash_count) {
-        advance(lexer);
-        closing_hash_count++;
-    }
+    uint8_t closing_hash_count = count_hashes_up_to(lexer, hash_count);
 
     if (closing_hash_count == hash_count) {
         lexer->result_symbol = mode_end_token(mode);
@@ -392,11 +386,7 @@ bool tree_sitter_tribute_external_scanner_scan(
         advance(lexer);
 
         if (lexer->lookahead == '#' && valid_symbols[MULTILINE_BYTES_START]) {
-            uint8_t hash_count = 0;
-            while (lexer->lookahead == '#') {
-                advance(lexer);
-                hash_count++;
-            }
+            uint8_t hash_count = count_hashes_up_to(lexer, UINT8_MAX);
 
             if (lexer->lookahead == '"') {
                 return scan_interpolated_start(lexer, scanner, MODE_MULTILINE_BYTES, hash_count);
@@ -409,11 +399,7 @@ bool tree_sitter_tribute_external_scanner_scan(
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
                 if (valid_symbols[RAW_INTERPOLATED_BYTES_START]) {
-                    uint8_t hash_count = 0;
-                    while (lexer->lookahead == '#') {
-                        advance(lexer);
-                        hash_count++;
-                    }
+                    uint8_t hash_count = count_hashes_up_to(lexer, UINT8_MAX);
                     return scan_interpolated_start(
                         lexer,
                         scanner,
@@ -443,11 +429,7 @@ bool tree_sitter_tribute_external_scanner_scan(
         if (lexer->lookahead == 's' && valid_symbols[RAW_INTERPOLATED_STRING_START]) {
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
-                uint8_t hash_count = 0;
-                while (lexer->lookahead == '#') {
-                    advance(lexer);
-                    hash_count++;
-                }
+                uint8_t hash_count = count_hashes_up_to(lexer, UINT8_MAX);
                 return scan_interpolated_start(
                     lexer,
                     scanner,
@@ -462,11 +444,7 @@ bool tree_sitter_tribute_external_scanner_scan(
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
                 if (valid_symbols[RAW_INTERPOLATED_BYTES_START]) {
-                    uint8_t hash_count = 0;
-                    while (lexer->lookahead == '#') {
-                        advance(lexer);
-                        hash_count++;
-                    }
+                    uint8_t hash_count = count_hashes_up_to(lexer, UINT8_MAX);
                     return scan_interpolated_start(
                         lexer,
                         scanner,
@@ -512,11 +490,7 @@ bool tree_sitter_tribute_external_scanner_scan(
         }
 
         if (lexer->lookahead == '#' && valid_symbols[MULTILINE_STRING_START]) {
-            uint8_t hash_count = 0;
-            while (lexer->lookahead == '#') {
-                advance(lexer);
-                hash_count++;
-            }
+            uint8_t hash_count = count_hashes_up_to(lexer, UINT8_MAX);
 
             if (lexer->lookahead == '"') {
                 return scan_interpolated_start(lexer, scanner, MODE_MULTILINE_STRING, hash_count);
@@ -530,11 +504,7 @@ bool tree_sitter_tribute_external_scanner_scan(
     if (lexer->lookahead == '#' && valid_symbols[MULTILINE_STRING_START]) {
         lexer->mark_end(lexer);
 
-        uint8_t hash_count = 0;
-        while (lexer->lookahead == '#') {
-            advance(lexer);
-            hash_count++;
-        }
+        uint8_t hash_count = count_hashes_up_to(lexer, UINT8_MAX);
 
         if (lexer->lookahead == '"') {
             return scan_interpolated_start(lexer, scanner, MODE_MULTILINE_STRING, hash_count);
