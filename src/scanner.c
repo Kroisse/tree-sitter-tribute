@@ -32,13 +32,18 @@ enum TokenType {
     ERROR_SENTINEL
 };
 
-// Scanner state for multiline strings with hash delimiters
+typedef enum {
+    MODE_NONE = 0,
+    MODE_MULTILINE_STRING,
+    MODE_MULTILINE_BYTES,
+    MODE_RAW_INTERPOLATED_STRING,
+    MODE_RAW_INTERPOLATED_BYTES,
+} ScanMode;
+
+// Scanner state for interpolated strings with hash delimiters
 typedef struct {
     uint8_t opening_hash_count;
-    bool in_multiline_string;
-    bool in_multiline_bytes;
-    bool in_raw_interpolated_string;
-    bool in_raw_interpolated_bytes;
+    ScanMode mode;
 } Scanner;
 
 void *tree_sitter_tribute_external_scanner_create(void) {
@@ -52,26 +57,17 @@ void tree_sitter_tribute_external_scanner_destroy(void *payload) {
 unsigned tree_sitter_tribute_external_scanner_serialize(void *payload, char *buffer) {
     Scanner *scanner = (Scanner *)payload;
     buffer[0] = (char)scanner->opening_hash_count;
-    buffer[1] = (char)(scanner->in_multiline_string ? 1 : 0);
-    buffer[2] = (char)(scanner->in_multiline_bytes ? 1 : 0);
-    buffer[3] = (char)(scanner->in_raw_interpolated_string ? 1 : 0);
-    buffer[4] = (char)(scanner->in_raw_interpolated_bytes ? 1 : 0);
-    return 5;
+    buffer[1] = (char)scanner->mode;
+    return 2;
 }
 
 void tree_sitter_tribute_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
     Scanner *scanner = (Scanner *)payload;
     scanner->opening_hash_count = 0;
-    scanner->in_multiline_string = false;
-    scanner->in_multiline_bytes = false;
-    scanner->in_raw_interpolated_string = false;
-    scanner->in_raw_interpolated_bytes = false;
-    if (length >= 5) {
+    scanner->mode = MODE_NONE;
+    if (length >= 2) {
         scanner->opening_hash_count = (uint8_t)buffer[0];
-        scanner->in_multiline_string = buffer[1] != 0;
-        scanner->in_multiline_bytes = buffer[2] != 0;
-        scanner->in_raw_interpolated_string = buffer[3] != 0;
-        scanner->in_raw_interpolated_bytes = buffer[4] != 0;
+        scanner->mode = (ScanMode)buffer[1];
     }
 }
 
@@ -128,134 +124,83 @@ static bool scan_raw_literal(TSLexer *lexer, enum TokenType token_type) {
     }
 }
 
-// Scan multiline string/bytes content until interpolation or end delimiter
+static enum TokenType mode_content_token(ScanMode mode) {
+    switch (mode) {
+        case MODE_MULTILINE_STRING:
+            return MULTILINE_STRING_CONTENT;
+        case MODE_MULTILINE_BYTES:
+            return MULTILINE_BYTES_CONTENT;
+        case MODE_RAW_INTERPOLATED_STRING:
+            return RAW_INTERPOLATED_STRING_CONTENT;
+        case MODE_RAW_INTERPOLATED_BYTES:
+            return RAW_INTERPOLATED_BYTES_CONTENT;
+        case MODE_NONE:
+        default:
+            return ERROR_SENTINEL;
+    }
+}
+
+static enum TokenType mode_end_token(ScanMode mode) {
+    switch (mode) {
+        case MODE_MULTILINE_STRING:
+            return MULTILINE_STRING_END;
+        case MODE_MULTILINE_BYTES:
+            return MULTILINE_BYTES_END;
+        case MODE_RAW_INTERPOLATED_STRING:
+            return RAW_INTERPOLATED_STRING_END;
+        case MODE_RAW_INTERPOLATED_BYTES:
+            return RAW_INTERPOLATED_BYTES_END;
+        case MODE_NONE:
+        default:
+            return ERROR_SENTINEL;
+    }
+}
+
+static enum TokenType mode_start_token(ScanMode mode) {
+    switch (mode) {
+        case MODE_MULTILINE_STRING:
+            return MULTILINE_STRING_START;
+        case MODE_MULTILINE_BYTES:
+            return MULTILINE_BYTES_START;
+        case MODE_RAW_INTERPOLATED_STRING:
+            return RAW_INTERPOLATED_STRING_START;
+        case MODE_RAW_INTERPOLATED_BYTES:
+            return RAW_INTERPOLATED_BYTES_START;
+        case MODE_NONE:
+        default:
+            return ERROR_SENTINEL;
+    }
+}
+
+// Scan interpolated content until interpolation or end delimiter
 // Returns true if content was found (even empty content before \{ or end)
-static bool scan_multiline_content(TSLexer *lexer, Scanner *scanner, bool is_bytes) {
+static bool scan_interpolated_content(TSLexer *lexer, Scanner *scanner, ScanMode mode) {
     uint8_t hash_count = scanner->opening_hash_count;
+    enum TokenType content_token = mode_content_token(mode);
     bool has_content = false;
 
     for (;;) {
         if (lexer->eof(lexer)) {
-            // Unterminated - return what we have
             if (has_content) {
-                lexer->result_symbol = is_bytes ? MULTILINE_BYTES_CONTENT : MULTILINE_STRING_CONTENT;
+                lexer->result_symbol = content_token;
                 lexer->mark_end(lexer);
                 return true;
             }
             return false;
         }
 
-        // Check for interpolation start: \{
         if (lexer->lookahead == '\\') {
             lexer->mark_end(lexer);
             advance(lexer);
             if (lexer->lookahead == '{') {
-                // Don't consume \{ - let grammar handle it
-                // Return content we've accumulated (may be empty)
-                lexer->result_symbol = is_bytes ? MULTILINE_BYTES_CONTENT : MULTILINE_STRING_CONTENT;
+                lexer->result_symbol = content_token;
                 return true;
             }
-            // Not interpolation, backslash is part of content
             has_content = true;
             continue;
         }
 
-        // Check for end delimiter: "# (with matching hash count)
         if (lexer->lookahead == '"') {
-            lexer->mark_end(lexer);
-            advance(lexer);
-
-            // Count closing hashes
-            uint8_t closing_hash_count = 0;
-            while (lexer->lookahead == '#' && closing_hash_count < hash_count) {
-                advance(lexer);
-                closing_hash_count++;
-            }
-
-            // If we matched all hashes, this is the end
-            if (closing_hash_count == hash_count) {
-                // Return content first (don't consume the end delimiter)
-                // The end will be returned on next scan
-                lexer->result_symbol = is_bytes ? MULTILINE_BYTES_CONTENT : MULTILINE_STRING_CONTENT;
-                return true;
-            }
-            // Not the end, quote and hashes are content
-            has_content = true;
-            continue;
-        }
-
-        // Regular content character
-        advance(lexer);
-        has_content = true;
-        lexer->mark_end(lexer);
-    }
-}
-
-// Scan multiline string/bytes end delimiter
-static bool scan_multiline_end(TSLexer *lexer, Scanner *scanner, bool is_bytes) {
-    uint8_t hash_count = scanner->opening_hash_count;
-
-    if (lexer->lookahead != '"') {
-        return false;
-    }
-    advance(lexer);
-
-    // Count closing hashes
-    uint8_t closing_hash_count = 0;
-    while (lexer->lookahead == '#' && closing_hash_count < hash_count) {
-        advance(lexer);
-        closing_hash_count++;
-    }
-
-    if (closing_hash_count == hash_count) {
-        lexer->result_symbol = is_bytes ? MULTILINE_BYTES_END : MULTILINE_STRING_END;
-        lexer->mark_end(lexer);
-        // Clear state
-        scanner->opening_hash_count = 0;
-        scanner->in_multiline_string = false;
-        scanner->in_multiline_bytes = false;
-        return true;
-    }
-
-    return false;
-}
-
-// Scan raw interpolated string/bytes content until interpolation or end delimiter
-// Returns true if content was found (even empty content before \{ or end)
-static bool scan_raw_interpolated_content(TSLexer *lexer, Scanner *scanner, bool is_bytes) {
-    uint8_t hash_count = scanner->opening_hash_count;
-    bool has_content = false;
-
-    for (;;) {
-        if (lexer->eof(lexer)) {
-            // Unterminated - return what we have
-            if (has_content) {
-                lexer->result_symbol =
-                    is_bytes ? RAW_INTERPOLATED_BYTES_CONTENT : RAW_INTERPOLATED_STRING_CONTENT;
-                lexer->mark_end(lexer);
-                return true;
-            }
-            return false;
-        }
-
-        // Check for interpolation start: \{
-        if (lexer->lookahead == '\\') {
-            lexer->mark_end(lexer);
-            advance(lexer);
-            if (lexer->lookahead == '{') {
-                // Don't consume \{ - let grammar handle it
-                // Return content we've accumulated (may be empty)
-                lexer->result_symbol =
-                    is_bytes ? RAW_INTERPOLATED_BYTES_CONTENT : RAW_INTERPOLATED_STRING_CONTENT;
-                return true;
-            }
-            has_content = true;
-            continue;
-        }
-
-        // Check for end delimiter: "### (matching opening hashes)
-        if (lexer->lookahead == '"') {
-            // Potential end delimiter - check if followed by correct number of hashes
             lexer->mark_end(lexer);
             advance(lexer);
 
@@ -266,26 +211,21 @@ static bool scan_raw_interpolated_content(TSLexer *lexer, Scanner *scanner, bool
             }
 
             if (closing_hash_count == hash_count) {
-                // Return content first (don't consume the end delimiter)
-                // The end will be returned on next scan
-                lexer->result_symbol =
-                    is_bytes ? RAW_INTERPOLATED_BYTES_CONTENT : RAW_INTERPOLATED_STRING_CONTENT;
+                lexer->result_symbol = content_token;
                 return true;
             }
-            // Not the end, quote and hashes are content
             has_content = true;
             continue;
         }
 
-        // Regular content character
         advance(lexer);
         has_content = true;
         lexer->mark_end(lexer);
     }
 }
 
-// Scan raw interpolated string/bytes end delimiter
-static bool scan_raw_interpolated_end(TSLexer *lexer, Scanner *scanner, bool is_bytes) {
+// Scan interpolated end delimiter
+static bool scan_interpolated_end(TSLexer *lexer, Scanner *scanner, ScanMode mode) {
     uint8_t hash_count = scanner->opening_hash_count;
 
     if (lexer->lookahead != '"') {
@@ -293,7 +233,6 @@ static bool scan_raw_interpolated_end(TSLexer *lexer, Scanner *scanner, bool is_
     }
     advance(lexer);
 
-    // Count closing hashes
     uint8_t closing_hash_count = 0;
     while (lexer->lookahead == '#' && closing_hash_count < hash_count) {
         advance(lexer);
@@ -301,41 +240,32 @@ static bool scan_raw_interpolated_end(TSLexer *lexer, Scanner *scanner, bool is_
     }
 
     if (closing_hash_count == hash_count) {
-        lexer->result_symbol = is_bytes ? RAW_INTERPOLATED_BYTES_END : RAW_INTERPOLATED_STRING_END;
+        lexer->result_symbol = mode_end_token(mode);
         lexer->mark_end(lexer);
-        // Clear state
         scanner->opening_hash_count = 0;
-        scanner->in_raw_interpolated_string = false;
-        scanner->in_raw_interpolated_bytes = false;
+        scanner->mode = MODE_NONE;
         return true;
     }
 
     return false;
 }
 
-// Scan raw interpolated string/bytes start delimiter
-static bool scan_raw_interpolated_start(TSLexer *lexer, Scanner *scanner, bool is_bytes) {
-    // Count opening hashes
-    uint8_t opening_hash_count = 0;
-    while (lexer->lookahead == '#') {
-        advance(lexer);
-        opening_hash_count++;
-    }
-
+// Scan interpolated start delimiter
+static bool scan_interpolated_start(
+    TSLexer *lexer,
+    Scanner *scanner,
+    ScanMode mode,
+    uint8_t opening_hash_count
+) {
     if (lexer->lookahead != '"') {
         return false;
     }
 
     advance(lexer);
-    lexer->result_symbol =
-        is_bytes ? RAW_INTERPOLATED_BYTES_START : RAW_INTERPOLATED_STRING_START;
+    lexer->result_symbol = mode_start_token(mode);
     lexer->mark_end(lexer);
     scanner->opening_hash_count = opening_hash_count;
-    if (is_bytes) {
-        scanner->in_raw_interpolated_bytes = true;
-    } else {
-        scanner->in_raw_interpolated_string = true;
-    }
+    scanner->mode = mode;
     return true;
 }
 
@@ -382,58 +312,18 @@ bool tree_sitter_tribute_external_scanner_scan(
         return false;
     }
 
-    // If we're inside a raw interpolated string, handle content/end
-    if (scanner->in_raw_interpolated_string) {
-        if (valid_symbols[RAW_INTERPOLATED_STRING_END] && lexer->lookahead == '"') {
-            if (scan_raw_interpolated_end(lexer, scanner, false)) {
-                return true;
-            }
-        }
-        if (valid_symbols[RAW_INTERPOLATED_STRING_CONTENT]) {
-            return scan_raw_interpolated_content(lexer, scanner, false);
-        }
-        return false;
-    }
+    // If we're inside an interpolated literal, handle content/end
+    if (scanner->mode != MODE_NONE) {
+        enum TokenType end_token = mode_end_token(scanner->mode);
+        enum TokenType content_token = mode_content_token(scanner->mode);
 
-    // If we're inside raw interpolated bytes, handle content/end
-    if (scanner->in_raw_interpolated_bytes) {
-        if (valid_symbols[RAW_INTERPOLATED_BYTES_END] && lexer->lookahead == '"') {
-            if (scan_raw_interpolated_end(lexer, scanner, true)) {
+        if (valid_symbols[end_token] && lexer->lookahead == '"') {
+            if (scan_interpolated_end(lexer, scanner, scanner->mode)) {
                 return true;
             }
         }
-        if (valid_symbols[RAW_INTERPOLATED_BYTES_CONTENT]) {
-            return scan_raw_interpolated_content(lexer, scanner, true);
-        }
-        return false;
-    }
-
-    // If we're inside a multiline string, handle content/end
-    if (scanner->in_multiline_string) {
-        // Try to scan end first
-        if (valid_symbols[MULTILINE_STRING_END] && lexer->lookahead == '"') {
-            if (scan_multiline_end(lexer, scanner, false)) {
-                return true;
-            }
-        }
-        // Scan content
-        if (valid_symbols[MULTILINE_STRING_CONTENT]) {
-            return scan_multiline_content(lexer, scanner, false);
-        }
-        return false;
-    }
-
-    // If we're inside multiline bytes, handle content/end
-    if (scanner->in_multiline_bytes) {
-        // Try to scan end first
-        if (valid_symbols[MULTILINE_BYTES_END] && lexer->lookahead == '"') {
-            if (scan_multiline_end(lexer, scanner, true)) {
-                return true;
-            }
-        }
-        // Scan content
-        if (valid_symbols[MULTILINE_BYTES_CONTENT]) {
-            return scan_multiline_content(lexer, scanner, true);
+        if (valid_symbols[content_token]) {
+            return scan_interpolated_content(lexer, scanner, scanner->mode);
         }
         return false;
     }
@@ -509,12 +399,7 @@ bool tree_sitter_tribute_external_scanner_scan(
             }
 
             if (lexer->lookahead == '"') {
-                advance(lexer);
-                lexer->result_symbol = MULTILINE_BYTES_START;
-                lexer->mark_end(lexer);
-                scanner->opening_hash_count = hash_count;
-                scanner->in_multiline_bytes = true;
-                return true;
+                return scan_interpolated_start(lexer, scanner, MODE_MULTILINE_BYTES, hash_count);
             }
             return false;
         }
@@ -524,7 +409,17 @@ bool tree_sitter_tribute_external_scanner_scan(
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
                 if (valid_symbols[RAW_INTERPOLATED_BYTES_START]) {
-                    return scan_raw_interpolated_start(lexer, scanner, true);
+                    uint8_t hash_count = 0;
+                    while (lexer->lookahead == '#') {
+                        advance(lexer);
+                        hash_count++;
+                    }
+                    return scan_interpolated_start(
+                        lexer,
+                        scanner,
+                        MODE_RAW_INTERPOLATED_BYTES,
+                        hash_count
+                    );
                 }
                 if (valid_symbols[RAW_BYTES_LITERAL]) {
                     return scan_raw_literal(lexer, RAW_BYTES_LITERAL);
@@ -548,7 +443,17 @@ bool tree_sitter_tribute_external_scanner_scan(
         if (lexer->lookahead == 's' && valid_symbols[RAW_INTERPOLATED_STRING_START]) {
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
-                return scan_raw_interpolated_start(lexer, scanner, false);
+                uint8_t hash_count = 0;
+                while (lexer->lookahead == '#') {
+                    advance(lexer);
+                    hash_count++;
+                }
+                return scan_interpolated_start(
+                    lexer,
+                    scanner,
+                    MODE_RAW_INTERPOLATED_STRING,
+                    hash_count
+                );
             }
         }
 
@@ -557,7 +462,17 @@ bool tree_sitter_tribute_external_scanner_scan(
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
                 if (valid_symbols[RAW_INTERPOLATED_BYTES_START]) {
-                    return scan_raw_interpolated_start(lexer, scanner, true);
+                    uint8_t hash_count = 0;
+                    while (lexer->lookahead == '#') {
+                        advance(lexer);
+                        hash_count++;
+                    }
+                    return scan_interpolated_start(
+                        lexer,
+                        scanner,
+                        MODE_RAW_INTERPOLATED_BYTES,
+                        hash_count
+                    );
                 }
                 if (valid_symbols[RAW_BYTES_LITERAL]) {
                     return scan_raw_literal(lexer, RAW_BYTES_LITERAL);
@@ -582,7 +497,17 @@ bool tree_sitter_tribute_external_scanner_scan(
         if (lexer->lookahead == 'r' && valid_symbols[RAW_INTERPOLATED_STRING_START]) {
             advance(lexer);
             if (lexer->lookahead == '#' || lexer->lookahead == '"') {
-                return scan_raw_interpolated_start(lexer, scanner, false);
+                uint8_t hash_count = 0;
+                while (lexer->lookahead == '#') {
+                    advance(lexer);
+                    hash_count++;
+                }
+                return scan_interpolated_start(
+                    lexer,
+                    scanner,
+                    MODE_RAW_INTERPOLATED_STRING,
+                    hash_count
+                );
             }
         }
 
@@ -594,12 +519,7 @@ bool tree_sitter_tribute_external_scanner_scan(
             }
 
             if (lexer->lookahead == '"') {
-                advance(lexer);
-                lexer->result_symbol = MULTILINE_STRING_START;
-                lexer->mark_end(lexer);
-                scanner->opening_hash_count = hash_count;
-                scanner->in_multiline_string = true;
-                return true;
+                return scan_interpolated_start(lexer, scanner, MODE_MULTILINE_STRING, hash_count);
             }
         }
 
@@ -617,12 +537,7 @@ bool tree_sitter_tribute_external_scanner_scan(
         }
 
         if (lexer->lookahead == '"') {
-            advance(lexer);
-            lexer->result_symbol = MULTILINE_STRING_START;
-            lexer->mark_end(lexer);
-            scanner->opening_hash_count = hash_count;
-            scanner->in_multiline_string = true;
-            return true;
+            return scan_interpolated_start(lexer, scanner, MODE_MULTILINE_STRING, hash_count);
         }
     }
 
