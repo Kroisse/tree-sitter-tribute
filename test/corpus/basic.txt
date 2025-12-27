@@ -349,7 +349,8 @@ fn test() {
         (method_call_expression
           receiver: (primary_expression
             (identifier))
-          method: (identifier)
+          method: (method_path
+            (identifier))
           (argument_list
             (primary_expression
               (identifier))))))))
@@ -373,7 +374,8 @@ fn test() {
         (method_call_expression
           receiver: (primary_expression
             (identifier))
-          method: (identifier))))))
+          method: (method_path
+            (identifier)))))))
 
 ================================================================================
 Chained UFCS method calls
@@ -396,15 +398,42 @@ fn test() {
             receiver: (method_call_expression
               receiver: (primary_expression
                 (identifier))
-              method: (identifier)
+              method: (method_path
+                (identifier))
               (argument_list
                 (primary_expression
                   (identifier))))
-            method: (identifier)
+            method: (method_path
+              (identifier))
             (argument_list
               (primary_expression
                 (identifier))))
-          method: (identifier))))))
+          method: (method_path
+            (identifier)))))))
+
+================================================================================
+Qualified UFCS method call
+================================================================================
+
+fn test() {
+    21.math::double()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (method_call_expression
+          receiver: (primary_expression
+            (nat_literal))
+          method: (method_path
+            (path_segment
+              (identifier))
+            (identifier)))))))
 
 ================================================================================
 Simple struct declaration
@@ -1200,7 +1229,8 @@ fn test() {
         (method_call_expression
           receiver: (primary_expression
             (identifier))
-          method: (identifier)
+          method: (method_path
+            (identifier))
           (argument_list
             (lambda_expression
               (keyword_fn)

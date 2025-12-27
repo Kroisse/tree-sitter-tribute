@@ -68,5 +68,7 @@ fn main() {
           receiver: (method_call_expression
             receiver: (primary_expression
               (identifier))
-            method: (identifier))
-          method: (identifier)))))) 
+            method: (method_path
+              (identifier)))
+          method: (method_path
+            (identifier))))))) 

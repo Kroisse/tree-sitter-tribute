@@ -1,0 +1,421 @@
+================================================================================
+Function type - basic
+================================================================================
+
+fn test(f: fn(Int, Int) -> Int) {
+    f(1, 2)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          params: (type_list
+            (type_identifier)
+            (type_identifier))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)
+          (argument_list
+            (primary_expression
+              (nat_literal))
+            (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Function type - no parameters
+================================================================================
+
+fn test(f: fn() -> Int) {
+    f()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))
+
+================================================================================
+Function type - pure function (empty ability row)
+================================================================================
+
+fn test(f: fn(Int) ->{} Int) {
+    f(42)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          params: (type_list
+            (type_identifier))
+          abilities: (ability_row)
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)
+          (argument_list
+            (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Function type - single ability
+================================================================================
+
+fn fetch(handler: fn(String) ->{Http} Response) {
+    handler("https://example.com")
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          params: (type_list
+            (type_identifier))
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier))))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)
+          (argument_list
+            (primary_expression
+              (string
+                (string_segment)))))))))
+
+================================================================================
+Function type - multiple abilities
+================================================================================
+
+fn run(comp: fn() ->{State(Int), Console} Nil) {
+    comp()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier)
+                (type_arguments
+                  (type_identifier)))
+              (ability_item
+                (type_identifier))))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))
+
+================================================================================
+Function type - ability with row variable
+================================================================================
+
+fn run(comp: fn() ->{State(Int), e} Int) {
+    comp()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier)
+                (type_arguments
+                  (type_identifier)))
+              (ability_tail
+                (type_variable
+                  (identifier)))))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))
+
+================================================================================
+Function type - nested function type
+================================================================================
+
+fn apply(f: fn(fn(Int) -> Int, Int) -> Int) {
+    f(fn(x) x + 1, 10)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          params: (type_list
+            (function_type
+              (keyword_fn)
+              params: (type_list
+                (type_identifier))
+              return_type: (type_identifier))
+            (type_identifier))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)
+          (argument_list
+            (lambda_expression
+              (keyword_fn)
+              params: (parameter_list
+                (parameter
+                  name: (identifier)))
+              body: (binary_expression
+                (primary_expression
+                  (identifier))
+                (primary_expression
+                  (nat_literal))))
+            (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Function type - generic parameter types
+================================================================================
+
+fn map(f: fn(a) -> b, xs: List(a)) -> List(b) {
+    xs
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          params: (type_list
+            (type_variable
+              (identifier)))
+          return_type: (type_variable
+            (identifier))))
+      (parameter
+        name: (identifier)
+        type: (generic_type
+          (type_identifier)
+          (type_variable
+            (identifier)))))
+    return_type: (return_type_annotation
+      (generic_type
+        (type_identifier)
+        (type_variable
+          (identifier))))
+    body: (block
+      (expression_statement
+        (primary_expression
+          (identifier))))))
+
+================================================================================
+Function type - trailing comma in type list
+================================================================================
+
+fn test(f: fn(Int, String,) -> Bool) {
+    f(1, "hi")
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          params: (type_list
+            (type_identifier)
+            (type_identifier))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)
+          (argument_list
+            (primary_expression
+              (nat_literal))
+            (primary_expression
+              (string
+                (string_segment)))))))))
+
+================================================================================
+Function type - trailing comma in ability row
+================================================================================
+
+fn run(comp: fn() ->{Console, Logger,} Nil) {
+    comp()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier))
+              (ability_item
+                (type_identifier))))
+          return_type: (type_identifier))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))
+
+================================================================================
+Function type - generic ability with generic parameter
+================================================================================
+
+fn run_state(comp: fn() ->{State(s), e} a, init: s) -> a {
+    comp()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier)
+                (type_arguments
+                  (type_variable
+                    (identifier))))
+              (ability_tail
+                (type_variable
+                  (identifier)))))
+          return_type: (type_variable
+            (identifier))))
+      (parameter
+        name: (identifier)
+        type: (type_variable
+          (identifier))))
+    return_type: (return_type_annotation
+      (type_variable
+        (identifier)))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))
+
+================================================================================
+Function type - multiple generic abilities
+================================================================================
+
+fn handle_both(comp: fn() ->{State(s), Reader(r)} a) {
+    comp()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier)
+                (type_arguments
+                  (type_variable
+                    (identifier))))
+              (ability_item
+                (type_identifier)
+                (type_arguments
+                  (type_variable
+                    (identifier))))))
+          return_type: (type_variable
+            (identifier)))))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))

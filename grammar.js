@@ -169,9 +169,57 @@ export default grammar({
     struct_field: ($) =>
       seq(field("name", $.identifier), ":", field("type", $._type)),
 
-    // Type reference (simple for now)
-    // Can be: String (type_identifier), a (type_variable), List(a) (generic_type)
-    _type: ($) => choice($.type_identifier, $.type_variable, $.generic_type),
+    // Type reference
+    // Can be: String (type_identifier), a (type_variable), List(a) (generic_type),
+    // fn(Int, Int) -> Int (function_type)
+    _type: ($) =>
+      choice($.type_identifier, $.type_variable, $.generic_type, $.function_type),
+
+    // Function type: fn(Int, Int) -> Int, fn(a) ->{State(s)} b
+    // - fn(Int) -> Int        : implicit effect polymorphic
+    // - fn(Int) ->{} Int      : pure function (no effects)
+    // - fn(Int) ->{State} Int : explicit effects
+    function_type: ($) =>
+      seq(
+        $.keyword_fn,
+        "(",
+        optional(field("params", $.type_list)),
+        ")",
+        "->",
+        optional(field("abilities", $.ability_row)),
+        field("return_type", $._type),
+      ),
+
+    // Type list for function type parameters
+    type_list: ($) => seq($._type, repeat(seq(",", $._type)), optional(",")),
+
+    // Ability row: {}, {State(Int), Console}, {State(Int), e}
+    // Empty row means pure function, non-empty lists abilities
+    ability_row: ($) =>
+      seq(
+        "{",
+        optional($.ability_list),
+        "}",
+      ),
+
+    // List of abilities: State(Int), Console or State(Int), e
+    ability_list: ($) =>
+      seq(
+        choice($.ability_item, $.ability_tail),
+        repeat(seq(",", choice($.ability_item, $.ability_tail))),
+        optional(","),
+      ),
+
+    // Ability item: Console, State(Int), Reader(String)
+    ability_item: ($) =>
+      seq($.type_identifier, optional($.type_arguments)),
+
+    // Ability tail (row variable): e, rest
+    ability_tail: ($) => $.type_variable,
+
+    // Type arguments for generic types in abilities: (Int), (String, Bool)
+    type_arguments: ($) =>
+      seq("(", $._type, repeat(seq(",", $._type)), optional(","), ")"),
 
     // Type variables are lowercase: a, b, elem
     type_variable: ($) => $.identifier,
@@ -389,7 +437,7 @@ export default grammar({
         ),
       ),
 
-    // UFCS: x.f(y) -> f(x, y), x.f -> f(x)
+    // UFCS: x.f(y) -> f(x, y), x.f -> f(x), x.a::b(y) -> a::b(x, y)
     method_call_expression: ($) =>
       choice(
         // With arguments - higher priority to prefer this over no-args form
@@ -398,7 +446,7 @@ export default grammar({
           seq(
             field("receiver", $._expression),
             ".",
-            field("method", $.identifier),
+            field("method", $.method_path),
             "(",
             optional($.argument_list),
             ")",
@@ -410,7 +458,7 @@ export default grammar({
           seq(
             field("receiver", $._expression),
             ".",
-            field("method", $.identifier),
+            field("method", $.method_path),
           ),
         ),
       ),
@@ -729,6 +777,17 @@ export default grammar({
         seq(
           choice(alias($._name, $.path_segment), $.path_keyword),
           repeat1(seq("::", alias($._name, $.path_segment))),
+        ),
+      ),
+
+    // Method path for UFCS: double, math::double, Std::Collections::map
+    // Must end with identifier (lowercase function name), not type_identifier
+    method_path: ($) =>
+      prec.right(
+        11,
+        seq(
+          repeat(seq(alias($._name, $.path_segment), "::")),
+          $.identifier,
         ),
       ),
 
