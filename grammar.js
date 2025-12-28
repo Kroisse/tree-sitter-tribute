@@ -351,8 +351,9 @@ export default grammar({
         field("body", $.block),
       ),
 
-    // -> Type
-    return_type_annotation: ($) => seq("->", $._type),
+    // -> Type or ->{E} Type
+    return_type_annotation: ($) =>
+      seq("->", optional(field("abilities", $.ability_row)), $._type),
 
     // Parameter with optional type annotation: x or x: Int
     parameter: ($) =>

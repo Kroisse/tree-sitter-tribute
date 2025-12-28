@@ -1417,6 +1417,22 @@
           "value": "->"
         },
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "abilities",
+              "content": {
+                "type": "SYMBOL",
+                "name": "ability_row"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "SYMBOL",
           "name": "_type"
         }

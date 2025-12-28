@@ -419,3 +419,159 @@ fn handle_both(comp: fn() ->{State(s), Reader(r)} a) {
       (expression_statement
         (call_expression
           function: (identifier))))))
+
+================================================================================
+Return type annotation - single ability
+================================================================================
+
+fn counter() ->{State(Int)} Int {
+    0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    return_type: (return_type_annotation
+      abilities: (ability_row
+        (ability_list
+          (ability_item
+            (type_identifier)
+            (type_arguments
+              (type_identifier)))))
+      (type_identifier))
+    body: (block
+      (expression_statement
+        (primary_expression
+          (nat_literal))))))
+
+================================================================================
+Return type annotation - multiple abilities
+================================================================================
+
+fn run() ->{State(Int), Console} Nil {
+    Nil
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    return_type: (return_type_annotation
+      abilities: (ability_row
+        (ability_list
+          (ability_item
+            (type_identifier)
+            (type_arguments
+              (type_identifier)))
+          (ability_item
+            (type_identifier))))
+      (type_identifier))
+    body: (block
+      (expression_statement
+        (primary_expression
+          (keyword_nil))))))
+
+================================================================================
+Return type annotation - with row variable
+================================================================================
+
+fn run_effect() ->{State(Int), e} Int {
+    0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    return_type: (return_type_annotation
+      abilities: (ability_row
+        (ability_list
+          (ability_item
+            (type_identifier)
+            (type_arguments
+              (type_identifier)))
+          (ability_tail
+            (type_variable
+              (identifier)))))
+      (type_identifier))
+    body: (block
+      (expression_statement
+        (primary_expression
+          (nat_literal))))))
+
+================================================================================
+Return type annotation - empty ability row (pure)
+================================================================================
+
+fn pure_fn() ->{} Int {
+    42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    return_type: (return_type_annotation
+      abilities: (ability_row)
+      (type_identifier))
+    body: (block
+      (expression_statement
+        (primary_expression
+          (nat_literal))))))
+
+================================================================================
+Return type annotation - generic ability with generic type
+================================================================================
+
+fn run_state(comp: fn() ->{State(s), e} a, init: s) ->{e} a {
+    comp()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    params: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (function_type
+          (keyword_fn)
+          abilities: (ability_row
+            (ability_list
+              (ability_item
+                (type_identifier)
+                (type_arguments
+                  (type_variable
+                    (identifier))))
+              (ability_tail
+                (type_variable
+                  (identifier)))))
+          return_type: (type_variable
+            (identifier))))
+      (parameter
+        name: (identifier)
+        type: (type_variable
+          (identifier))))
+    return_type: (return_type_annotation
+      abilities: (ability_row
+        (ability_list
+          (ability_tail
+            (type_variable
+              (identifier)))))
+      (type_variable
+        (identifier)))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier))))))

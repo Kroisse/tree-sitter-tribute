@@ -2424,7 +2424,18 @@
   {
     "type": "return_type_annotation",
     "named": true,
-    "fields": {},
+    "fields": {
+      "abilities": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "ability_row",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
