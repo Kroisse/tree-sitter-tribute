@@ -1884,11 +1884,6 @@
     "fields": {}
   },
   {
-    "type": "operator",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "operator_fn",
     "named": true,
     "fields": {
@@ -2180,32 +2175,6 @@
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "qualified_operator",
-    "named": true,
-    "fields": {
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "operator",
-            "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_identifier",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -3256,8 +3225,16 @@
     "named": true
   },
   {
+    "type": "operator",
+    "named": true
+  },
+  {
     "type": "pkg",
     "named": false
+  },
+  {
+    "type": "qualified_operator",
+    "named": true
   },
   {
     "type": "raw_bytes_literal",

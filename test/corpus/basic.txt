@@ -2486,3 +2486,73 @@ fn test() {
                   (string_segment))))
             (record_field
               name: (identifier))))))))
+
+================================================================================
+Multiple statements with qualified path calls
+================================================================================
+
+fn test() {
+    foo()
+    Foo::bar()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)))
+      (expression_statement
+        (call_expression
+          function: (path_expression
+            (path_segment
+              (type_identifier))
+            (path_segment
+              (identifier))))))))
+
+================================================================================
+Qualified operator binary expression
+================================================================================
+
+fn test() {
+    1 Int::+ 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (binary_expression
+          (primary_expression
+            (nat_literal))
+          (qualified_operator)
+          (primary_expression
+            (nat_literal)))))))
+
+================================================================================
+Qualified operator as function
+================================================================================
+
+fn test() {
+    (Int::+)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (keyword_fn)
+    name: (identifier)
+    body: (block
+      (expression_statement
+        (primary_expression
+          (operator_fn
+            operator: (qualified_operator)))))))

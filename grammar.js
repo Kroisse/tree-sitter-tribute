@@ -712,11 +712,15 @@ export default grammar({
       ),
 
     // Qualified operator: Int::+, List::<>, String::==
+    // NOTE: This is a token to prevent partial matching (e.g., Foo:: without operator)
+    // which would cause Foo::bar() to be parsed as binary_expression instead of call_expression
     qualified_operator: ($) =>
-      seq(
-        field("type", $.type_identifier),
-        "::",
-        field("operator", alias($._operator, $.operator)),
+      token(
+        seq(
+          /[A-Z][a-zA-Z0-9_]*/,  // type_identifier pattern
+          "::",
+          choice("+", "-", "*", "/", "%", "<>", "==", "!=", "<=", ">=", "<", ">", "&&", "||"),
+        ),
       ),
 
     // Record expression: User { name: "Alice", age: 30 }
