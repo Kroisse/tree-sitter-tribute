@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tree-sitter-tribute"
 description = "This is not the greatest language in the world, no. This is just a tribute."
-version = "0.4.0"
+version = "0.4.1"
 keywords = ["incremental", "parsing", "tree-sitter", "tribute"]
 classifiers = [
   "Intended Audience :: Developers",
