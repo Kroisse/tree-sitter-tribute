@@ -12,21 +12,22 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (raw_string
-            (raw_string_literal))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_string
-            (raw_interpolated_string_segment))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_string
-            (raw_interpolated_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (raw_string
+              (raw_string_literal))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_string
+              (raw_interpolated_string_segment))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_string
+              (raw_interpolated_string_segment))))))))
 
 ================================================================================
 Raw bytes prefixes
@@ -41,17 +42,18 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_bytes
-            (raw_interpolated_bytes_segment))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_bytes
-            (raw_interpolated_bytes_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_bytes
+              (raw_interpolated_bytes_segment))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_bytes
+              (raw_interpolated_bytes_segment))))))))
 
 ================================================================================
 Raw interpolated strings
@@ -67,34 +69,35 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_string
-            (raw_interpolated_string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (raw_interpolated_string_segment))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_string
-            (raw_interpolated_string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (raw_interpolated_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_string
+              (raw_interpolated_string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (raw_interpolated_string_segment))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_string
+              (raw_interpolated_string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (raw_interpolated_string_segment))))))))
 
 ================================================================================
 Raw interpolated bytes
@@ -110,31 +113,32 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_bytes
-            (raw_interpolated_bytes_segment)
-            (bytes_interpolation
-              expression: (primary_expression
-                (identifier)))
-            (raw_interpolated_bytes_segment))))
-      (expression_statement
-        (primary_expression
-          (raw_interpolated_bytes
-            (raw_interpolated_bytes_segment)
-            (bytes_interpolation
-              expression: (primary_expression
-                (identifier)))
-            (raw_interpolated_bytes_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_bytes
+              (raw_interpolated_bytes_segment)
+              (bytes_interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (raw_interpolated_bytes_segment))))
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_bytes
+              (raw_interpolated_bytes_segment)
+              (bytes_interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (raw_interpolated_bytes_segment))))))))

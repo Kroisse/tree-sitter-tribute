@@ -8,13 +8,14 @@ fn main() { #"hello"# }
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (multiline_string
-            (multiline_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment))))))))
 
 ================================================================================
 Prefixed multiline string
@@ -26,13 +27,14 @@ fn main() { s#"hello"# }
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (multiline_string
-            (multiline_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment))))))))
 
 ================================================================================
 Multiline string spanning lines
@@ -49,13 +51,14 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (multiline_string
-            (multiline_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment))))))))
 
 ================================================================================
 Multiline string with double hash
@@ -67,13 +70,14 @@ fn main() { ##"contains "# inside"## }
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (multiline_string
-            (multiline_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment))))))))
 
 ================================================================================
 Multiline string with interpolation
@@ -88,26 +92,27 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (multiline_string
-            (multiline_string_segment)
-            (multiline_interpolation
-              expression: (primary_expression
-                (identifier)))
-            (multiline_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment)
+              (multiline_interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (multiline_string_segment))))))))
 
 ================================================================================
 Multiline string with multiple interpolations
@@ -123,44 +128,45 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (nat_literal)))
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (nat_literal)))
-      (expression_statement
-        (primary_expression
-          (multiline_string
-            (multiline_string_segment)
-            (multiline_interpolation
-              expression: (primary_expression
-                (identifier)))
-            (multiline_string_segment)
-            (multiline_interpolation
-              expression: (primary_expression
-                (identifier)))
-            (multiline_string_segment)
-            (multiline_interpolation
-              expression: (binary_expression
-                (primary_expression
-                  (identifier))
-                (primary_expression
-                  (identifier))))
-            (multiline_string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (nat_literal)))
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment)
+              (multiline_interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (multiline_string_segment)
+              (multiline_interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (multiline_string_segment)
+              (multiline_interpolation
+                expression: (binary_expression
+                  (primary_expression
+                    (identifier))
+                  (primary_expression
+                    (identifier))))
+              (multiline_string_segment))))))))
 
 ================================================================================
 Basic multiline bytes
@@ -172,13 +178,14 @@ fn main() { b#"hello"# }
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (multiline_bytes
-            (multiline_bytes_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_bytes
+              (multiline_bytes_segment))))))))
 
 ================================================================================
 Multiline bytes with interpolation
@@ -193,23 +200,24 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (multiline_bytes
-            (multiline_bytes_segment)
-            (multiline_bytes_interpolation
-              expression: (primary_expression
-                (identifier)))
-            (multiline_bytes_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (multiline_bytes
+              (multiline_bytes_segment)
+              (multiline_bytes_interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (multiline_bytes_segment))))))))
