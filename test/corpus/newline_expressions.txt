@@ -11,18 +11,19 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (block
-            (expression_statement
-              (binary_expression
-                (primary_expression
-                  (identifier))
-                (primary_expression
-                  (identifier))))))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (block
+              (expression_statement
+                (binary_expression
+                  (primary_expression
+                    (identifier))
+                  (primary_expression
+                    (identifier)))))))))))
 
 ===
 Binary expression split across newline
@@ -37,15 +38,16 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (binary_expression
-          (primary_expression
-            (identifier))
-          (primary_expression
-            (identifier)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (binary_expression
+            (primary_expression
+              (identifier))
+            (primary_expression
+              (identifier))))))))
 
 ===
 Chained field access split across newline
@@ -60,15 +62,16 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (method_call_expression
-          receiver: (method_call_expression
-            receiver: (primary_expression
-              (identifier))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (method_call_expression
+            receiver: (method_call_expression
+              receiver: (primary_expression
+                (identifier))
+              method: (method_path
+                (identifier)))
             method: (method_path
-              (identifier)))
-          method: (method_path
-            (identifier))))))) 
+              (identifier))))))))

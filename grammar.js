@@ -26,6 +26,16 @@ function re(strings, ...values) {
   return new RustRegex(pattern);
 };
 
+// Helper: common function signature parts (name, params, return type)
+const functionSignature = ($) => [
+  $.keyword_fn,
+  field("name", $.identifier),
+  "(",
+  optional(field("params", $.parameter_list)),
+  ")",
+  optional(field("return_type", $.return_type_annotation)),
+];
+
 export default grammar({
   name: "tribute",
 
@@ -339,17 +349,30 @@ export default grammar({
     // fn add(x, y) { x + y }
     // fn add(x: Int, y: Int) -> Int { x + y }
     // fn add(x: a, y) -> a { x }  -- mixed typed/untyped
+    // extern fn len(bytes: Bytes) -> Int  -- external implementation
+    // pub extern "wasm" fn len(bytes: Bytes) -> Int  -- with ABI
     function_definition: ($) =>
+      choice($.extern_function, $.regular_function),
+
+    // extern fn: no body allowed
+    extern_function: ($) =>
       seq(
         optional($.visibility_marker),
-        $.keyword_fn,
-        field("name", $.identifier),
-        "(",
-        optional(field("params", $.parameter_list)),
-        ")",
-        optional(field("return_type", $.return_type_annotation)),
+        $.extern_marker,
+        ...functionSignature($),
+      ),
+
+    // regular fn: body required
+    regular_function: ($) =>
+      seq(
+        optional($.visibility_marker),
+        ...functionSignature($),
         field("body", $.block),
       ),
+
+    // extern or extern "abi"
+    extern_marker: ($) =>
+      seq($.keyword_extern, optional(field("abi", $.string))),
 
     // -> Type or ->{E} Type
     return_type_annotation: ($) =>
@@ -979,6 +1002,7 @@ export default grammar({
     keyword_ability: ($) => "ability",
     keyword_const: ($) => "const",
     keyword_pub: ($) => "pub",
+    keyword_extern: ($) => "extern",
 
     // Visibility marker: pub, pub(pkg), pub(super)
     // Currently only supports 'pub', extensible for restricted visibility later

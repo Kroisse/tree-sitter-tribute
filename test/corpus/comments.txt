@@ -10,12 +10,13 @@ fn main() { 1 }
 (source_file
   (line_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Line doc comment
@@ -29,12 +30,13 @@ fn main() { 1 }
 (source_file
   (line_doc_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Block comment
@@ -48,12 +50,13 @@ fn main() { 1 }
 (source_file
   (block_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Block doc comment
@@ -67,12 +70,13 @@ fn main() { 1 }
 (source_file
   (block_doc_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Nested block comment
@@ -86,12 +90,13 @@ fn main() { 1 }
 (source_file
   (block_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Multiple comments
@@ -111,12 +116,13 @@ fn main() { 1 }
   (line_doc_comment)
   (block_doc_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Empty line comment
@@ -130,12 +136,13 @@ fn main() { 1 }
 (source_file
   (line_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Comment inside function
@@ -150,13 +157,14 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (line_comment)
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (line_comment)
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Multiline block comment
@@ -173,9 +181,10 @@ fn main() { 1 }
 (source_file
   (block_comment)
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))

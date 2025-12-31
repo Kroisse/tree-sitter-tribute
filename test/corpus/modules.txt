@@ -248,12 +248,13 @@ mod utils {
     name: (identifier)
     body: (mod_body
       (function_definition
-        (keyword_fn)
-        name: (identifier)
-        body: (block
-          (expression_statement
-            (primary_expression
-              (nat_literal))))))))
+        (regular_function
+          (keyword_fn)
+          name: (identifier)
+          body: (block
+            (expression_statement
+              (primary_expression
+                (nat_literal)))))))))
 
 ================================================================================
 Nested mod declarations
@@ -302,26 +303,27 @@ pub mod math {
     name: (identifier)
     body: (mod_body
       (function_definition
-        (visibility_marker
-          (keyword_pub))
-        (keyword_fn)
-        name: (identifier)
-        params: (parameter_list
-          (parameter
-            name: (identifier)
-            type: (type_identifier))
-          (parameter
-            name: (identifier)
-            type: (type_identifier)))
-        return_type: (return_type_annotation
-          (type_identifier))
-        body: (block
-          (expression_statement
-            (binary_expression
-              (primary_expression
-                (identifier))
-              (primary_expression
-                (identifier)))))))))
+        (regular_function
+          (visibility_marker
+            (keyword_pub))
+          (keyword_fn)
+          name: (identifier)
+          params: (parameter_list
+            (parameter
+              name: (identifier)
+              type: (type_identifier))
+            (parameter
+              name: (identifier)
+              type: (type_identifier)))
+          return_type: (return_type_annotation
+            (type_identifier))
+          body: (block
+            (expression_statement
+              (binary_expression
+                (primary_expression
+                  (identifier))
+                (primary_expression
+                  (identifier))))))))))
 
 ================================================================================
 Path expression with pkg
@@ -335,17 +337,18 @@ fn test() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (call_expression
-          function: (path_expression
-            (path_keyword)
-            (path_segment
-              (identifier))
-            (path_segment
-              (identifier))))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (call_expression
+            function: (path_expression
+              (path_keyword)
+              (path_segment
+                (identifier))
+              (path_segment
+                (identifier)))))))))
 
 ================================================================================
 Path expression with super
@@ -359,15 +362,16 @@ fn test() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (call_expression
-          function: (path_expression
-            (path_keyword)
-            (path_segment
-              (identifier))))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (call_expression
+            function: (path_expression
+              (path_keyword)
+              (path_segment
+                (identifier)))))))))
 
 ================================================================================
 Visibility pub(pkg)
@@ -381,14 +385,15 @@ pub(pkg) fn internal_helper() {
 
 (source_file
   (function_definition
-    (visibility_marker
-      (keyword_pub))
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (nat_literal))))))
+    (regular_function
+      (visibility_marker
+        (keyword_pub))
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
 
 ================================================================================
 Visibility pub(super)

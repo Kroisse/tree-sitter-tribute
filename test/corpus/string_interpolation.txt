@@ -11,26 +11,27 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (string
-            (string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (string_segment))))))))
 
 ================================================================================
 Multiple interpolations
@@ -46,44 +47,45 @@ fn test() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (nat_literal)))
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (nat_literal)))
-      (expression_statement
-        (primary_expression
-          (string
-            (string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (string_segment)
-            (interpolation
-              expression: (binary_expression
-                (primary_expression
-                  (identifier))
-                (primary_expression
-                  (identifier))))
-            (string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (nat_literal)))
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (string_segment)
+              (interpolation
+                expression: (binary_expression
+                  (primary_expression
+                    (identifier))
+                  (primary_expression
+                    (identifier))))
+              (string_segment))))))))
 
 ================================================================================
 Mixed text and interpolation
@@ -99,40 +101,41 @@ fn greet() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (nat_literal)))
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (nat_literal)))
-      (expression_statement
-        (primary_expression
-          (string
-            (string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (string_segment)
-            (interpolation
-              expression: (binary_expression
-                (primary_expression
-                  (identifier))
-                (primary_expression
-                  (identifier))))
-            (string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (nat_literal)))
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (string_segment)
+              (interpolation
+                expression: (binary_expression
+                  (primary_expression
+                    (identifier))
+                  (primary_expression
+                    (identifier))))
+              (string_segment))))))))
 
 ================================================================================
 Regular string without interpolation
@@ -146,13 +149,14 @@ fn test() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (expression_statement
-        (primary_expression
-          (string
-            (string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))))))
 
 ================================================================================
 Empty interpolation content
@@ -167,26 +171,27 @@ fn test() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (string
-            (string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (string_segment))))))))
 
 ================================================================================
 Prefixed interpolated string
@@ -201,23 +206,24 @@ fn main() {
 
 (source_file
   (function_definition
-    (keyword_fn)
-    name: (identifier)
-    body: (block
-      (let_statement
-        (keyword_let)
-        pattern: (pattern
-          (simple_pattern
-            (identifier_pattern
-              (identifier))))
-        value: (primary_expression
-          (string
-            (string_segment))))
-      (expression_statement
-        (primary_expression
-          (string
-            (string_segment)
-            (interpolation
-              expression: (primary_expression
-                (identifier)))
-            (string_segment)))))))
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (identifier)))
+              (string_segment))))))))

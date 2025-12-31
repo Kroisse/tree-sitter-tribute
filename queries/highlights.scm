@@ -10,6 +10,7 @@
   (keyword_ability)
   (keyword_const)
   (keyword_pub)
+  (keyword_extern)
   (keyword_use)
   (keyword_mod)
   (keyword_if)
@@ -39,7 +40,10 @@
   (type_identifier) @type)
 
 ; Function definitions
-(function_definition
+(regular_function
+  name: (identifier) @function)
+
+(extern_function
   name: (identifier) @function)
 
 ; Ability operations
