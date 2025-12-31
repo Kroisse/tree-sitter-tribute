@@ -27,9 +27,10 @@ function re(strings, ...values) {
 };
 
 // Helper: common function signature parts (name, params, return type)
+// Name can be identifier (add, len) or operator_name ((+), (<>))
 const functionSignature = ($) => [
   $.keyword_fn,
-  field("name", $.identifier),
+  field("name", choice($.identifier, $.operator_name)),
   "(",
   optional(field("params", $.parameter_list)),
   ")",
@@ -373,6 +374,9 @@ export default grammar({
     // extern or extern "abi"
     extern_marker: ($) =>
       seq($.keyword_extern, optional(field("abi", $.string))),
+
+    // Operator name for function definitions: (+), (<>), (==)
+    operator_name: ($) => seq("(", $._operator, ")"),
 
     // -> Type or ->{E} Type
     return_type_annotation: ($) =>

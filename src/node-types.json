@@ -889,6 +889,10 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "operator_name",
+            "named": true
           }
         ]
       },
@@ -1943,6 +1947,11 @@
     }
   },
   {
+    "type": "operator_name",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "parameter",
     "named": true,
     "fields": {
@@ -2423,6 +2432,10 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "operator_name",
             "named": true
           }
         ]

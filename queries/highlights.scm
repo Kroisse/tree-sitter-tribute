@@ -43,8 +43,14 @@
 (regular_function
   name: (identifier) @function)
 
+(regular_function
+  name: (operator_name) @function)
+
 (extern_function
   name: (identifier) @function)
+
+(extern_function
+  name: (operator_name) @function)
 
 ; Ability operations
 (ability_operation

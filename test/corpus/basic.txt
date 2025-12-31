@@ -2719,3 +2719,71 @@ pub extern "C" fn foobar() -> Int
       name: (identifier)
       return_type: (return_type_annotation
         (type_identifier)))))
+
+================================================================================
+Operator function definition
+================================================================================
+
+fn (+)(a: Int, b: Int) -> Int {
+    a
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (operator_name)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_identifier))
+        (parameter
+          name: (identifier)
+          type: (type_identifier)))
+      return_type: (return_type_annotation
+        (type_identifier))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (identifier)))))))
+
+================================================================================
+Concat operator function in module
+================================================================================
+
+pub mod Bytes {
+    pub fn (<>)(left: Bytes, right: Bytes) -> Bytes {
+        left
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_mod)
+    name: (type_identifier)
+    body: (mod_body
+      (function_definition
+        (regular_function
+          (visibility_marker
+            (keyword_pub))
+          (keyword_fn)
+          name: (operator_name)
+          params: (parameter_list
+            (parameter
+              name: (identifier)
+              type: (type_identifier))
+            (parameter
+              name: (identifier)
+              type: (type_identifier)))
+          return_type: (return_type_annotation
+            (type_identifier))
+          body: (block
+            (expression_statement
+              (primary_expression
+                (identifier)))))))))
