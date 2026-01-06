@@ -1,7 +1,7 @@
 [package]
 name = "tree-sitter-tribute"
 description = "This is not the greatest language in the world, no. This is just a tribute."
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Eunchong Yu <kroisse@gmail.com>"]
 license = "MIT"
 readme = "README.md"

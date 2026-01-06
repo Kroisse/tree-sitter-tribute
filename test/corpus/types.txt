@@ -592,3 +592,118 @@ fn run_state(comp: fn() ->{State(s), e} a, init: s) ->{e} a {
         (expression_statement
           (call_expression
             function: (identifier)))))))
+
+================================================================================
+Tuple type - basic
+================================================================================
+
+fn test(pair: #(Int, String)) {
+    pair
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (tuple_type
+            (type_identifier)
+            (type_identifier))))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (identifier)))))))
+
+================================================================================
+Tuple type - with type variables
+================================================================================
+
+fn swap(pair: #(a, b)) -> #(b, a) {
+    pair
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (tuple_type
+            (type_variable
+              (identifier))
+            (type_variable
+              (identifier)))))
+      return_type: (return_type_annotation
+        (tuple_type
+          (type_variable
+            (identifier))
+          (type_variable
+            (identifier))))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (identifier)))))))
+
+================================================================================
+Tuple type - nested
+================================================================================
+
+fn nested(x: #(Int, #(String, Bool))) {
+    x
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (tuple_type
+            (type_identifier)
+            (tuple_type
+              (type_identifier)
+              (type_identifier)))))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (identifier)))))))
+
+================================================================================
+Tuple type - trailing comma
+================================================================================
+
+fn test(triple: #(Int, Int, Int,)) {
+    triple
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (tuple_type
+            (type_identifier)
+            (type_identifier)
+            (type_identifier))))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (identifier)))))))

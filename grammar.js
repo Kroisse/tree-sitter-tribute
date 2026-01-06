@@ -182,9 +182,13 @@ export default grammar({
 
     // Type reference
     // Can be: String (type_identifier), a (type_variable), List(a) (generic_type),
-    // fn(Int, Int) -> Int (function_type)
+    // fn(Int, Int) -> Int (function_type), #(Int, String) (tuple_type)
     _type: ($) =>
-      choice($.type_identifier, $.type_variable, $.generic_type, $.function_type),
+      choice($.type_identifier, $.type_variable, $.generic_type, $.function_type, $.tuple_type),
+
+    // Tuple type: #(Int, String), #(a, b, c)
+    tuple_type: ($) =>
+      seq("#", "(", $._type, repeat(seq(",", $._type)), optional(","), ")"),
 
     // Function type: fn(Int, Int) -> Int, fn(a) ->{State(s)} b
     // - fn(Int) -> Int        : implicit effect polymorphic
