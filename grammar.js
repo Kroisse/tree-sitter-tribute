@@ -61,7 +61,7 @@ export default grammar({
     $._error_sentinel,
   ],
 
-  conflicts: ($) => [[ $.constructor_expression ], [ $.case_arm ]],
+  conflicts: ($) => [[ $.constructor_expression ], [ $.case_arm ], [ $.handler_arm ]],
 
   rules: {
     source_file: ($) => repeat($._item),
@@ -530,12 +530,38 @@ export default grammar({
         field("value", $._expression),
       ),
 
-    // handle comp()
-    // handle { some_effectful_computation() }
+    // handle comp() { { result } -> result, { State::get() -> k } -> k(42) }
+    // Fused handler syntax: handle expression with handler arms directly
     handle_expression: ($) =>
-      seq($.keyword_handle, field("expr", $._expression)),
+      seq(
+        $.keyword_handle,
+        field("expr", $._expression),
+        "{",
+        optional(
+          seq(
+            $.handler_arm,
+            repeat(seq($._field_separator, $.handler_arm)),
+            optional($._field_separator),
+          ),
+        ),
+        "}",
+      ),
 
-    pattern: ($) => choice($.simple_pattern, $.as_pattern, $.handler_pattern),
+    // Handler arm: handler_pattern -> expression (similar to case_arm)
+    handler_arm: ($) =>
+      seq(
+        field("pattern", $.handler_pattern),
+        choice(
+          seq("->", field("value", $._expression)), // no guard
+          seq(
+            $.guarded_branch,
+            repeat(seq($._newline, $.guarded_branch)),
+          ), // with guards
+        ),
+      ),
+
+    // Handler pattern is now only used inside handle_expression, not general patterns
+    pattern: ($) => choice($.simple_pattern, $.as_pattern),
 
     // Simple patterns (can be used in as_pattern without recursion)
     simple_pattern: ($) =>

@@ -1061,11 +1061,40 @@ pub ability Http {
         return_type: (type_identifier)))))
 
 ================================================================================
-Handle expression
+Handle expression with completion handler
 ================================================================================
 
 fn test() {
-    handle comp()
+    handle comp() {
+        { result } -> result
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (identifier))
+            (handler_arm
+              pattern: (handler_pattern
+                result: (identifier))
+              value: (primary_expression
+                (identifier)))))))))
+
+================================================================================
+Handle expression with empty handler block
+================================================================================
+
+fn test() {
+    handle comp() { }
 }
 
 --------------------------------------------------------------------------------
@@ -1081,38 +1110,6 @@ fn test() {
             (keyword_handle)
             expr: (call_expression
               function: (identifier))))))))
-
-================================================================================
-Handle with case expression
-================================================================================
-
-fn test() {
-    case handle comp() {
-        _ -> result
-    }
-}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (function_definition
-    (regular_function
-      (keyword_fn)
-      name: (identifier)
-      body: (block
-        (expression_statement
-          (case_expression
-            (keyword_case)
-            value: (handle_expression
-              (keyword_handle)
-              expr: (call_expression
-                function: (identifier)))
-            (case_arm
-              pattern: (pattern
-                (simple_pattern
-                  (wildcard_pattern)))
-              value: (primary_expression
-                (identifier)))))))))
 
 ================================================================================
 Simple lambda expression
@@ -2317,43 +2314,11 @@ fn test(xs) {
                 (identifier)))))))))
 
 ================================================================================
-Handler pattern completion
-================================================================================
-
-fn test() {
-    case handle comp() {
-        { result } -> result
-    }
-}
-
---------------------------------------------------------------------------------
-
-(source_file
-  (function_definition
-    (regular_function
-      (keyword_fn)
-      name: (identifier)
-      body: (block
-        (expression_statement
-          (case_expression
-            (keyword_case)
-            value: (handle_expression
-              (keyword_handle)
-              expr: (call_expression
-                function: (identifier)))
-            (case_arm
-              pattern: (pattern
-                (handler_pattern
-                  result: (identifier)))
-              value: (primary_expression
-                (identifier)))))))))
-
-================================================================================
 Handler pattern suspend
 ================================================================================
 
 fn test() {
-    case handle comp() {
+    handle comp() {
         { State::get() -> k } -> k(42)
     }
 }
@@ -2367,21 +2332,18 @@ fn test() {
       name: (identifier)
       body: (block
         (expression_statement
-          (case_expression
-            (keyword_case)
-            value: (handle_expression
-              (keyword_handle)
-              expr: (call_expression
-                function: (identifier)))
-            (case_arm
-              pattern: (pattern
-                (handler_pattern
-                  operation: (path_expression
-                    (path_segment
-                      (type_identifier))
-                    (path_segment
-                      (identifier)))
-                  continuation: (identifier)))
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (identifier))
+            (handler_arm
+              pattern: (handler_pattern
+                operation: (path_expression
+                  (path_segment
+                    (type_identifier))
+                  (path_segment
+                    (identifier)))
+                continuation: (identifier))
               value: (call_expression
                 function: (identifier)
                 (argument_list
@@ -2393,7 +2355,7 @@ Handler pattern suspend with args
 ================================================================================
 
 fn test() {
-    case handle comp() {
+    handle comp() {
         { Logger::log(msg) -> k } -> k(Nil)
     }
 }
@@ -2407,26 +2369,85 @@ fn test() {
       name: (identifier)
       body: (block
         (expression_statement
-          (case_expression
-            (keyword_case)
-            value: (handle_expression
-              (keyword_handle)
-              expr: (call_expression
-                function: (identifier)))
-            (case_arm
-              pattern: (pattern
-                (handler_pattern
-                  operation: (path_expression
-                    (path_segment
-                      (type_identifier))
-                    (path_segment
-                      (identifier)))
-                  args: (pattern_list
-                    (pattern
-                      (simple_pattern
-                        (identifier_pattern
-                          (identifier)))))
-                  continuation: (identifier)))
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (identifier))
+            (handler_arm
+              pattern: (handler_pattern
+                operation: (path_expression
+                  (path_segment
+                    (type_identifier))
+                  (path_segment
+                    (identifier)))
+                args: (pattern_list
+                  (pattern
+                    (simple_pattern
+                      (identifier_pattern
+                        (identifier)))))
+                continuation: (identifier))
+              value: (call_expression
+                function: (identifier)
+                (argument_list
+                  (primary_expression
+                    (keyword_nil)))))))))))
+
+================================================================================
+Handle expression with multiple handlers
+================================================================================
+
+fn test() {
+    handle comp() {
+        { result } -> result,
+        { State::get() -> k } -> k(0),
+        { State::set(v) -> k } -> k(Nil)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (identifier))
+            (handler_arm
+              pattern: (handler_pattern
+                result: (identifier))
+              value: (primary_expression
+                (identifier)))
+            (handler_arm
+              pattern: (handler_pattern
+                operation: (path_expression
+                  (path_segment
+                    (type_identifier))
+                  (path_segment
+                    (identifier)))
+                continuation: (identifier))
+              value: (call_expression
+                function: (identifier)
+                (argument_list
+                  (primary_expression
+                    (nat_literal)))))
+            (handler_arm
+              pattern: (handler_pattern
+                operation: (path_expression
+                  (path_segment
+                    (type_identifier))
+                  (path_segment
+                    (identifier)))
+                args: (pattern_list
+                  (pattern
+                    (simple_pattern
+                      (identifier_pattern
+                        (identifier)))))
+                continuation: (identifier))
               value: (call_expression
                 function: (identifier)
                 (argument_list
