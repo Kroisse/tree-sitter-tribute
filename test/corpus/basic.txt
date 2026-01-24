@@ -40,9 +40,9 @@ fn test() {
       body: (block
         (expression_statement
           (binary_expression
-            (primary_expression
+            left: (primary_expression
               (nat_literal))
-            (primary_expression
+            right: (primary_expression
               (nat_literal))))))))
 
 ================================================================================
@@ -92,9 +92,9 @@ fn add(a, b) {
       body: (block
         (expression_statement
           (binary_expression
-            (primary_expression
+            left: (primary_expression
               (identifier))
-            (primary_expression
+            right: (primary_expression
               (identifier))))))))
 
 ================================================================================
@@ -149,12 +149,12 @@ fn test() {
       body: (block
         (expression_statement
           (binary_expression
-            (primary_expression
+            left: (primary_expression
               (nat_literal))
-            (binary_expression
-              (primary_expression
+            right: (binary_expression
+              left: (primary_expression
                 (nat_literal))
-              (primary_expression
+              right: (primary_expression
                 (nat_literal)))))))))
 
 ================================================================================
@@ -265,9 +265,9 @@ fn test() {
               (identifier_pattern
                 (identifier))))
           value: (binary_expression
-            (primary_expression
+            left: (primary_expression
               (identifier))
-            (primary_expression
+            right: (primary_expression
               (identifier))))
         (expression_statement
           (call_expression
@@ -896,9 +896,9 @@ fn test(n) {
               (guarded_branch
                 (keyword_if)
                 guard: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (nat_literal)))
                 value: (primary_expression
                   (string
@@ -947,9 +947,9 @@ fn test(n) {
               (guarded_branch
                 (keyword_if)
                 guard: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (nat_literal)))
                 value: (primary_expression
                   (string
@@ -957,9 +957,9 @@ fn test(n) {
               (guarded_branch
                 (keyword_if)
                 guard: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (nat_literal)))
                 value: (primary_expression
                   (string
@@ -1134,9 +1134,9 @@ fn test() {
               (parameter
                 name: (identifier)))
             body: (binary_expression
-              (primary_expression
+              left: (primary_expression
                 (identifier))
-              (primary_expression
+              right: (primary_expression
                 (nat_literal)))))))))
 
 ================================================================================
@@ -1164,9 +1164,9 @@ fn test() {
               (parameter
                 name: (identifier)))
             body: (binary_expression
-              (primary_expression
+              left: (primary_expression
                 (identifier))
-              (primary_expression
+              right: (primary_expression
                 (identifier)))))))))
 
 ================================================================================
@@ -1203,15 +1203,15 @@ fn test() {
                       (identifier_pattern
                         (identifier))))
                   value: (binary_expression
-                    (primary_expression
+                    left: (primary_expression
                       (identifier))
-                    (primary_expression
+                    right: (primary_expression
                       (nat_literal))))
                 (expression_statement
                   (binary_expression
-                    (primary_expression
+                    left: (primary_expression
                       (identifier))
-                    (primary_expression
+                    right: (primary_expression
                       (nat_literal))))))))))))
 
 ================================================================================
@@ -1265,9 +1265,9 @@ fn test() {
                   (parameter
                     name: (identifier)))
                 body: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (nat_literal)))))))))))
 
 ================================================================================
@@ -1295,9 +1295,9 @@ fn add(x, y) -> Int {
       body: (block
         (expression_statement
           (binary_expression
-            (primary_expression
+            left: (primary_expression
               (identifier))
-            (primary_expression
+            right: (primary_expression
               (identifier))))))))
 
 ================================================================================
@@ -1352,9 +1352,9 @@ fn test() {
             return_type: (return_type_annotation
               (type_identifier))
             body: (binary_expression
-              (primary_expression
+              left: (primary_expression
                 (identifier))
-              (primary_expression
+              right: (primary_expression
                 (nat_literal)))))))))
 
 ================================================================================
@@ -1384,9 +1384,9 @@ fn add(x: Int, y: Int) -> Int {
       body: (block
         (expression_statement
           (binary_expression
-            (primary_expression
+            left: (primary_expression
               (identifier))
-            (primary_expression
+            right: (primary_expression
               (identifier))))))))
 
 ================================================================================
@@ -1445,9 +1445,9 @@ fn test() {
             return_type: (return_type_annotation
               (type_identifier))
             body: (binary_expression
-              (primary_expression
+              left: (primary_expression
                 (identifier))
-              (primary_expression
+              right: (primary_expression
                 (nat_literal)))))))))
 
 ================================================================================
@@ -1612,9 +1612,9 @@ fn test(pair) {
                           (identifier_pattern
                             (identifier))))))))
               value: (binary_expression
-                (primary_expression
+                left: (primary_expression
                   (identifier))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))
             (case_arm
               pattern: (pattern
@@ -1785,9 +1785,9 @@ fn test(pair) {
                           (identifier_pattern
                             (identifier))))))))
               value: (binary_expression
-                (primary_expression
+                left: (primary_expression
                   (identifier))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))
             (case_arm
               pattern: (pattern
@@ -1840,12 +1840,12 @@ fn test(triple) {
                           (identifier_pattern
                             (identifier))))))))
               value: (binary_expression
-                (binary_expression
-                  (primary_expression
+                left: (binary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (identifier)))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))))))))
 
 ================================================================================
@@ -1896,12 +1896,12 @@ fn test(nested) {
                           (identifier_pattern
                             (identifier))))))))
               value: (binary_expression
-                (binary_expression
-                  (primary_expression
+                left: (binary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (identifier)))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))))))))
 
 ================================================================================
@@ -2021,12 +2021,12 @@ fn test(xs) {
                         (identifier_pattern
                           (identifier)))))))
               value: (binary_expression
-                (binary_expression
-                  (primary_expression
+                left: (binary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (identifier)))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))))))))
 
 ================================================================================
@@ -2110,9 +2110,9 @@ fn test(xs) {
                     (rest_pattern
                       (spread)))))
               value: (binary_expression
-                (primary_expression
+                left: (primary_expression
                   (identifier))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))))))))
 
 ================================================================================
@@ -2616,10 +2616,10 @@ fn test() {
       body: (block
         (expression_statement
           (binary_expression
-            (primary_expression
+            left: (primary_expression
               (nat_literal))
-            (qualified_operator)
-            (primary_expression
+            operator: (qualified_operator)
+            right: (primary_expression
               (nat_literal))))))))
 
 ================================================================================

@@ -81,9 +81,9 @@ fn test() {
               (string_segment)
               (interpolation
                 expression: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (identifier))))
               (string_segment))))))))
 
@@ -131,9 +131,9 @@ fn greet() {
               (string_segment)
               (interpolation
                 expression: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (identifier))))
               (string_segment))))))))
 

@@ -162,9 +162,9 @@ fn main() {
               (multiline_string_segment)
               (multiline_interpolation
                 expression: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (identifier))))
               (multiline_string_segment))))))))
 

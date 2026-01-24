@@ -320,9 +320,9 @@ pub mod math {
           body: (block
             (expression_statement
               (binary_expression
-                (primary_expression
+                left: (primary_expression
                   (identifier))
-                (primary_expression
+                right: (primary_expression
                   (identifier))))))))))
 
 ================================================================================

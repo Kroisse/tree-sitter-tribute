@@ -423,31 +423,41 @@ export default grammar({
         $.primary_expression,
       ),
 
-    binary_expression: ($) =>
-      choice(
+    binary_expression: ($) => {
+      const binop = (precedence, op) =>
+        prec.left(
+          precedence,
+          seq(
+            field("left", $._expression),
+            field("operator", op),
+            field("right", $._expression),
+          ),
+        );
+      return choice(
         // Precedence (higher number = binds tighter)
         // 5: * / %
-        prec.left(5, seq($._expression, "*", $._expression)),
-        prec.left(5, seq($._expression, "/", $._expression)),
-        prec.left(5, seq($._expression, "%", $._expression)),
+        binop(5, "*"),
+        binop(5, "/"),
+        binop(5, "%"),
         // 4: + - <>
-        prec.left(4, seq($._expression, "+", $._expression)),
-        prec.left(4, seq($._expression, "-", $._expression)),
-        prec.left(4, seq($._expression, "<>", $._expression)),
+        binop(4, "+"),
+        binop(4, "-"),
+        binop(4, "<>"),
         // 3: == != < > <= >=
-        prec.left(3, seq($._expression, "==", $._expression)),
-        prec.left(3, seq($._expression, "!=", $._expression)),
-        prec.left(3, seq($._expression, "<", $._expression)),
-        prec.left(3, seq($._expression, ">", $._expression)),
-        prec.left(3, seq($._expression, "<=", $._expression)),
-        prec.left(3, seq($._expression, ">=", $._expression)),
+        binop(3, "=="),
+        binop(3, "!="),
+        binop(3, "<"),
+        binop(3, ">"),
+        binop(3, "<="),
+        binop(3, ">="),
         // 2: &&
-        prec.left(2, seq($._expression, "&&", $._expression)),
+        binop(2, "&&"),
         // 1: ||
-        prec.left(1, seq($._expression, "||", $._expression)),
+        binop(1, "||"),
         // Qualified operators: a Int::+ b, xs List::<> ys
-        prec.left(5, seq($._expression, $.qualified_operator, $._expression)),
-      ),
+        binop(5, $.qualified_operator),
+      );
+    },
 
     call_expression: ($) =>
       prec(

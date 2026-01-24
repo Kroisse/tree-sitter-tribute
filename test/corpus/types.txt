@@ -234,9 +234,9 @@ fn apply(f: fn(fn(Int) -> Int, Int) -> Int) {
                   (parameter
                     name: (identifier)))
                 body: (binary_expression
-                  (primary_expression
+                  left: (primary_expression
                     (identifier))
-                  (primary_expression
+                  right: (primary_expression
                     (nat_literal))))
               (primary_expression
                 (nat_literal)))))))))
