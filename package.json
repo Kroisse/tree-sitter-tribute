@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-tribute",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "This is not the greatest language in the world, no. This is just a tribute.",
   "type": "module",
   "repository": {
@@ -39,7 +39,7 @@
   "devDependencies": {
     "prebuildify": "^6.0.1",
     "tree-sitter": "^0.25.0",
-    "tree-sitter-cli": "^0.26.3"
+    "tree-sitter-cli": "^0.26.5"
   },
   "peerDependencies": {
     "tree-sitter": "^0.25.0"
