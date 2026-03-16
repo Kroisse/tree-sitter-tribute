@@ -61,7 +61,7 @@ export default grammar({
     $._error_sentinel,
   ],
 
-  conflicts: ($) => [[ $.constructor_expression ], [ $.case_arm ], [ $.handler_arm ]],
+  conflicts: ($) => [[ $.constructor_expression ], [ $.case_arm ]],
 
   rules: {
     source_file: ($) => repeat($._item),
@@ -300,8 +300,11 @@ export default grammar({
     //     fn read() -> String
     // }
     // ability State(s) {
-    //     fn get() -> s
-    //     fn set(value: s) -> Nil
+    //     op get() -> s
+    //     op set(value: s) -> Nil
+    // }
+    // ability Fail {
+    //     op fail(msg: Text) -> Never
     // }
     // pub ability Http { ... }
     ability_declaration: ($) =>
@@ -315,10 +318,11 @@ export default grammar({
 
     ability_body: ($) => seq("{", repeat($.ability_operation), "}"),
 
-    // fn print(msg: String) -> Nil
+    // fn print(msg: String) -> Nil   (tail-resumptive)
+    // op get() -> s                   (general, explicit resume)
     ability_operation: ($) =>
       seq(
-        $.keyword_fn,
+        field("kind", choice($.keyword_fn, $.keyword_op)),
         field("name", $.identifier),
         "(",
         optional($.typed_parameter_list),
@@ -416,11 +420,24 @@ export default grammar({
         $.lambda_expression,
         $.constructor_expression,
         $.call_expression,
+        $.resume_expression,
         $.method_call_expression,
         $.case_expression,
         $.handle_expression,
         $.record_expression,
         $.primary_expression,
+      ),
+
+    // resume(value) — only valid inside op handler arms
+    resume_expression: ($) =>
+      prec(
+        10,
+        seq(
+          $.keyword_resume,
+          "(",
+          optional($.argument_list),
+          ")",
+        ),
       ),
 
     binary_expression: ($) => {
@@ -540,8 +557,12 @@ export default grammar({
         field("value", $._expression),
       ),
 
-    // handle comp() { { result } -> result, { State::get() -> k } -> k(42) }
-    // Fused handler syntax: handle expression with handler arms directly
+    // handle comp() {
+    //     do(result) { result }
+    //     fn Console::print(msg) { IO::write(stdout, msg) }
+    //     op State::get() { run_state(fn() resume(state), state) }
+    //     op Fail::fail(msg) { None }
+    // }
     handle_expression: ($) =>
       seq(
         $.keyword_handle,
@@ -557,18 +578,49 @@ export default grammar({
         "}",
       ),
 
-    // Handler arm: handler_pattern -> expression (similar to case_arm)
+    // Handler arm: do(x) { body }, fn Op(args) { body }, op Op(args) { body }
     handler_arm: ($) =>
-      seq(
-        field("pattern", $.handler_pattern),
-        choice(
-          seq("->", field("value", $._expression)), // no guard
-          seq(
-            $.guarded_branch,
-            repeat(seq($._newline, $.guarded_branch)),
-          ), // with guards
-        ),
+      choice(
+        $.completion_handler,
+        $.fn_handler,
+        $.op_handler,
       ),
+
+    // do(result) { body }
+    completion_handler: ($) =>
+      seq(
+        $.keyword_do,
+        "(",
+        field("binding", $.identifier),
+        ")",
+        field("body", $.block),
+      ),
+
+    // fn Console::print(msg) { body }
+    fn_handler: ($) =>
+      seq(
+        $.keyword_fn,
+        field("operation", choice($.path_expression, $.identifier)),
+        "(",
+        optional(field("params", $.handler_parameter_list)),
+        ")",
+        field("body", $.block),
+      ),
+
+    // op State::get() { body }
+    op_handler: ($) =>
+      seq(
+        $.keyword_op,
+        field("operation", choice($.path_expression, $.identifier)),
+        "(",
+        optional(field("params", $.handler_parameter_list)),
+        ")",
+        field("body", $.block),
+      ),
+
+    // Handler parameters are just identifiers (patterns without types)
+    handler_parameter_list: ($) =>
+      seq($.identifier, repeat(seq(",", $.identifier)), optional(",")),
 
     // Handler pattern is now only used inside handle_expression, not general patterns
     pattern: ($) => choice($.simple_pattern, $.as_pattern),
@@ -676,26 +728,6 @@ export default grammar({
           $.keyword_as,
           field("binding", $.identifier),
         ),
-      ),
-
-    // Handler pattern: { result } or { State::get() -> k }
-    handler_pattern: ($) =>
-      seq(
-        "{",
-        choice(
-          // Completion: { result }
-          field("result", $.identifier),
-          // Suspend: { Path::op(args) -> k }
-          seq(
-            field("operation", choice($.path_expression, $.identifier)),
-            "(",
-            optional(field("args", $.pattern_list)),
-            ")",
-            "->",
-            field("continuation", $.identifier),
-          ),
-        ),
-        "}",
       ),
 
     argument_list: ($) => seq($._expression, repeat(seq(",", $._expression))),
@@ -1039,6 +1071,9 @@ export default grammar({
 
     // Keywords
     keyword_fn: ($) => token(prec(2, "fn")),
+    keyword_op: ($) => token(prec(2, "op")),
+    keyword_do: ($) => token(prec(2, "do")),
+    keyword_resume: ($) => token(prec(2, "resume")),
     keyword_let: ($) => "let",
     keyword_case: ($) => "case",
     keyword_struct: ($) => "struct",

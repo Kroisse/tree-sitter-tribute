@@ -989,7 +989,7 @@ ability Console {
     name: (type_identifier)
     body: (ability_body
       (ability_operation
-        (keyword_fn)
+        kind: (keyword_fn)
         name: (identifier)
         (typed_parameter_list
           (typed_parameter
@@ -997,17 +997,17 @@ ability Console {
             type: (type_identifier)))
         return_type: (type_identifier))
       (ability_operation
-        (keyword_fn)
+        kind: (keyword_fn)
         name: (identifier)
         return_type: (type_identifier)))))
 
 ================================================================================
-Generic ability declaration
+Generic ability declaration with op
 ================================================================================
 
 ability State(s) {
-    fn get() -> s
-    fn set(value: s) -> Nil
+    op get() -> s
+    op set(value: s) -> Nil
 }
 
 --------------------------------------------------------------------------------
@@ -1020,12 +1020,12 @@ ability State(s) {
       (identifier))
     body: (ability_body
       (ability_operation
-        (keyword_fn)
+        kind: (keyword_op)
         name: (identifier)
         return_type: (type_variable
           (identifier)))
       (ability_operation
-        (keyword_fn)
+        kind: (keyword_op)
         name: (identifier)
         (typed_parameter_list
           (typed_parameter
@@ -1052,7 +1052,7 @@ pub ability Http {
     name: (type_identifier)
     body: (ability_body
       (ability_operation
-        (keyword_fn)
+        kind: (keyword_fn)
         name: (identifier)
         (typed_parameter_list
           (typed_parameter
@@ -1061,12 +1061,12 @@ pub ability Http {
         return_type: (type_identifier)))))
 
 ================================================================================
-Handle expression with completion handler
+Handle expression with completion handler (do)
 ================================================================================
 
 fn test() {
     handle comp() {
-        { result } -> result
+        do(result) { result }
     }
 }
 
@@ -1084,10 +1084,13 @@ fn test() {
             expr: (call_expression
               function: (identifier))
             (handler_arm
-              pattern: (handler_pattern
-                result: (identifier))
-              value: (primary_expression
-                (identifier)))))))))
+              (completion_handler
+                (keyword_do)
+                binding: (identifier)
+                body: (block
+                  (expression_statement
+                    (primary_expression
+                      (identifier))))))))))))
 
 ================================================================================
 Handle expression with empty handler block
@@ -2314,12 +2317,12 @@ fn test(xs) {
                 (identifier)))))))))
 
 ================================================================================
-Handler pattern suspend
+Handler with op and resume
 ================================================================================
 
 fn test() {
     handle comp() {
-        { State::get() -> k } -> k(42)
+        op State::get() { resume(42) }
     }
 }
 
@@ -2337,26 +2340,28 @@ fn test() {
             expr: (call_expression
               function: (identifier))
             (handler_arm
-              pattern: (handler_pattern
+              (op_handler
+                (keyword_op)
                 operation: (path_expression
                   (path_segment
                     (type_identifier))
                   (path_segment
                     (identifier)))
-                continuation: (identifier))
-              value: (call_expression
-                function: (identifier)
-                (argument_list
-                  (primary_expression
-                    (nat_literal)))))))))))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      (argument_list
+                        (primary_expression
+                          (nat_literal))))))))))))))
 
 ================================================================================
-Handler pattern suspend with args
+Handler with fn (tail-resumptive)
 ================================================================================
 
 fn test() {
     handle comp() {
-        { Logger::log(msg) -> k } -> k(Nil)
+        fn Console::print(msg) { IO::write(stdout, msg) }
     }
 }
 
@@ -2374,33 +2379,38 @@ fn test() {
             expr: (call_expression
               function: (identifier))
             (handler_arm
-              pattern: (handler_pattern
+              (fn_handler
+                (keyword_fn)
                 operation: (path_expression
                   (path_segment
                     (type_identifier))
                   (path_segment
                     (identifier)))
-                args: (pattern_list
-                  (pattern
-                    (simple_pattern
-                      (identifier_pattern
-                        (identifier)))))
-                continuation: (identifier))
-              value: (call_expression
-                function: (identifier)
-                (argument_list
-                  (primary_expression
-                    (keyword_nil)))))))))))
+                params: (handler_parameter_list
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (call_expression
+                      function: (path_expression
+                        (path_segment
+                          (type_identifier))
+                        (path_segment
+                          (identifier)))
+                      (argument_list
+                        (primary_expression
+                          (identifier))
+                        (primary_expression
+                          (identifier))))))))))))))
 
 ================================================================================
-Handle expression with multiple handlers
+Handle expression with multiple handler arms
 ================================================================================
 
 fn test() {
     handle comp() {
-        { result } -> result,
-        { State::get() -> k } -> k(0),
-        { State::set(v) -> k } -> k(Nil)
+        do(result) { result }
+        op State::get() { resume(0) }
+        op State::set(v) { resume(Nil) }
     }
 }
 
@@ -2418,41 +2428,95 @@ fn test() {
             expr: (call_expression
               function: (identifier))
             (handler_arm
-              pattern: (handler_pattern
-                result: (identifier))
-              value: (primary_expression
-                (identifier)))
+              (completion_handler
+                (keyword_do)
+                binding: (identifier)
+                body: (block
+                  (expression_statement
+                    (primary_expression
+                      (identifier))))))
             (handler_arm
-              pattern: (handler_pattern
+              (op_handler
+                (keyword_op)
                 operation: (path_expression
                   (path_segment
                     (type_identifier))
                   (path_segment
                     (identifier)))
-                continuation: (identifier))
-              value: (call_expression
-                function: (identifier)
-                (argument_list
-                  (primary_expression
-                    (nat_literal)))))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      (argument_list
+                        (primary_expression
+                          (nat_literal))))))))
             (handler_arm
-              pattern: (handler_pattern
+              (op_handler
+                (keyword_op)
                 operation: (path_expression
                   (path_segment
                     (type_identifier))
                   (path_segment
                     (identifier)))
-                args: (pattern_list
-                  (pattern
-                    (simple_pattern
-                      (identifier_pattern
-                        (identifier)))))
-                continuation: (identifier))
-              value: (call_expression
-                function: (identifier)
-                (argument_list
-                  (primary_expression
-                    (keyword_nil)))))))))))
+                params: (handler_parameter_list
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      (argument_list
+                        (primary_expression
+                          (keyword_nil))))))))))))))
+
+================================================================================
+Handler with op -> Never (abort pattern)
+================================================================================
+
+fn test() {
+    handle comp() {
+        do(result) { Some(result) }
+        op Fail::fail(msg) { None }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (identifier))
+            (handler_arm
+              (completion_handler
+                (keyword_do)
+                binding: (identifier)
+                body: (block
+                  (expression_statement
+                    (constructor_expression
+                      constructor: (type_identifier)
+                      (argument_list
+                        (primary_expression
+                          (identifier))))))))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (path_expression
+                  (path_segment
+                    (type_identifier))
+                  (path_segment
+                    (identifier)))
+                params: (handler_parameter_list
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (constructor_expression
+                      constructor: (type_identifier))))))))))))
 
 ================================================================================
 Record expression with fields

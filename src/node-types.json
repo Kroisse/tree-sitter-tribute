@@ -106,6 +106,20 @@
     "type": "ability_operation",
     "named": true,
     "fields": {
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_fn",
+            "named": true
+          },
+          {
+            "type": "keyword_op",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -144,13 +158,9 @@
       }
     },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
-        {
-          "type": "keyword_fn",
-          "named": true
-        },
         {
           "type": "typed_parameter_list",
           "named": true
@@ -230,6 +240,10 @@
         },
         {
           "type": "record_expression",
+          "named": true
+        },
+        {
+          "type": "resume_expression",
           "named": true
         }
       ]
@@ -313,6 +327,10 @@
           },
           {
             "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
             "named": true
           }
         ]
@@ -422,6 +440,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -488,6 +510,10 @@
           },
           {
             "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
             "named": true
           }
         ]
@@ -601,6 +627,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -659,6 +689,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -673,6 +707,42 @@
         },
         {
           "type": "keyword_case",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "completion_handler",
+    "named": true,
+    "fields": {
+      "binding": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_do",
           "named": true
         }
       ]
@@ -756,6 +826,10 @@
           },
           {
             "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
             "named": true
           }
         ]
@@ -987,6 +1061,10 @@
         {
           "type": "record_expression",
           "named": true
+        },
+        {
+          "type": "resume_expression",
+          "named": true
         }
       ]
     }
@@ -1070,6 +1148,56 @@
       "types": [
         {
           "type": "keyword_extern",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "fn_handler",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "operation": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "path_expression",
+            "named": true
+          }
+        ]
+      },
+      "params": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "handler_parameter_list",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_fn",
           "named": true
         }
       ]
@@ -1230,6 +1358,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       },
@@ -1271,6 +1403,10 @@
           },
           {
             "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
             "named": true
           }
         ]
@@ -1330,6 +1466,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -1352,119 +1492,39 @@
   {
     "type": "handler_arm",
     "named": true,
-    "fields": {
-      "pattern": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "handler_pattern",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "binary_expression",
-            "named": true
-          },
-          {
-            "type": "call_expression",
-            "named": true
-          },
-          {
-            "type": "case_expression",
-            "named": true
-          },
-          {
-            "type": "constructor_expression",
-            "named": true
-          },
-          {
-            "type": "handle_expression",
-            "named": true
-          },
-          {
-            "type": "lambda_expression",
-            "named": true
-          },
-          {
-            "type": "method_call_expression",
-            "named": true
-          },
-          {
-            "type": "primary_expression",
-            "named": true
-          },
-          {
-            "type": "record_expression",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
-      "multiple": true,
-      "required": false,
+      "multiple": false,
+      "required": true,
       "types": [
         {
-          "type": "guarded_branch",
+          "type": "completion_handler",
+          "named": true
+        },
+        {
+          "type": "fn_handler",
+          "named": true
+        },
+        {
+          "type": "op_handler",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "handler_pattern",
+    "type": "handler_parameter_list",
     "named": true,
-    "fields": {
-      "args": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "pattern_list",
-            "named": true
-          }
-        ]
-      },
-      "continuation": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "operation": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "path_expression",
-            "named": true
-          }
-        ]
-      },
-      "result": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1525,6 +1585,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -1572,6 +1636,10 @@
           },
           {
             "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
             "named": true
           }
         ]
@@ -1661,6 +1729,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -1718,6 +1790,10 @@
         },
         {
           "type": "record_expression",
+          "named": true
+        },
+        {
+          "type": "resume_expression",
           "named": true
         }
       ]
@@ -1857,6 +1933,10 @@
           },
           {
             "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
             "named": true
           }
         ]
@@ -2037,6 +2117,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -2090,6 +2174,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -2118,6 +2206,56 @@
     "type": "multiline_string_segment",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "op_handler",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "operation": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "path_expression",
+            "named": true
+          }
+        ]
+      },
+      "params": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "handler_parameter_list",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_op",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "operator_fn",
@@ -2575,6 +2713,10 @@
           {
             "type": "record_expression",
             "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
           }
         ]
       }
@@ -2690,6 +2832,25 @@
       "types": [
         {
           "type": "spread",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "resume_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "argument_list",
+          "named": true
+        },
+        {
+          "type": "keyword_resume",
           "named": true
         }
       ]
@@ -3015,6 +3176,10 @@
         },
         {
           "type": "record_expression",
+          "named": true
+        },
+        {
+          "type": "resume_expression",
           "named": true
         }
       ]
@@ -3523,6 +3688,10 @@
     "named": true
   },
   {
+    "type": "keyword_do",
+    "named": true
+  },
+  {
     "type": "keyword_enum",
     "named": true
   },
@@ -3559,7 +3728,15 @@
     "named": true
   },
   {
+    "type": "keyword_op",
+    "named": true
+  },
+  {
     "type": "keyword_pub",
+    "named": true
+  },
+  {
+    "type": "keyword_resume",
     "named": true
   },
   {
