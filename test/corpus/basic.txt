@@ -1066,7 +1066,7 @@ Handle expression with completion handler (do)
 
 fn test() {
     handle comp() {
-        do(result) { result }
+        do result { result }
     }
 }
 
@@ -2322,7 +2322,7 @@ Handler with op and resume
 
 fn test() {
     handle comp() {
-        op State::get() { resume(42) }
+        op State::get() { resume 42 }
     }
 }
 
@@ -2351,9 +2351,8 @@ fn test() {
                   (expression_statement
                     (resume_expression
                       (keyword_resume)
-                      (argument_list
-                        (primary_expression
-                          (nat_literal))))))))))))))
+                      value: (primary_expression
+                        (nat_literal)))))))))))))
 
 ================================================================================
 Handler with fn (tail-resumptive)
@@ -2408,9 +2407,9 @@ Handle expression with multiple handler arms
 
 fn test() {
     handle comp() {
-        do(result) { result }
-        op State::get() { resume(0) }
-        op State::set(v) { resume(Nil) }
+        do result { result }
+        op State::get() { resume 0 }
+        op State::set(v) { resume Nil }
     }
 }
 
@@ -2447,9 +2446,8 @@ fn test() {
                   (expression_statement
                     (resume_expression
                       (keyword_resume)
-                      (argument_list
-                        (primary_expression
-                          (nat_literal))))))))
+                      value: (primary_expression
+                        (nat_literal)))))))
             (handler_arm
               (op_handler
                 (keyword_op)
@@ -2464,9 +2462,8 @@ fn test() {
                   (expression_statement
                     (resume_expression
                       (keyword_resume)
-                      (argument_list
-                        (primary_expression
-                          (keyword_nil))))))))))))))
+                      value: (primary_expression
+                        (keyword_nil)))))))))))))
 
 ================================================================================
 Handler with op -> Never (abort pattern)
@@ -2474,7 +2471,7 @@ Handler with op -> Never (abort pattern)
 
 fn test() {
     handle comp() {
-        do(result) { Some(result) }
+        do result { Some(result) }
         op Fail::fail(msg) { None }
     }
 }

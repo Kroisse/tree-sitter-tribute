@@ -428,15 +428,13 @@ export default grammar({
         $.primary_expression,
       ),
 
-    // resume(value) — only valid inside op handler arms
+    // resume value — only valid inside op handler arms
     resume_expression: ($) =>
-      prec(
+      prec.right(
         10,
         seq(
           $.keyword_resume,
-          "(",
-          optional($.argument_list),
-          ")",
+          optional(field("value", $._expression)),
         ),
       ),
 
@@ -558,9 +556,9 @@ export default grammar({
       ),
 
     // handle comp() {
-    //     do(result) { result }
+    //     do result { result }
     //     fn Console::print(msg) { IO::write(stdout, msg) }
-    //     op State::get() { run_state(fn() resume(state), state) }
+    //     op State::get() { run_state(fn() resume state, state) }
     //     op Fail::fail(msg) { None }
     // }
     handle_expression: ($) =>
@@ -578,7 +576,7 @@ export default grammar({
         "}",
       ),
 
-    // Handler arm: do(x) { body }, fn Op(args) { body }, op Op(args) { body }
+    // Handler arm: do x { body }, fn Op(args) { body }, op Op(args) { body }
     handler_arm: ($) =>
       choice(
         $.completion_handler,
@@ -586,13 +584,11 @@ export default grammar({
         $.op_handler,
       ),
 
-    // do(result) { body }
+    // do result { body }
     completion_handler: ($) =>
       seq(
         $.keyword_do,
-        "(",
         field("binding", $.identifier),
-        ")",
         field("body", $.block),
       ),
 

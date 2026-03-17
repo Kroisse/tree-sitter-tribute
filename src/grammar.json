@@ -1833,7 +1833,7 @@
       ]
     },
     "resume_expression": {
-      "type": "PREC",
+      "type": "PREC_RIGHT",
       "value": 10,
       "content": {
         "type": "SEQ",
@@ -1843,24 +1843,20 @@
             "name": "keyword_resume"
           },
           {
-            "type": "STRING",
-            "value": "("
-          },
-          {
             "type": "CHOICE",
             "members": [
               {
-                "type": "SYMBOL",
-                "name": "argument_list"
+                "type": "FIELD",
+                "name": "value",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                }
               },
               {
                 "type": "BLANK"
               }
             ]
-          },
-          {
-            "type": "STRING",
-            "value": ")"
           }
         ]
       }
@@ -2798,20 +2794,12 @@
           "name": "keyword_do"
         },
         {
-          "type": "STRING",
-          "value": "("
-        },
-        {
           "type": "FIELD",
           "name": "binding",
           "content": {
             "type": "SYMBOL",
             "name": "identifier"
           }
-        },
-        {
-          "type": "STRING",
-          "value": ")"
         },
         {
           "type": "FIELD",
