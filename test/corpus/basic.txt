@@ -2355,6 +2355,50 @@ fn test() {
                         (nat_literal)))))))))))))
 
 ================================================================================
+Resume with binary expression
+================================================================================
+
+fn test() {
+    handle comp() {
+        op State::get() { resume a + b + c }
+    }
+}
+
+---------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (identifier))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (path_expression
+                  (path_segment
+                    (type_identifier))
+                  (path_segment
+                    (identifier)))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      value: (binary_expression
+                        left: (binary_expression
+                          left: (primary_expression
+                            (identifier))
+                          right: (primary_expression
+                            (identifier)))
+                        right: (primary_expression
+                          (identifier))))))))))))))
+
+================================================================================
 Handler with fn (tail-resumptive)
 ================================================================================
 

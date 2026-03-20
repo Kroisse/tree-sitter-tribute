@@ -431,7 +431,7 @@ export default grammar({
     // resume value — only valid inside op handler arms
     resume_expression: ($) =>
       prec.right(
-        10,
+        0,
         seq(
           $.keyword_resume,
           optional(field("value", $._expression)),

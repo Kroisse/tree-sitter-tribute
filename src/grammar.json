@@ -1834,7 +1834,7 @@
     },
     "resume_expression": {
       "type": "PREC_RIGHT",
-      "value": 10,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
