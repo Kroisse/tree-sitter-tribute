@@ -965,7 +965,7 @@ export default grammar({
       ),
 
     string_segment: ($) =>
-      prec(-1, re`([^"\\]|\\[nrtN0"\\]|\\x[0-9a-fA-F]{2})*`),
+      prec(-1, re`([^"\\]|\\[nrt0"\\]|\\x[0-7][0-9a-fA-F]|\\u[0-9a-fA-F]{4})*`),
 
     interpolation: ($) =>
       seq("\\", "{", field("expression", $._expression), "}"),

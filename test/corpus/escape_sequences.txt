@@ -1,0 +1,180 @@
+================================================================================
+String escape sequences - basic
+================================================================================
+
+fn main() {
+    "hello\nworld"
+    "tab\there"
+    "cr\rhere"
+    "null\0here"
+    "quote\"here"
+    "backslash\\here"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))))))
+
+================================================================================
+String escape sequences - hex (ASCII range)
+================================================================================
+
+fn main() {
+    "\x41\x42\x43"
+    "\x00\x7F"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))))))
+
+================================================================================
+String escape sequences - unicode
+================================================================================
+
+fn main() {
+    "\u0041"
+    "\u00E9"
+    "\u4E16"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))))))
+
+================================================================================
+Bytes escape sequences - basic
+================================================================================
+
+fn main() {
+    b"hello\nworld"
+    b"tab\there"
+    b"\0\0"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (bytes_string
+              (bytes_segment))))
+        (expression_statement
+          (primary_expression
+            (bytes_string
+              (bytes_segment))))
+        (expression_statement
+          (primary_expression
+            (bytes_string
+              (bytes_segment))))))))
+
+================================================================================
+Bytes escape sequences - hex (full range)
+================================================================================
+
+fn main() {
+    b"\x00\xFF"
+    b"\x80\xFE"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (bytes_string
+              (bytes_segment))))
+        (expression_statement
+          (primary_expression
+            (bytes_string
+              (bytes_segment))))))))
+
+================================================================================
+String with mixed escapes and text
+================================================================================
+
+fn main() {
+    "line1\nline2\ttab\x41end"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))))))
