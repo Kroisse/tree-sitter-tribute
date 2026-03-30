@@ -225,9 +225,29 @@ export default grammar({
         optional(","),
       ),
 
-    // Ability item: Console, State(Int), Reader(String)
+    // Ability item: Console, State(Int), Reader(String), abilities::Throw(Nat)
     ability_item: ($) =>
-      seq($.type_identifier, optional($.type_arguments)),
+      seq(
+        field("name", $.ability_path),
+        optional($.type_arguments),
+      ),
+
+    // Ability path: Abort, abilities::Abort, pkg::std::Throw
+    // Single segment must be type_identifier (ability names are uppercase).
+    // Multi-segment paths can start with lowercase (module names) or path keywords.
+    ability_path: ($) =>
+      choice(
+        // Multi-segment: abilities::Abort, pkg::std::Throw
+        prec.right(
+          11,
+          seq(
+            choice(alias($._name, $.path_segment), $.path_keyword),
+            repeat1(seq("::", alias($._name, $.path_segment))),
+          ),
+        ),
+        // Single segment: Abort, State (always uppercase)
+        $.type_identifier,
+      ),
 
     // Ability tail (row variable): e, rest
     ability_tail: ($) => $.type_variable,

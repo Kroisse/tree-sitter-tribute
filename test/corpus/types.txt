@@ -115,7 +115,8 @@ fn fetch(handler: fn(String) ->{Http} Response) {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier))))
+                  name: (ability_path
+                    (type_identifier)))))
             return_type: (type_identifier))))
       body: (block
         (expression_statement
@@ -149,11 +150,13 @@ fn run(comp: fn() ->{State(Int), Console} Nil) {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier)
+                  name: (ability_path
+                    (type_identifier))
                   (type_arguments
                     (type_identifier)))
                 (ability_item
-                  (type_identifier))))
+                  name: (ability_path
+                    (type_identifier)))))
             return_type: (type_identifier))))
       body: (block
         (expression_statement
@@ -183,7 +186,8 @@ fn run(comp: fn() ->{State(Int), e} Int) {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier)
+                  name: (ability_path
+                    (type_identifier))
                   (type_arguments
                     (type_identifier)))
                 (ability_tail
@@ -340,9 +344,11 @@ fn run(comp: fn() ->{Console, Logger,} Nil) {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier))
+                  name: (ability_path
+                    (type_identifier)))
                 (ability_item
-                  (type_identifier))))
+                  name: (ability_path
+                    (type_identifier)))))
             return_type: (type_identifier))))
       body: (block
         (expression_statement
@@ -372,7 +378,8 @@ fn run_state(comp: fn() ->{State(s), e} a, init: s) -> a {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier)
+                  name: (ability_path
+                    (type_identifier))
                   (type_arguments
                     (type_variable
                       (identifier))))
@@ -416,12 +423,14 @@ fn handle_both(comp: fn() ->{State(s), Reader(r)} a) {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier)
+                  name: (ability_path
+                    (type_identifier))
                   (type_arguments
                     (type_variable
                       (identifier))))
                 (ability_item
-                  (type_identifier)
+                  name: (ability_path
+                    (type_identifier))
                   (type_arguments
                     (type_variable
                       (identifier))))))
@@ -451,7 +460,8 @@ fn counter() ->{State(Int)} Int {
         abilities: (ability_row
           (ability_list
             (ability_item
-              (type_identifier)
+              name: (ability_path
+                (type_identifier))
               (type_arguments
                 (type_identifier)))))
         (type_identifier))
@@ -479,11 +489,13 @@ fn run() ->{State(Int), Console} Nil {
         abilities: (ability_row
           (ability_list
             (ability_item
-              (type_identifier)
+              name: (ability_path
+                (type_identifier))
               (type_arguments
                 (type_identifier)))
             (ability_item
-              (type_identifier))))
+              name: (ability_path
+                (type_identifier)))))
         (type_identifier))
       body: (block
         (expression_statement
@@ -509,7 +521,8 @@ fn run_effect() ->{State(Int), e} Int {
         abilities: (ability_row
           (ability_list
             (ability_item
-              (type_identifier)
+              name: (ability_path
+                (type_identifier))
               (type_arguments
                 (type_identifier)))
             (ability_tail
@@ -567,7 +580,8 @@ fn run_state(comp: fn() ->{State(s), e} a, init: s) ->{e} a {
             abilities: (ability_row
               (ability_list
                 (ability_item
-                  (type_identifier)
+                  name: (ability_path
+                    (type_identifier))
                   (type_arguments
                     (type_variable
                       (identifier))))
@@ -707,3 +721,70 @@ fn test(triple: #(Int, Int, Int,)) {
         (expression_statement
           (primary_expression
             (identifier)))))))
+
+================================================================================
+Ability path - module-qualified ability
+================================================================================
+
+fn example() ->{abilities::Throw(Nat)} Nat {
+    0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      return_type: (return_type_annotation
+        abilities: (ability_row
+          (ability_list
+            (ability_item
+              name: (ability_path
+                (path_segment
+                  (identifier))
+                (path_segment
+                  (type_identifier)))
+              (type_arguments
+                (type_identifier)))))
+        (type_identifier))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
+
+================================================================================
+Ability path - deeply nested module path
+================================================================================
+
+fn example() ->{pkg::std::abilities::Throw(Int)} Int {
+    0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      return_type: (return_type_annotation
+        abilities: (ability_row
+          (ability_list
+            (ability_item
+              name: (ability_path
+                (path_keyword)
+                (path_segment
+                  (identifier))
+                (path_segment
+                  (identifier))
+                (path_segment
+                  (type_identifier)))
+              (type_arguments
+                (type_identifier)))))
+        (type_identifier))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
