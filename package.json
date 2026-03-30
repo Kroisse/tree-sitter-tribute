@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-tribute",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "This is not the greatest language in the world, no. This is just a tribute.",
   "type": "module",
   "repository": {
