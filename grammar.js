@@ -181,11 +181,10 @@ export default grammar({
       seq(field("name", $.identifier), ":", field("type", $._type)),
 
     // Type reference
-    // Can be: String (type_identifier), a (type_variable), List(a) (generic_type),
+    // Can be: String (type_path), a (type_variable), List(a) (generic_type),
     // fn(Int, Int) -> Int (function_type), #(Int, String) (tuple_type)
     _type: ($) =>
       choice(
-        $.type_identifier,
         $.type_path,
         $.type_variable,
         $.generic_type,
@@ -271,7 +270,7 @@ export default grammar({
       prec(
         1,
         seq(
-          choice($.type_identifier, $.type_path),
+          $.type_path,
           "(",
           $._type,
           repeat(seq(",", $._type)),
@@ -505,7 +504,7 @@ export default grammar({
       prec(
         10,
         seq(
-          field("function", choice($.identifier, $.path_expression)),
+          field("function", $.value_path),
           "(",
           optional($.argument_list),
           ")",
@@ -516,7 +515,7 @@ export default grammar({
       prec(
         10,
         seq(
-          field("constructor", choice($.type_identifier, $.type_path)),
+          field("constructor", $.type_path),
           optional(seq("(", optional($.argument_list), ")")),
         ),
       ),
@@ -530,7 +529,7 @@ export default grammar({
           seq(
             field("receiver", $._expression),
             ".",
-            field("method", $.method_path),
+            field("method", $.value_path),
             "(",
             optional($.argument_list),
             ")",
@@ -542,7 +541,7 @@ export default grammar({
           seq(
             field("receiver", $._expression),
             ".",
-            field("method", $.method_path),
+            field("method", $.value_path),
           ),
         ),
       ),
@@ -623,7 +622,7 @@ export default grammar({
     fn_handler: ($) =>
       seq(
         $.keyword_fn,
-        field("operation", choice($.path_expression, $.identifier)),
+        field("operation", $.value_path),
         "(",
         optional(field("params", $.handler_parameter_list)),
         ")",
@@ -634,7 +633,7 @@ export default grammar({
     op_handler: ($) =>
       seq(
         $.keyword_op,
-        field("operation", choice($.path_expression, $.identifier)),
+        field("operation", $.value_path),
         "(",
         optional(field("params", $.handler_parameter_list)),
         ")",
@@ -681,7 +680,7 @@ export default grammar({
     // Constructor pattern: None, Some(x), Pair(a, b), Ok { value: x }
     constructor_pattern: ($) =>
       seq(
-        field("name", choice($.type_identifier, $.type_path)),
+        field("name", $.type_path),
         optional(
           choice(
             // Tuple-style: Some(x), Pair(a, b)
@@ -772,8 +771,7 @@ export default grammar({
         $.raw_interpolated_bytes,
         $.multiline_bytes,
         $.rune,
-        $.path_expression,
-        $.identifier,
+        $.value_path,
         $.list_expression,
         $.tuple_expression,
         $.operator_fn,
@@ -852,7 +850,7 @@ export default grammar({
       prec(
         11,
         seq(
-          field("type", choice($.type_identifier, $.type_path)),
+          field("type", $.type_path),
           "{",
           optional(field("fields", $.record_fields)),
           "}",
@@ -894,41 +892,39 @@ export default grammar({
         ),
       ),
 
-    // Path expression: std::io, Int::to_string, Std::Collections::List
+    // A path whose final segment names a value: print, std::io::print,
+    // Int::to_string. Value references use this rule in every expression role.
     // Also supports: pkg::module, super::item, self::helper
     // Keywords (True, False, Nil) won't match because identifier is lowercase-only
     // Note: path_segment wraps identifier/type_identifier due to tree-sitter lexer limitations
-    path_expression: ($) =>
-      prec.right(
-        11,
-        seq(
-          choice(alias($._name, $.path_segment), $.path_keyword),
-          repeat1(seq("::", alias($._name, $.path_segment))),
+    value_path: ($) =>
+      choice(
+        $.identifier,
+        prec.right(
+          11,
+          seq(
+            choice(alias($._name, $.path_segment), $.path_keyword),
+            repeat(seq("::", alias($._name, $.path_segment))),
+            "::",
+            $.identifier,
+          ),
         ),
       ),
 
-    // A qualified path whose final segment is a type or constructor name.
+    // A path whose final segment is a type or constructor name.
     // Used where the syntactic role distinguishes constructors/types from
     // ordinary function paths: std::io::Error::EndOfFile, pkg::model::User.
     type_path: ($) =>
-      prec.right(
-        11,
-        seq(
-          choice(alias($._name, $.path_segment), $.path_keyword),
-          repeat(seq("::", alias($._name, $.path_segment))),
-          "::",
-          $.type_identifier,
-        ),
-      ),
-
-    // Method path for UFCS: double, math::double, Std::Collections::map
-    // Must end with identifier (lowercase function name), not type_identifier
-    method_path: ($) =>
-      prec.right(
-        11,
-        seq(
-          repeat(seq(alias($._name, $.path_segment), "::")),
-          $.identifier,
+      choice(
+        $.type_identifier,
+        prec.right(
+          11,
+          seq(
+            choice(alias($._name, $.path_segment), $.path_keyword),
+            repeat(seq("::", alias($._name, $.path_segment))),
+            "::",
+            $.type_identifier,
+          ),
         ),
       ),
 

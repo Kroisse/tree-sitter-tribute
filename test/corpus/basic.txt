@@ -16,7 +16,8 @@ fn main() {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (string
@@ -63,7 +64,8 @@ fn test() {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (string
@@ -93,9 +95,11 @@ fn add(a, b) {
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             right: (primary_expression
-              (identifier))))))))
+              (value_path
+                (identifier)))))))))
 
 ================================================================================
 Let statement with expression
@@ -121,7 +125,8 @@ fn test() {
               (identifier_pattern
                 (identifier))))
           value: (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (nat_literal))
@@ -129,7 +134,8 @@ fn test() {
                 (nat_literal)))))
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Operator precedence
@@ -175,13 +181,16 @@ fn test() {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (call_expression
-                function: (identifier)
+                function: (value_path
+                  (identifier))
                 (argument_list
                   (call_expression
-                    function: (identifier)
+                    function: (value_path
+                      (identifier))
                     (argument_list
                       (primary_expression
                         (nat_literal))
@@ -220,7 +229,8 @@ fn test() {
         (line_comment)
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Multiple statements in block
@@ -266,18 +276,23 @@ fn test() {
                 (identifier))))
           value: (binary_expression
             left: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             right: (primary_expression
-              (identifier))))
-        (expression_statement
-          (call_expression
-            function: (identifier)
-            (argument_list
-              (primary_expression
+              (value_path
                 (identifier)))))
         (expression_statement
+          (call_expression
+            function: (value_path
+              (identifier))
+            (argument_list
+              (primary_expression
+                (value_path
+                  (identifier))))))
+        (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Case expression with literal patterns
@@ -307,7 +322,8 @@ fn test_number(n) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -359,12 +375,14 @@ fn test() {
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (identifier))
-            method: (method_path
+              (value_path
+                (identifier)))
+            method: (value_path
               (identifier))
             (argument_list
               (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 UFCS method call without arguments
@@ -385,8 +403,9 @@ fn test() {
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (identifier))
-            method: (method_path
+              (value_path
+                (identifier)))
+            method: (value_path
               (identifier))))))))
 
 ================================================================================
@@ -410,18 +429,21 @@ fn test() {
             receiver: (method_call_expression
               receiver: (method_call_expression
                 receiver: (primary_expression
-                  (identifier))
-                method: (method_path
+                  (value_path
+                    (identifier)))
+                method: (value_path
                   (identifier))
                 (argument_list
                   (primary_expression
-                    (identifier))))
-              method: (method_path
+                    (value_path
+                      (identifier)))))
+              method: (value_path
                 (identifier))
               (argument_list
                 (primary_expression
-                  (identifier))))
-            method: (method_path
+                  (value_path
+                    (identifier)))))
+            method: (value_path
               (identifier))))))))
 
 ================================================================================
@@ -444,7 +466,7 @@ fn test() {
           (method_call_expression
             receiver: (primary_expression
               (nat_literal))
-            method: (method_path
+            method: (value_path
               (path_segment
                 (identifier))
               (identifier))))))))
@@ -468,10 +490,12 @@ struct User {
       (struct_fields
         (struct_field
           name: (identifier)
-          type: (type_identifier))
+          type: (type_path
+            (type_identifier)))
         (struct_field
           name: (identifier)
-          type: (type_identifier))))))
+          type: (type_path
+            (type_identifier)))))))
 
 ================================================================================
 Generic struct declaration
@@ -519,7 +543,8 @@ pub struct Container(a) {
         (struct_field
           name: (identifier)
           type: (generic_type
-            (type_identifier)
+            (type_path
+              (type_identifier))
             (type_variable
               (identifier))))))))
 
@@ -639,7 +664,8 @@ const pi: Float = 3.14159
   (const_declaration
     (keyword_const)
     name: (identifier)
-    type: (type_identifier)
+    type: (type_path
+      (type_identifier))
     value: (primary_expression
       (float_literal))))
 
@@ -747,7 +773,8 @@ fn test(b) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -791,7 +818,8 @@ fn test(x) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -826,13 +854,12 @@ fn test() {
       body: (block
         (expression_statement
           (primary_expression
-            (path_expression
+            (value_path
               (path_segment
                 (identifier))
               (path_segment
                 (identifier))
-              (path_segment
-                (identifier)))))))))
+              (identifier))))))))
 
 ================================================================================
 Path expression with type
@@ -852,11 +879,10 @@ fn test() {
       body: (block
         (expression_statement
           (call_expression
-            function: (path_expression
+            function: (value_path
               (path_segment
                 (type_identifier))
-              (path_segment
-                (identifier)))
+              (identifier))
             (argument_list
               (primary_expression
                 (nat_literal)))))))))
@@ -887,7 +913,8 @@ fn test(n) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -897,7 +924,8 @@ fn test(n) {
                 (keyword_if)
                 guard: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
                     (nat_literal)))
                 value: (primary_expression
@@ -938,7 +966,8 @@ fn test(n) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -948,7 +977,8 @@ fn test(n) {
                 (keyword_if)
                 guard: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
                     (nat_literal)))
                 value: (primary_expression
@@ -958,7 +988,8 @@ fn test(n) {
                 (keyword_if)
                 guard: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
                     (nat_literal)))
                 value: (primary_expression
@@ -994,12 +1025,15 @@ ability Console {
         (typed_parameter_list
           (typed_parameter
             name: (identifier)
-            type: (type_identifier)))
-        return_type: (type_identifier))
+            type: (type_path
+              (type_identifier))))
+        return_type: (type_path
+          (type_identifier)))
       (ability_operation
         kind: (keyword_fn)
         name: (identifier)
-        return_type: (type_identifier)))))
+        return_type: (type_path
+          (type_identifier))))))
 
 ================================================================================
 Generic ability declaration with op
@@ -1032,7 +1066,8 @@ ability State(s) {
             name: (identifier)
             type: (type_variable
               (identifier))))
-        return_type: (type_identifier)))))
+        return_type: (type_path
+          (type_identifier))))))
 
 ================================================================================
 Pub ability declaration
@@ -1057,8 +1092,10 @@ pub ability Http {
         (typed_parameter_list
           (typed_parameter
             name: (identifier)
-            type: (type_identifier)))
-        return_type: (type_identifier)))))
+            type: (type_path
+              (type_identifier))))
+        return_type: (type_path
+          (type_identifier))))))
 
 ================================================================================
 Handle expression with completion handler (do)
@@ -1082,7 +1119,8 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))
+              function: (value_path
+                (identifier)))
             (handler_arm
               (completion_handler
                 (keyword_do)
@@ -1090,7 +1128,8 @@ fn test() {
                 body: (block
                   (expression_statement
                     (primary_expression
-                      (identifier))))))))))))
+                      (value_path
+                        (identifier)))))))))))))
 
 ================================================================================
 Handle expression with empty handler block
@@ -1112,7 +1151,8 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))))))))
+              function: (value_path
+                (identifier)))))))))
 
 ================================================================================
 Simple lambda expression
@@ -1138,7 +1178,8 @@ fn test() {
                 name: (identifier)))
             body: (binary_expression
               left: (primary_expression
-                (identifier))
+                (value_path
+                  (identifier)))
               right: (primary_expression
                 (nat_literal)))))))))
 
@@ -1168,9 +1209,11 @@ fn test() {
                 name: (identifier)))
             body: (binary_expression
               left: (primary_expression
-                (identifier))
+                (value_path
+                  (identifier)))
               right: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 Lambda with block body
@@ -1207,13 +1250,15 @@ fn test() {
                         (identifier))))
                   value: (binary_expression
                     left: (primary_expression
-                      (identifier))
+                      (value_path
+                        (identifier)))
                     right: (primary_expression
                       (nat_literal))))
                 (expression_statement
                   (binary_expression
                     left: (primary_expression
-                      (identifier))
+                      (value_path
+                        (identifier)))
                     right: (primary_expression
                       (nat_literal))))))))))))
 
@@ -1258,8 +1303,9 @@ fn test() {
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (identifier))
-            method: (method_path
+              (value_path
+                (identifier)))
+            method: (value_path
               (identifier))
             (argument_list
               (lambda_expression
@@ -1269,7 +1315,8 @@ fn test() {
                     name: (identifier)))
                 body: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
                     (nat_literal)))))))))))
 
@@ -1294,14 +1341,17 @@ fn add(x, y) -> Int {
         (parameter
           name: (identifier)))
       return_type: (return_type_annotation
-        (type_identifier))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             right: (primary_expression
-              (identifier))))))))
+              (value_path
+                (identifier)))))))))
 
 ================================================================================
 Function with generic return type
@@ -1323,12 +1373,15 @@ fn wrap(value) -> Option(Int) {
           name: (identifier)))
       return_type: (return_type_annotation
         (generic_type
-          (type_identifier)
-          (type_identifier)))
+          (type_path
+            (type_identifier))
+          (type_path
+            (type_identifier))))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Lambda with return type annotation
@@ -1353,10 +1406,12 @@ fn test() {
               (parameter
                 name: (identifier)))
             return_type: (return_type_annotation
-              (type_identifier))
+              (type_path
+                (type_identifier)))
             body: (binary_expression
               left: (primary_expression
-                (identifier))
+                (value_path
+                  (identifier)))
               right: (primary_expression
                 (nat_literal)))))))))
 
@@ -1378,19 +1433,24 @@ fn add(x: Int, y: Int) -> Int {
       params: (parameter_list
         (parameter
           name: (identifier)
-          type: (type_identifier))
+          type: (type_path
+            (type_identifier)))
         (parameter
           name: (identifier)
-          type: (type_identifier)))
+          type: (type_path
+            (type_identifier))))
       return_type: (return_type_annotation
-        (type_identifier))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             right: (primary_expression
-              (identifier))))))))
+              (value_path
+                (identifier)))))))))
 
 ================================================================================
 Function with generic typed parameter
@@ -1414,13 +1474,15 @@ fn wrap(value: a) -> Option(a) {
             (identifier))))
       return_type: (return_type_annotation
         (generic_type
-          (type_identifier)
+          (type_path
+            (type_identifier))
           (type_variable
             (identifier))))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Lambda with typed parameter
@@ -1444,12 +1506,15 @@ fn test() {
             params: (parameter_list
               (parameter
                 name: (identifier)
-                type: (type_identifier)))
+                type: (type_path
+                  (type_identifier))))
             return_type: (return_type_annotation
-              (type_identifier))
+              (type_path
+                (type_identifier)))
             body: (binary_expression
               left: (primary_expression
-                (identifier))
+                (value_path
+                  (identifier)))
               right: (primary_expression
                 (nat_literal)))))))))
 
@@ -1481,7 +1546,8 @@ fn bar(x: a, y) -> a {
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Constructor pattern without arguments
@@ -1509,12 +1575,14 @@ fn test(opt) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier))))
+                    name: (type_path
+                      (type_identifier)))))
               value: (primary_expression
                 (string
                   (string_segment))))
@@ -1552,24 +1620,28 @@ fn test(opt) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     args: (pattern_list
                       (pattern
                         (simple_pattern
                           (identifier_pattern
                             (identifier))))))))
               value: (primary_expression
-                (identifier)))
+                (value_path
+                  (identifier))))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier))))
+                    name: (type_path
+                      (type_identifier)))))
               value: (primary_expression
                 (nat_literal)))))))))
 
@@ -1599,12 +1671,14 @@ fn test(pair) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     args: (pattern_list
                       (pattern
                         (simple_pattern
@@ -1616,9 +1690,11 @@ fn test(pair) {
                             (identifier))))))))
               value: (binary_expression
                 left: (primary_expression
-                  (identifier))
+                  (value_path
+                    (identifier)))
                 right: (primary_expression
-                  (identifier))))
+                  (value_path
+                    (identifier)))))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1653,41 +1729,48 @@ fn test(opt) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     args: (pattern_list
                       (pattern
                         (simple_pattern
                           (constructor_pattern
-                            name: (type_identifier)
+                            name: (type_path
+                              (type_identifier))
                             args: (pattern_list
                               (pattern
                                 (simple_pattern
                                   (identifier_pattern
                                     (identifier))))))))))))
               value: (primary_expression
-                (identifier)))
+                (value_path
+                  (identifier))))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     args: (pattern_list
                       (pattern
                         (simple_pattern
                           (constructor_pattern
-                            name: (type_identifier))))))))
+                            name: (type_path
+                              (type_identifier)))))))))
               value: (primary_expression
                 (nat_literal)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier))))
+                    name: (type_path
+                      (type_identifier)))))
               value: (primary_expression
                 (nat_literal)))))))))
 
@@ -1717,26 +1800,14 @@ fn test(result) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
-            (case_arm
-              pattern: (pattern
-                (simple_pattern
-                  (constructor_pattern
-                    name: (type_identifier)
-                    fields: (pattern_fields
-                      (pattern_field
-                        name: (identifier)
-                        pattern: (pattern
-                          (simple_pattern
-                            (identifier_pattern
-                              (identifier)))))))))
-              value: (primary_expression
+              (value_path
                 (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     fields: (pattern_fields
                       (pattern_field
                         name: (identifier)
@@ -1745,7 +1816,24 @@ fn test(result) {
                             (identifier_pattern
                               (identifier)))))))))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (pattern_field
+                        name: (identifier)
+                        pattern: (pattern
+                          (simple_pattern
+                            (identifier_pattern
+                              (identifier)))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 Tuple pattern with two elements
@@ -1773,7 +1861,8 @@ fn test(pair) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1789,9 +1878,11 @@ fn test(pair) {
                             (identifier))))))))
               value: (binary_expression
                 left: (primary_expression
-                  (identifier))
+                  (value_path
+                    (identifier)))
                 right: (primary_expression
-                  (identifier))))
+                  (value_path
+                    (identifier)))))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1824,7 +1915,8 @@ fn test(triple) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1845,11 +1937,14 @@ fn test(triple) {
               value: (binary_expression
                 left: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier)))
+                    (value_path
+                      (identifier))))
                 right: (primary_expression
-                  (identifier))))))))))
+                  (value_path
+                    (identifier)))))))))))
 
 ================================================================================
 Nested tuple pattern
@@ -1876,7 +1971,8 @@ fn test(nested) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1901,11 +1997,14 @@ fn test(nested) {
               value: (binary_expression
                 left: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier)))
+                    (value_path
+                      (identifier))))
                 right: (primary_expression
-                  (identifier))))))))))
+                  (value_path
+                    (identifier)))))))))))
 
 ================================================================================
 Tuple pattern with wildcard
@@ -1932,7 +2031,8 @@ fn test(pair) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1946,7 +2046,8 @@ fn test(pair) {
                         (simple_pattern
                           (wildcard_pattern)))))))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 Empty list pattern
@@ -1973,7 +2074,8 @@ fn test(xs) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -2006,7 +2108,8 @@ fn test(xs) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -2026,11 +2129,14 @@ fn test(xs) {
               value: (binary_expression
                 left: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier)))
+                    (value_path
+                      (identifier))))
                 right: (primary_expression
-                  (identifier))))))))))
+                  (value_path
+                    (identifier)))))))))))
 
 ================================================================================
 List pattern with rest
@@ -2057,7 +2163,8 @@ fn test(xs) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -2070,7 +2177,8 @@ fn test(xs) {
                       (spread)
                       name: (identifier)))))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 List pattern with anonymous rest
@@ -2097,7 +2205,8 @@ fn test(xs) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -2114,9 +2223,11 @@ fn test(xs) {
                       (spread)))))
               value: (binary_expression
                 left: (primary_expression
-                  (identifier))
+                  (value_path
+                    (identifier)))
                 right: (primary_expression
-                  (identifier))))))))))
+                  (value_path
+                    (identifier)))))))))))
 
 ================================================================================
 List pattern rest only
@@ -2143,7 +2254,8 @@ fn test(xs) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -2152,7 +2264,8 @@ fn test(xs) {
                       (spread)
                       name: (identifier)))))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 Constructor pattern with shorthand fields
@@ -2179,19 +2292,22 @@ fn test(user) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     fields: (pattern_fields
                       (pattern_field
                         name: (identifier))
                       (pattern_field
                         name: (identifier))))))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 Constructor pattern with rest
@@ -2218,18 +2334,21 @@ fn test(user) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
                   (constructor_pattern
-                    name: (type_identifier)
+                    name: (type_path
+                      (type_identifier))
                     fields: (pattern_fields
                       (pattern_field
                         name: (identifier))
                       (spread)))))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 As pattern
@@ -2256,13 +2375,15 @@ fn test(opt) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (as_pattern
                   pattern: (simple_pattern
                     (constructor_pattern
-                      name: (type_identifier)
+                      name: (type_path
+                        (type_identifier))
                       args: (pattern_list
                         (pattern
                           (simple_pattern
@@ -2271,7 +2392,8 @@ fn test(opt) {
                   (keyword_as)
                   binding: (identifier)))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 As pattern with list
@@ -2298,7 +2420,8 @@ fn test(xs) {
           (case_expression
             (keyword_case)
             value: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               pattern: (pattern
                 (as_pattern
@@ -2314,7 +2437,8 @@ fn test(xs) {
                   (keyword_as)
                   binding: (identifier)))
               value: (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))
 
 ================================================================================
 Handler with op and resume
@@ -2338,15 +2462,15 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))
+              function: (value_path
+                (identifier)))
             (handler_arm
               (op_handler
                 (keyword_op)
-                operation: (path_expression
+                operation: (value_path
                   (path_segment
                     (type_identifier))
-                  (path_segment
-                    (identifier)))
+                  (identifier))
                 body: (block
                   (expression_statement
                     (resume_expression
@@ -2376,15 +2500,15 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))
+              function: (value_path
+                (identifier)))
             (handler_arm
               (op_handler
                 (keyword_op)
-                operation: (path_expression
+                operation: (value_path
                   (path_segment
                     (type_identifier))
-                  (path_segment
-                    (identifier)))
+                  (identifier))
                 body: (block
                   (expression_statement
                     (resume_expression
@@ -2392,11 +2516,14 @@ fn test() {
                       value: (binary_expression
                         left: (binary_expression
                           left: (primary_expression
-                            (identifier))
+                            (value_path
+                              (identifier)))
                           right: (primary_expression
-                            (identifier)))
+                            (value_path
+                              (identifier))))
                         right: (primary_expression
-                          (identifier))))))))))))))
+                          (value_path
+                            (identifier)))))))))))))))
 
 ================================================================================
 Handler with fn (tail-resumptive)
@@ -2420,30 +2547,31 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))
+              function: (value_path
+                (identifier)))
             (handler_arm
               (fn_handler
                 (keyword_fn)
-                operation: (path_expression
+                operation: (value_path
                   (path_segment
                     (type_identifier))
-                  (path_segment
-                    (identifier)))
+                  (identifier))
                 params: (handler_parameter_list
                   (identifier))
                 body: (block
                   (expression_statement
                     (call_expression
-                      function: (path_expression
+                      function: (value_path
                         (path_segment
                           (type_identifier))
-                        (path_segment
-                          (identifier)))
+                        (identifier))
                       (argument_list
                         (primary_expression
-                          (identifier))
+                          (value_path
+                            (identifier)))
                         (primary_expression
-                          (identifier))))))))))))))
+                          (value_path
+                            (identifier)))))))))))))))
 
 ================================================================================
 Handle expression with multiple handler arms
@@ -2469,7 +2597,8 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))
+              function: (value_path
+                (identifier)))
             (handler_arm
               (completion_handler
                 (keyword_do)
@@ -2477,15 +2606,15 @@ fn test() {
                 body: (block
                   (expression_statement
                     (primary_expression
-                      (identifier))))))
+                      (value_path
+                        (identifier)))))))
             (handler_arm
               (op_handler
                 (keyword_op)
-                operation: (path_expression
+                operation: (value_path
                   (path_segment
                     (type_identifier))
-                  (path_segment
-                    (identifier)))
+                  (identifier))
                 body: (block
                   (expression_statement
                     (resume_expression
@@ -2495,11 +2624,10 @@ fn test() {
             (handler_arm
               (op_handler
                 (keyword_op)
-                operation: (path_expression
+                operation: (value_path
                   (path_segment
                     (type_identifier))
-                  (path_segment
-                    (identifier)))
+                  (identifier))
                 params: (handler_parameter_list
                   (identifier))
                 body: (block
@@ -2532,7 +2660,8 @@ fn test() {
           (handle_expression
             (keyword_handle)
             expr: (call_expression
-              function: (identifier))
+              function: (value_path
+                (identifier)))
             (handler_arm
               (completion_handler
                 (keyword_do)
@@ -2540,24 +2669,26 @@ fn test() {
                 body: (block
                   (expression_statement
                     (constructor_expression
-                      constructor: (type_identifier)
+                      constructor: (type_path
+                        (type_identifier))
                       (argument_list
                         (primary_expression
-                          (identifier))))))))
+                          (value_path
+                            (identifier)))))))))
             (handler_arm
               (op_handler
                 (keyword_op)
-                operation: (path_expression
+                operation: (value_path
                   (path_segment
                     (type_identifier))
-                  (path_segment
-                    (identifier)))
+                  (identifier))
                 params: (handler_parameter_list
                   (identifier))
                 body: (block
                   (expression_statement
                     (constructor_expression
-                      constructor: (type_identifier))))))))))))
+                      constructor: (type_path
+                        (type_identifier)))))))))))))
 
 ================================================================================
 Record expression with fields
@@ -2577,7 +2708,8 @@ fn test() {
       body: (block
         (expression_statement
           (record_expression
-            type: (type_identifier)
+            type: (type_path
+              (type_identifier))
             fields: (record_fields
               (record_field
                 name: (identifier)
@@ -2607,7 +2739,8 @@ fn test() {
       body: (block
         (expression_statement
           (record_expression
-            type: (type_identifier)
+            type: (type_path
+              (type_identifier))
             fields: (record_fields
               (record_field
                 name: (identifier))
@@ -2632,12 +2765,14 @@ fn test() {
       body: (block
         (expression_statement
           (record_expression
-            type: (type_identifier)
+            type: (type_path
+              (type_identifier))
             fields: (record_fields
               (record_field
                 (spread)
                 value: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (record_field
                 name: (identifier)
                 value: (primary_expression
@@ -2661,12 +2796,14 @@ fn test() {
       body: (block
         (expression_statement
           (record_expression
-            type: (type_identifier)
+            type: (type_path
+              (type_identifier))
             fields: (record_fields
               (record_field
                 (spread)
                 value: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (record_field
                 name: (identifier)
                 value: (primary_expression
@@ -2694,14 +2831,14 @@ fn test() {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))
+            function: (value_path
+              (identifier))))
         (expression_statement
           (call_expression
-            function: (path_expression
+            function: (value_path
               (path_segment
                 (type_identifier))
-              (path_segment
-                (identifier)))))))))
+              (identifier))))))))
 
 ================================================================================
 Qualified operator binary expression
@@ -2766,9 +2903,11 @@ extern fn len(bytes: Bytes) -> Int
       params: (parameter_list
         (parameter
           name: (identifier)
-          type: (type_identifier)))
+          type: (type_path
+            (type_identifier))))
       return_type: (return_type_annotation
-        (type_identifier)))))
+        (type_path
+          (type_identifier))))))
 
 ================================================================================
 Pub extern function
@@ -2790,12 +2929,15 @@ pub extern fn get_or_panic(bytes: Bytes, index: Int) -> Int
       params: (parameter_list
         (parameter
           name: (identifier)
-          type: (type_identifier))
+          type: (type_path
+            (type_identifier)))
         (parameter
           name: (identifier)
-          type: (type_identifier)))
+          type: (type_path
+            (type_identifier))))
       return_type: (return_type_annotation
-        (type_identifier)))))
+        (type_path
+          (type_identifier))))))
 
 ================================================================================
 Extern function with ABI
@@ -2817,12 +2959,15 @@ extern "wasm" fn concat(left: Bytes, right: Bytes) -> Bytes
       params: (parameter_list
         (parameter
           name: (identifier)
-          type: (type_identifier))
+          type: (type_path
+            (type_identifier)))
         (parameter
           name: (identifier)
-          type: (type_identifier)))
+          type: (type_path
+            (type_identifier))))
       return_type: (return_type_annotation
-        (type_identifier)))))
+        (type_path
+          (type_identifier))))))
 
 ================================================================================
 Pub extern with ABI
@@ -2844,7 +2989,8 @@ pub extern "C" fn foobar() -> Int
       (keyword_fn)
       name: (identifier)
       return_type: (return_type_annotation
-        (type_identifier)))))
+        (type_path
+          (type_identifier))))))
 
 ================================================================================
 Operator function definition
@@ -2864,16 +3010,20 @@ fn (+)(a: Int, b: Int) -> Int {
       params: (parameter_list
         (parameter
           name: (identifier)
-          type: (type_identifier))
+          type: (type_path
+            (type_identifier)))
         (parameter
           name: (identifier)
-          type: (type_identifier)))
+          type: (type_path
+            (type_identifier))))
       return_type: (return_type_annotation
-        (type_identifier))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Concat operator function in module
@@ -2903,13 +3053,17 @@ pub mod Bytes {
           params: (parameter_list
             (parameter
               name: (identifier)
-              type: (type_identifier))
+              type: (type_path
+                (type_identifier)))
             (parameter
               name: (identifier)
-              type: (type_identifier)))
+              type: (type_path
+                (type_identifier))))
           return_type: (return_type_annotation
-            (type_identifier))
+            (type_path
+              (type_identifier)))
           body: (block
             (expression_statement
               (primary_expression
-                (identifier)))))))))
+                (value_path
+                  (identifier))))))))))

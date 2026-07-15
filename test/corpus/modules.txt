@@ -311,19 +311,24 @@ pub mod math {
           params: (parameter_list
             (parameter
               name: (identifier)
-              type: (type_identifier))
+              type: (type_path
+                (type_identifier)))
             (parameter
               name: (identifier)
-              type: (type_identifier)))
+              type: (type_path
+                (type_identifier))))
           return_type: (return_type_annotation
-            (type_identifier))
+            (type_path
+              (type_identifier)))
           body: (block
             (expression_statement
               (binary_expression
                 left: (primary_expression
-                  (identifier))
+                  (value_path
+                    (identifier)))
                 right: (primary_expression
-                  (identifier))))))))))
+                  (value_path
+                    (identifier)))))))))))
 
 ================================================================================
 Path expression with pkg
@@ -343,12 +348,11 @@ fn test() {
       body: (block
         (expression_statement
           (call_expression
-            function: (path_expression
+            function: (value_path
               (path_keyword)
               (path_segment
                 (identifier))
-              (path_segment
-                (identifier)))))))))
+              (identifier))))))))
 
 ================================================================================
 Path expression with super
@@ -368,10 +372,9 @@ fn test() {
       body: (block
         (expression_statement
           (call_expression
-            function: (path_expression
+            function: (value_path
               (path_keyword)
-              (path_segment
-                (identifier)))))))))
+              (identifier))))))))
 
 ================================================================================
 Visibility pub(pkg)
@@ -415,4 +418,5 @@ pub(super) struct LocalConfig {
       (struct_fields
         (struct_field
           name: (identifier)
-          type: (type_identifier))))))
+          type: (type_path
+            (type_identifier)))))))

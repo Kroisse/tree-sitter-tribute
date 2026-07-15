@@ -57,16 +57,12 @@
 (ability_operation
   name: (identifier) @function)
 
-; Function calls
 (call_expression
-  function: (identifier) @function.call)
-
-(call_expression
-  function: (path_expression) @function.call)
+  function: (value_path) @function.call)
 
 ; Method calls (UFCS)
 (method_call_expression
-  method: (method_path) @function.method)
+  method: (value_path) @function.method)
 
 ; Parameters
 (parameter
@@ -92,9 +88,6 @@
   name: (type_identifier) @constructor)
 
 ; Constructor patterns
-(constructor_pattern
-  name: (type_identifier) @constructor)
-
 (constructor_pattern
   name: (type_path
     (type_identifier) @constructor))

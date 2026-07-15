@@ -19,13 +19,17 @@ fn test(f: fn(Int, Int) -> Int) {
           type: (function_type
             (keyword_fn)
             params: (type_list
-              (type_identifier)
-              (type_identifier))
-            return_type: (type_identifier))))
+              (type_path
+                (type_identifier))
+              (type_path
+                (type_identifier)))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (nat_literal))
@@ -52,11 +56,13 @@ fn test(f: fn() -> Int) {
           name: (identifier)
           type: (function_type
             (keyword_fn)
-            return_type: (type_identifier))))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Function type - pure function (empty ability row)
@@ -79,13 +85,16 @@ fn test(f: fn(Int) ->{} Int) {
           type: (function_type
             (keyword_fn)
             params: (type_list
-              (type_identifier))
+              (type_path
+                (type_identifier)))
             abilities: (ability_row)
-            return_type: (type_identifier))))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (nat_literal)))))))))
@@ -111,17 +120,20 @@ fn fetch(handler: fn(String) ->{Http} Response) {
           type: (function_type
             (keyword_fn)
             params: (type_list
-              (type_identifier))
+              (type_path
+                (type_identifier)))
             abilities: (ability_row
               (ability_list
                 (ability_item
                   name: (ability_path
                     (type_identifier)))))
-            return_type: (type_identifier))))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (string
@@ -153,15 +165,18 @@ fn run(comp: fn() ->{State(Int), Console} Nil) {
                   name: (ability_path
                     (type_identifier))
                   (type_arguments
-                    (type_identifier)))
+                    (type_path
+                      (type_identifier))))
                 (ability_item
                   name: (ability_path
                     (type_identifier)))))
-            return_type: (type_identifier))))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Function type - ability with row variable
@@ -189,15 +204,18 @@ fn run(comp: fn() ->{State(Int), e} Int) {
                   name: (ability_path
                     (type_identifier))
                   (type_arguments
-                    (type_identifier)))
+                    (type_path
+                      (type_identifier))))
                 (ability_tail
                   (type_variable
                     (identifier)))))
-            return_type: (type_identifier))))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Function type - nested function type
@@ -223,14 +241,19 @@ fn apply(f: fn(fn(Int) -> Int, Int) -> Int) {
               (function_type
                 (keyword_fn)
                 params: (type_list
-                  (type_identifier))
-                return_type: (type_identifier))
-              (type_identifier))
-            return_type: (type_identifier))))
+                  (type_path
+                    (type_identifier)))
+                return_type: (type_path
+                  (type_identifier)))
+              (type_path
+                (type_identifier)))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (lambda_expression
                 (keyword_fn)
@@ -239,7 +262,8 @@ fn apply(f: fn(fn(Int) -> Int, Int) -> Int) {
                     name: (identifier)))
                 body: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
                     (nat_literal))))
               (primary_expression
@@ -273,18 +297,21 @@ fn map(f: fn(a) -> b, xs: List(a)) -> List(b) {
         (parameter
           name: (identifier)
           type: (generic_type
-            (type_identifier)
+            (type_path
+              (type_identifier))
             (type_variable
               (identifier)))))
       return_type: (return_type_annotation
         (generic_type
-          (type_identifier)
+          (type_path
+            (type_identifier))
           (type_variable
             (identifier))))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Function type - trailing comma in type list
@@ -307,13 +334,17 @@ fn test(f: fn(Int, String,) -> Bool) {
           type: (function_type
             (keyword_fn)
             params: (type_list
-              (type_identifier)
-              (type_identifier))
-            return_type: (type_identifier))))
+              (type_path
+                (type_identifier))
+              (type_path
+                (type_identifier)))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)
+            function: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (nat_literal))
@@ -349,11 +380,13 @@ fn run(comp: fn() ->{Console, Logger,} Nil) {
                 (ability_item
                   name: (ability_path
                     (type_identifier)))))
-            return_type: (type_identifier))))
+            return_type: (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Function type - generic ability with generic parameter
@@ -398,7 +431,8 @@ fn run_state(comp: fn() ->{State(s), e} a, init: s) -> a {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Function type - multiple generic abilities
@@ -439,7 +473,8 @@ fn handle_both(comp: fn() ->{State(s), Reader(r)} a) {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Return type annotation - single ability
@@ -463,8 +498,10 @@ fn counter() ->{State(Int)} Int {
               name: (ability_path
                 (type_identifier))
               (type_arguments
-                (type_identifier)))))
-        (type_identifier))
+                (type_path
+                  (type_identifier))))))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression
@@ -492,11 +529,13 @@ fn run() ->{State(Int), Console} Nil {
               name: (ability_path
                 (type_identifier))
               (type_arguments
-                (type_identifier)))
+                (type_path
+                  (type_identifier))))
             (ability_item
               name: (ability_path
                 (type_identifier)))))
-        (type_identifier))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression
@@ -524,11 +563,13 @@ fn run_effect() ->{State(Int), e} Int {
               name: (ability_path
                 (type_identifier))
               (type_arguments
-                (type_identifier)))
+                (type_path
+                  (type_identifier))))
             (ability_tail
               (type_variable
                 (identifier)))))
-        (type_identifier))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression
@@ -551,7 +592,8 @@ fn pure_fn() ->{} Int {
       name: (identifier)
       return_type: (return_type_annotation
         abilities: (ability_row)
-        (type_identifier))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression
@@ -605,7 +647,8 @@ fn run_state(comp: fn() ->{State(s), e} a, init: s) ->{e} a {
       body: (block
         (expression_statement
           (call_expression
-            function: (identifier)))))))
+            function: (value_path
+              (identifier))))))))
 
 ================================================================================
 Tuple type - basic
@@ -626,12 +669,15 @@ fn test(pair: #(Int, String)) {
         (parameter
           name: (identifier)
           type: (tuple_type
-            (type_identifier)
-            (type_identifier))))
+            (type_path
+              (type_identifier))
+            (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Tuple type - with type variables
@@ -665,7 +711,8 @@ fn swap(pair: #(a, b)) -> #(b, a) {
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Tuple type - nested
@@ -686,14 +733,18 @@ fn nested(x: #(Int, #(String, Bool))) {
         (parameter
           name: (identifier)
           type: (tuple_type
-            (type_identifier)
+            (type_path
+              (type_identifier))
             (tuple_type
-              (type_identifier)
-              (type_identifier)))))
+              (type_path
+                (type_identifier))
+              (type_path
+                (type_identifier))))))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Tuple type - trailing comma
@@ -714,13 +765,17 @@ fn test(triple: #(Int, Int, Int,)) {
         (parameter
           name: (identifier)
           type: (tuple_type
-            (type_identifier)
-            (type_identifier)
-            (type_identifier))))
+            (type_path
+              (type_identifier))
+            (type_path
+              (type_identifier))
+            (type_path
+              (type_identifier)))))
       body: (block
         (expression_statement
           (primary_expression
-            (identifier)))))))
+            (value_path
+              (identifier))))))))
 
 ================================================================================
 Ability path - module-qualified ability
@@ -747,8 +802,10 @@ fn example() ->{abilities::Throw(Nat)} Nat {
                 (path_segment
                   (type_identifier)))
               (type_arguments
-                (type_identifier)))))
-        (type_identifier))
+                (type_path
+                  (type_identifier))))))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression
@@ -782,8 +839,10 @@ fn example() ->{pkg::std::abilities::Throw(Int)} Int {
                 (path_segment
                   (type_identifier)))
               (type_arguments
-                (type_identifier)))))
-        (type_identifier))
+                (type_path
+                  (type_identifier))))))
+        (type_path
+          (type_identifier)))
       body: (block
         (expression_statement
           (primary_expression

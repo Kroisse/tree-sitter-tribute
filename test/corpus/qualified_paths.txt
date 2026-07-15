@@ -72,7 +72,8 @@ fn test(value: std::io::ReadLineResult) {
           (case_expression
             (keyword_case)
             (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             (case_arm
               (pattern
                 (simple_pattern
@@ -89,7 +90,8 @@ fn test(value: std::io::ReadLineResult) {
                           (identifier_pattern
                             (identifier))))))))
               (primary_expression
-                (identifier)))
+                (value_path
+                  (identifier))))
             (case_arm
               (pattern
                 (simple_pattern

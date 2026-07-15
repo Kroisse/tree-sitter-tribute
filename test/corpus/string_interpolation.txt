@@ -30,7 +30,8 @@ fn main() {
               (string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (string_segment))))))))
 
 ================================================================================
@@ -73,18 +74,22 @@ fn test() {
               (string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (string_segment)
               (interpolation
                 expression: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier))))
+                    (value_path
+                      (identifier)))))
               (string_segment))))))))
 
 ================================================================================
@@ -127,14 +132,17 @@ fn greet() {
               (string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (string_segment)
               (interpolation
                 expression: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier))))
+                    (value_path
+                      (identifier)))))
               (string_segment))))))))
 
 ================================================================================
@@ -190,7 +198,8 @@ fn test() {
               (string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (string_segment))))))))
 
 ================================================================================
@@ -225,5 +234,6 @@ fn main() {
               (string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (string_segment))))))))

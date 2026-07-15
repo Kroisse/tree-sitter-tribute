@@ -21,9 +21,11 @@ fn main() {
               (expression_statement
                 (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier)))))))))))
+                    (value_path
+                      (identifier))))))))))))
 
 ===
 Binary expression split across newline
@@ -45,9 +47,11 @@ fn main() {
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (identifier))
+              (value_path
+                (identifier)))
             right: (primary_expression
-              (identifier))))))))
+              (value_path
+                (identifier)))))))))
 
 ===
 Chained field access split across newline
@@ -70,8 +74,9 @@ fn main() {
           (method_call_expression
             receiver: (method_call_expression
               receiver: (primary_expression
-                (identifier))
-              method: (method_path
+                (value_path
+                  (identifier)))
+              method: (value_path
                 (identifier)))
-            method: (method_path
+            method: (value_path
               (identifier))))))))
