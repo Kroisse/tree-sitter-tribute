@@ -37,7 +37,8 @@
 
 ; Ability items in function types
 (ability_item
-  (type_identifier) @type)
+  name: (ability_path
+    (type_identifier) @type))
 
 ; Function definitions
 (regular_function
@@ -93,6 +94,10 @@
 ; Constructor patterns
 (constructor_pattern
   name: (type_identifier) @constructor)
+
+(constructor_pattern
+  name: (type_path
+    (type_identifier) @constructor))
 
 ; Numbers
 (nat_literal) @number

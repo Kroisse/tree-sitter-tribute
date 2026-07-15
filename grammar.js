@@ -61,7 +61,7 @@ export default grammar({
     $._error_sentinel,
   ],
 
-  conflicts: ($) => [[ $.constructor_expression ], [ $.case_arm ]],
+  conflicts: ($) => [[$.constructor_expression], [$.case_arm]],
 
   rules: {
     source_file: ($) => repeat($._item),
@@ -184,7 +184,14 @@ export default grammar({
     // Can be: String (type_identifier), a (type_variable), List(a) (generic_type),
     // fn(Int, Int) -> Int (function_type), #(Int, String) (tuple_type)
     _type: ($) =>
-      choice($.type_identifier, $.type_variable, $.generic_type, $.function_type, $.tuple_type),
+      choice(
+        $.type_identifier,
+        $.type_path,
+        $.type_variable,
+        $.generic_type,
+        $.function_type,
+        $.tuple_type,
+      ),
 
     // Tuple type: #(Int, String), #(a, b, c)
     tuple_type: ($) =>
@@ -264,7 +271,7 @@ export default grammar({
       prec(
         1,
         seq(
-          $.type_identifier,
+          choice($.type_identifier, $.type_path),
           "(",
           $._type,
           repeat(seq(",", $._type)),
@@ -509,7 +516,7 @@ export default grammar({
       prec(
         10,
         seq(
-          field("constructor", $.type_identifier),
+          field("constructor", choice($.type_identifier, $.type_path)),
           optional(seq("(", optional($.argument_list), ")")),
         ),
       ),
@@ -674,7 +681,7 @@ export default grammar({
     // Constructor pattern: None, Some(x), Pair(a, b), Ok { value: x }
     constructor_pattern: ($) =>
       seq(
-        field("name", $.type_identifier),
+        field("name", choice($.type_identifier, $.type_path)),
         optional(
           choice(
             // Tuple-style: Some(x), Pair(a, b)
@@ -845,7 +852,7 @@ export default grammar({
       prec(
         11,
         seq(
-          field("type", $.type_identifier),
+          field("type", choice($.type_identifier, $.type_path)),
           "{",
           optional(field("fields", $.record_fields)),
           "}",
@@ -897,6 +904,20 @@ export default grammar({
         seq(
           choice(alias($._name, $.path_segment), $.path_keyword),
           repeat1(seq("::", alias($._name, $.path_segment))),
+        ),
+      ),
+
+    // A qualified path whose final segment is a type or constructor name.
+    // Used where the syntactic role distinguishes constructors/types from
+    // ordinary function paths: std::io::Error::EndOfFile, pkg::model::User.
+    type_path: ($) =>
+      prec.right(
+        11,
+        seq(
+          choice(alias($._name, $.path_segment), $.path_keyword),
+          repeat(seq("::", alias($._name, $.path_segment))),
+          "::",
+          $.type_identifier,
         ),
       ),
 
