@@ -88,7 +88,8 @@ fn main() {
               (raw_interpolated_string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (raw_interpolated_string_segment))))
         (expression_statement
           (primary_expression
@@ -96,7 +97,8 @@ fn main() {
               (raw_interpolated_string_segment)
               (interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (raw_interpolated_string_segment))))))))
 
 ================================================================================
@@ -132,7 +134,8 @@ fn main() {
               (raw_interpolated_bytes_segment)
               (bytes_interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (raw_interpolated_bytes_segment))))
         (expression_statement
           (primary_expression
@@ -140,5 +143,6 @@ fn main() {
               (raw_interpolated_bytes_segment)
               (bytes_interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (raw_interpolated_bytes_segment))))))))

@@ -1,0 +1,107 @@
+================================================================================
+Qualified constructor, record, and constructor pattern paths
+================================================================================
+
+fn test(value: std::io::ReadLineResult) {
+    let line = std::io::ReadLine(b"hello")
+    let error = std::io::SystemError { code: +5, message: "failed" }
+    case value {
+        std::io::ReadLine(bytes) -> bytes
+        std::io::ReadEndOfFile -> b""
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      (identifier)
+      (parameter_list
+        (parameter
+          (identifier)
+          (type_path
+            (path_segment
+              (identifier))
+            (path_segment
+              (identifier))
+            (type_identifier))))
+      (block
+        (let_statement
+          (keyword_let)
+          (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          (constructor_expression
+            (type_path
+              (path_segment
+                (identifier))
+              (path_segment
+                (identifier))
+              (type_identifier))
+            (argument_list
+              (primary_expression
+                (bytes_string
+                  (bytes_segment))))))
+        (let_statement
+          (keyword_let)
+          (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          (record_expression
+            (type_path
+              (path_segment
+                (identifier))
+              (path_segment
+                (identifier))
+              (type_identifier))
+            (record_fields
+              (record_field
+                (identifier)
+                (primary_expression
+                  (int_literal)))
+              (record_field
+                (identifier)
+                (primary_expression
+                  (string
+                    (string_segment)))))))
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    (type_path
+                      (path_segment
+                        (identifier))
+                      (path_segment
+                        (identifier))
+                      (type_identifier))
+                    (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              (primary_expression
+                (value_path
+                  (identifier))))
+            (case_arm
+              (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    (type_path
+                      (path_segment
+                        (identifier))
+                      (path_segment
+                        (identifier))
+                      (type_identifier)))))
+              (primary_expression
+                (bytes_string
+                  (bytes_segment))))))))))

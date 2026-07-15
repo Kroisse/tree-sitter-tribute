@@ -154,7 +154,7 @@
             "named": true
           },
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           },
           {
@@ -583,11 +583,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "path_expression",
+            "type": "value_path",
             "named": true
           }
         ]
@@ -809,7 +805,7 @@
             "named": true
           },
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           },
           {
@@ -889,7 +885,7 @@
         "required": true,
         "types": [
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           }
         ]
@@ -935,7 +931,7 @@
         "required": true,
         "types": [
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           }
         ]
@@ -1202,11 +1198,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "path_expression",
+            "type": "value_path",
             "named": true
           }
         ]
@@ -1293,7 +1285,7 @@
             "named": true
           },
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           },
           {
@@ -1335,7 +1327,7 @@
           "named": true
         },
         {
-          "type": "type_identifier",
+          "type": "type_path",
           "named": true
         },
         {
@@ -1920,7 +1912,7 @@
         "required": true,
         "types": [
           {
-            "type": "method_path",
+            "type": "value_path",
             "named": true
           }
         ]
@@ -1978,25 +1970,6 @@
       "types": [
         {
           "type": "argument_list",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "method_path",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "path_segment",
           "named": true
         }
       ]
@@ -2256,11 +2229,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "path_expression",
+            "type": "value_path",
             "named": true
           }
         ]
@@ -2343,7 +2312,7 @@
             "named": true
           },
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           },
           {
@@ -2364,25 +2333,6 @@
       "types": [
         {
           "type": "parameter",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "path_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "path_keyword",
-          "named": true
-        },
-        {
-          "type": "path_segment",
           "named": true
         }
       ]
@@ -2512,10 +2462,6 @@
           "named": true
         },
         {
-          "type": "identifier",
-          "named": true
-        },
-        {
           "type": "int_literal",
           "named": true
         },
@@ -2552,10 +2498,6 @@
           "named": true
         },
         {
-          "type": "path_expression",
-          "named": true
-        },
-        {
           "type": "raw_bytes",
           "named": true
         },
@@ -2581,6 +2523,10 @@
         },
         {
           "type": "tuple_expression",
+          "named": true
+        },
+        {
+          "type": "value_path",
           "named": true
         }
       ]
@@ -2683,7 +2629,7 @@
         "required": true,
         "types": [
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           }
         ]
@@ -2961,7 +2907,7 @@
           "named": true
         },
         {
-          "type": "type_identifier",
+          "type": "type_path",
           "named": true
         },
         {
@@ -3166,7 +3112,7 @@
             "named": true
           },
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           },
           {
@@ -3279,7 +3225,7 @@
           "named": true
         },
         {
-          "type": "type_identifier",
+          "type": "type_path",
           "named": true
         },
         {
@@ -3326,7 +3272,7 @@
           "named": true
         },
         {
-          "type": "type_identifier",
+          "type": "type_path",
           "named": true
         },
         {
@@ -3357,7 +3303,7 @@
           "named": true
         },
         {
-          "type": "type_identifier",
+          "type": "type_path",
           "named": true
         },
         {
@@ -3388,7 +3334,7 @@
           "named": true
         },
         {
-          "type": "type_identifier",
+          "type": "type_path",
           "named": true
         },
         {
@@ -3408,6 +3354,29 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_path",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "path_keyword",
+          "named": true
+        },
+        {
+          "type": "path_segment",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
           "named": true
         }
       ]
@@ -3459,7 +3428,7 @@
             "named": true
           },
           {
-            "type": "type_identifier",
+            "type": "type_path",
             "named": true
           },
           {
@@ -3575,6 +3544,29 @@
         },
         {
           "type": "use_tree",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "value_path",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "path_keyword",
+          "named": true
+        },
+        {
+          "type": "path_segment",
           "named": true
         }
       ]

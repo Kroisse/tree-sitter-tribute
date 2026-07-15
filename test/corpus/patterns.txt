@@ -1,0 +1,889 @@
+================================================================================
+Constructor pattern without arguments
+================================================================================
+
+fn test(opt) {
+    case opt {
+        None -> "nothing",
+        _ -> "something"
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier)))))
+              value: (primary_expression
+                (string
+                  (string_segment))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (wildcard_pattern)))
+              value: (primary_expression
+                (string
+                  (string_segment))))))))))
+
+================================================================================
+Constructor pattern with single argument
+================================================================================
+
+fn test(opt) {
+    case opt {
+        Some(x) -> x,
+        None -> 0
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier)))))
+              value: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Constructor pattern with multiple arguments
+================================================================================
+
+fn test(pair) {
+    case pair {
+        Pair(a, b) -> a + b,
+        _ -> 0
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              value: (binary_expression
+                left: (primary_expression
+                  (value_path
+                    (identifier)))
+                right: (primary_expression
+                  (value_path
+                    (identifier)))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (wildcard_pattern)))
+              value: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Nested constructor patterns
+================================================================================
+
+fn test(opt) {
+    case opt {
+        Some(Some(x)) -> x,
+        Some(None) -> 0,
+        None -> 0
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (constructor_pattern
+                            name: (type_path
+                              (type_identifier))
+                            args: (pattern_list
+                              (pattern
+                                (simple_pattern
+                                  (identifier_pattern
+                                    (identifier))))))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (constructor_pattern
+                            name: (type_path
+                              (type_identifier)))))))))
+              value: (primary_expression
+                (nat_literal)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier)))))
+              value: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Constructor pattern with struct fields
+================================================================================
+
+fn test(result) {
+    case result {
+        Ok { value: x } -> x,
+        Err { error: e } -> e
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (pattern_field
+                        name: (identifier)
+                        pattern: (pattern
+                          (simple_pattern
+                            (identifier_pattern
+                              (identifier)))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (pattern_field
+                        name: (identifier)
+                        pattern: (pattern
+                          (simple_pattern
+                            (identifier_pattern
+                              (identifier)))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+================================================================================
+Tuple pattern with two elements
+================================================================================
+
+fn test(pair) {
+    case pair {
+        #(a, b) -> a + b,
+        _ -> 0
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (tuple_pattern
+                    elements: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              value: (binary_expression
+                left: (primary_expression
+                  (value_path
+                    (identifier)))
+                right: (primary_expression
+                  (value_path
+                    (identifier)))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (wildcard_pattern)))
+              value: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Tuple pattern with three elements
+================================================================================
+
+fn test(triple) {
+    case triple {
+        #(x, y, z) -> x + y + z
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (tuple_pattern
+                    elements: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              value: (binary_expression
+                left: (binary_expression
+                  left: (primary_expression
+                    (value_path
+                      (identifier)))
+                  right: (primary_expression
+                    (value_path
+                      (identifier))))
+                right: (primary_expression
+                  (value_path
+                    (identifier)))))))))))
+
+================================================================================
+Nested tuple pattern
+================================================================================
+
+fn test(nested) {
+    case nested {
+        #(#(a, b), c) -> a + b + c
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (tuple_pattern
+                    elements: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (tuple_pattern
+                            elements: (pattern_list
+                              (pattern
+                                (simple_pattern
+                                  (identifier_pattern
+                                    (identifier))))
+                              (pattern
+                                (simple_pattern
+                                  (identifier_pattern
+                                    (identifier))))))))
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              value: (binary_expression
+                left: (binary_expression
+                  left: (primary_expression
+                    (value_path
+                      (identifier)))
+                  right: (primary_expression
+                    (value_path
+                      (identifier))))
+                right: (primary_expression
+                  (value_path
+                    (identifier)))))))))))
+
+================================================================================
+Tuple pattern with wildcard
+================================================================================
+
+fn test(pair) {
+    case pair {
+        #(x, _) -> x
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (tuple_pattern
+                    elements: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))
+                      (pattern
+                        (simple_pattern
+                          (wildcard_pattern)))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+Empty list pattern
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [] -> 0
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern)))
+              value: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+List pattern with elements
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [a, b, c] -> a + b + c
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier))))
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier))))
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier)))))))
+              value: (binary_expression
+                left: (binary_expression
+                  left: (primary_expression
+                    (value_path
+                      (identifier)))
+                  right: (primary_expression
+                    (value_path
+                      (identifier))))
+                right: (primary_expression
+                  (value_path
+                    (identifier)))))))))))
+
+================================================================================
+List pattern with rest
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [head, ..tail] -> head
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier))))
+                    (rest_pattern
+                      (spread)
+                      name: (identifier)))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+List pattern with anonymous rest
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [first, second, ..] -> first + second
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier))))
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier))))
+                    (rest_pattern
+                      (spread)))))
+              value: (binary_expression
+                left: (primary_expression
+                  (value_path
+                    (identifier)))
+                right: (primary_expression
+                  (value_path
+                    (identifier)))))))))))
+
+================================================================================
+List pattern rest only
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [..all] -> all
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern
+                    (rest_pattern
+                      (spread)
+                      name: (identifier)))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+Constructor pattern with shorthand fields
+================================================================================
+
+fn test(user) {
+    case user {
+        User { name, age } -> name
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (pattern_field
+                        name: (identifier))
+                      (pattern_field
+                        name: (identifier))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+Constructor pattern with rest
+================================================================================
+
+fn test(user) {
+    case user {
+        User { name, .. } -> name
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (pattern_field
+                        name: (identifier))
+                      (spread)))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+As pattern
+================================================================================
+
+fn test(opt) {
+    case opt {
+        Some(x) as whole -> whole
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (as_pattern
+                  pattern: (simple_pattern
+                    (constructor_pattern
+                      name: (type_path
+                        (type_identifier))
+                      args: (pattern_list
+                        (pattern
+                          (simple_pattern
+                            (identifier_pattern
+                              (identifier)))))))
+                  (keyword_as)
+                  binding: (identifier)))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+As pattern with list
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [head, ..tail] as list -> list
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (as_pattern
+                  pattern: (simple_pattern
+                    (list_pattern
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))
+                      (rest_pattern
+                        (spread)
+                        name: (identifier))))
+                  (keyword_as)
+                  binding: (identifier)))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))

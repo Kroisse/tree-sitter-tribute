@@ -111,7 +111,8 @@ fn main() {
               (multiline_string_segment)
               (multiline_interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (multiline_string_segment))))))))
 
 ================================================================================
@@ -154,18 +155,22 @@ fn main() {
               (multiline_string_segment)
               (multiline_interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (multiline_string_segment)
               (multiline_interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (multiline_string_segment)
               (multiline_interpolation
                 expression: (binary_expression
                   left: (primary_expression
-                    (identifier))
+                    (value_path
+                      (identifier)))
                   right: (primary_expression
-                    (identifier))))
+                    (value_path
+                      (identifier)))))
               (multiline_string_segment))))))))
 
 ================================================================================
@@ -219,5 +224,6 @@ fn main() {
               (multiline_bytes_segment)
               (multiline_bytes_interpolation
                 expression: (primary_expression
-                  (identifier)))
+                  (value_path
+                    (identifier))))
               (multiline_bytes_segment))))))))

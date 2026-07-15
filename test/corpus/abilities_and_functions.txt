@@ -1,0 +1,544 @@
+================================================================================
+Simple ability declaration
+================================================================================
+
+ability Console {
+    fn print(msg: String) -> Nil
+    fn read() -> String
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (ability_declaration
+    (keyword_ability)
+    name: (type_identifier)
+    body: (ability_body
+      (ability_operation
+        kind: (keyword_fn)
+        name: (identifier)
+        (typed_parameter_list
+          (typed_parameter
+            name: (identifier)
+            type: (type_path
+              (type_identifier))))
+        return_type: (type_path
+          (type_identifier)))
+      (ability_operation
+        kind: (keyword_fn)
+        name: (identifier)
+        return_type: (type_path
+          (type_identifier))))))
+
+================================================================================
+Generic ability declaration with op
+================================================================================
+
+ability State(s) {
+    op get() -> s
+    op set(value: s) -> Nil
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (ability_declaration
+    (keyword_ability)
+    name: (type_identifier)
+    type_params: (type_parameters
+      (identifier))
+    body: (ability_body
+      (ability_operation
+        kind: (keyword_op)
+        name: (identifier)
+        return_type: (type_variable
+          (identifier)))
+      (ability_operation
+        kind: (keyword_op)
+        name: (identifier)
+        (typed_parameter_list
+          (typed_parameter
+            name: (identifier)
+            type: (type_variable
+              (identifier))))
+        return_type: (type_path
+          (type_identifier))))))
+
+================================================================================
+Pub ability declaration
+================================================================================
+
+pub ability Http {
+    fn get(url: String) -> Response
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (ability_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_ability)
+    name: (type_identifier)
+    body: (ability_body
+      (ability_operation
+        kind: (keyword_fn)
+        name: (identifier)
+        (typed_parameter_list
+          (typed_parameter
+            name: (identifier)
+            type: (type_path
+              (type_identifier))))
+        return_type: (type_path
+          (type_identifier))))))
+
+================================================================================
+Handle expression with completion handler (do)
+================================================================================
+
+fn test() {
+    handle comp() {
+        do result { result }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))
+            (handler_arm
+              (completion_handler
+                (keyword_do)
+                binding: (identifier)
+                body: (block
+                  (expression_statement
+                    (primary_expression
+                      (value_path
+                        (identifier)))))))))))))
+
+================================================================================
+Handle expression with empty handler block
+================================================================================
+
+fn test() {
+    handle comp() { }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))))))))
+
+================================================================================
+Simple lambda expression
+================================================================================
+
+fn test() {
+    fn(x) x + 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (lambda_expression
+            (keyword_fn)
+            params: (parameter_list
+              (parameter
+                name: (identifier)))
+            body: (binary_expression
+              left: (primary_expression
+                (value_path
+                  (identifier)))
+              right: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Lambda with multiple parameters
+================================================================================
+
+fn test() {
+    fn(x, y) x + y
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (lambda_expression
+            (keyword_fn)
+            params: (parameter_list
+              (parameter
+                name: (identifier))
+              (parameter
+                name: (identifier)))
+            body: (binary_expression
+              left: (primary_expression
+                (value_path
+                  (identifier)))
+              right: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+================================================================================
+Lambda with block body
+================================================================================
+
+fn test() {
+    fn(x) {
+        let y = x + 1
+        y * 2
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (lambda_expression
+            (keyword_fn)
+            params: (parameter_list
+              (parameter
+                name: (identifier)))
+            body: (primary_expression
+              (block
+                (let_statement
+                  (keyword_let)
+                  pattern: (pattern
+                    (simple_pattern
+                      (identifier_pattern
+                        (identifier))))
+                  value: (binary_expression
+                    left: (primary_expression
+                      (value_path
+                        (identifier)))
+                    right: (primary_expression
+                      (nat_literal))))
+                (expression_statement
+                  (binary_expression
+                    left: (primary_expression
+                      (value_path
+                        (identifier)))
+                    right: (primary_expression
+                      (nat_literal))))))))))))
+
+================================================================================
+Lambda without parameters
+================================================================================
+
+fn test() {
+    fn() 42
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (lambda_expression
+            (keyword_fn)
+            body: (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Lambda as function argument
+================================================================================
+
+fn test() {
+    list.map(fn(x) x * 2)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (method_call_expression
+            receiver: (primary_expression
+              (value_path
+                (identifier)))
+            method: (value_path
+              (identifier))
+            (argument_list
+              (lambda_expression
+                (keyword_fn)
+                params: (parameter_list
+                  (parameter
+                    name: (identifier)))
+                body: (binary_expression
+                  left: (primary_expression
+                    (value_path
+                      (identifier)))
+                  right: (primary_expression
+                    (nat_literal)))))))))))
+
+================================================================================
+Function with return type annotation
+================================================================================
+
+fn add(x, y) -> Int {
+    x + y
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier))
+        (parameter
+          name: (identifier)))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier)))
+      body: (block
+        (expression_statement
+          (binary_expression
+            left: (primary_expression
+              (value_path
+                (identifier)))
+            right: (primary_expression
+              (value_path
+                (identifier)))))))))
+
+================================================================================
+Function with generic return type
+================================================================================
+
+fn wrap(value) -> Option(Int) {
+    value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      return_type: (return_type_annotation
+        (generic_type
+          (type_path
+            (type_identifier))
+          (type_path
+            (type_identifier))))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
+================================================================================
+Lambda with return type annotation
+================================================================================
+
+fn test() {
+    fn(x) -> Int x + 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (lambda_expression
+            (keyword_fn)
+            params: (parameter_list
+              (parameter
+                name: (identifier)))
+            return_type: (return_type_annotation
+              (type_path
+                (type_identifier)))
+            body: (binary_expression
+              left: (primary_expression
+                (value_path
+                  (identifier)))
+              right: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Function with typed parameters
+================================================================================
+
+fn add(x: Int, y: Int) -> Int {
+    x + y
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier)))
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier)))
+      body: (block
+        (expression_statement
+          (binary_expression
+            left: (primary_expression
+              (value_path
+                (identifier)))
+            right: (primary_expression
+              (value_path
+                (identifier)))))))))
+
+================================================================================
+Function with generic typed parameter
+================================================================================
+
+fn wrap(value: a) -> Option(a) {
+    value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_variable
+            (identifier))))
+      return_type: (return_type_annotation
+        (generic_type
+          (type_path
+            (type_identifier))
+          (type_variable
+            (identifier))))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
+
+================================================================================
+Lambda with typed parameter
+================================================================================
+
+fn test() {
+    fn(x: Int) -> Int x * 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (lambda_expression
+            (keyword_fn)
+            params: (parameter_list
+              (parameter
+                name: (identifier)
+                type: (type_path
+                  (type_identifier))))
+            return_type: (return_type_annotation
+              (type_path
+                (type_identifier)))
+            body: (binary_expression
+              left: (primary_expression
+                (value_path
+                  (identifier)))
+              right: (primary_expression
+                (nat_literal)))))))))
+
+================================================================================
+Mixed typed and untyped parameters
+================================================================================
+
+fn bar(x: a, y) -> a {
+    x
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_variable
+            (identifier)))
+        (parameter
+          name: (identifier)))
+      return_type: (return_type_annotation
+        (type_variable
+          (identifier)))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
