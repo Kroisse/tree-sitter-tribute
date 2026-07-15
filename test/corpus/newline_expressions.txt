@@ -76,7 +76,5 @@ fn main() {
               receiver: (primary_expression
                 (value_path
                   (identifier)))
-              method: (value_path
-                (identifier)))
-            method: (value_path
-              (identifier))))))))
+              method: (identifier))
+            method: (identifier)))))))

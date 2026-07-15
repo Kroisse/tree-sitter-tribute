@@ -2535,7 +2535,7 @@
                 "name": "method",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "value_path"
+                  "name": "identifier"
                 }
               },
               {
@@ -2584,7 +2584,7 @@
                 "name": "method",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "value_path"
+                  "name": "identifier"
                 }
               }
             ]

@@ -520,7 +520,7 @@ export default grammar({
         ),
       ),
 
-    // UFCS: x.f(y) -> f(x, y), x.f -> f(x), x.a::b(y) -> a::b(x, y)
+    // UFCS: x.f(y) -> f(x, y), x.f -> f(x)
     method_call_expression: ($) =>
       choice(
         // With arguments - higher priority to prefer this over no-args form
@@ -529,7 +529,7 @@ export default grammar({
           seq(
             field("receiver", $._expression),
             ".",
-            field("method", $.value_path),
+            field("method", $.identifier),
             "(",
             optional($.argument_list),
             ")",
@@ -541,7 +541,7 @@ export default grammar({
           seq(
             field("receiver", $._expression),
             ".",
-            field("method", $.value_path),
+            field("method", $.identifier),
           ),
         ),
       ),

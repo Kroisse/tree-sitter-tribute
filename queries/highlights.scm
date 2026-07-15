@@ -62,7 +62,7 @@
 
 ; Method calls (UFCS)
 (method_call_expression
-  method: (value_path) @function.method)
+  method: (identifier) @function.method)
 
 ; Parameters
 (parameter
