@@ -1912,7 +1912,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "value_path",
             "named": true
           }
         ]

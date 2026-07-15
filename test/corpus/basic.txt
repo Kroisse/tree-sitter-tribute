@@ -377,7 +377,8 @@ fn test() {
             receiver: (primary_expression
               (value_path
                 (identifier)))
-            method: (identifier)
+            method: (value_path
+              (identifier))
             (argument_list
               (primary_expression
                 (value_path
@@ -404,7 +405,8 @@ fn test() {
             receiver: (primary_expression
               (value_path
                 (identifier)))
-            method: (identifier)))))))
+            method: (value_path
+              (identifier))))))))
 
 ================================================================================
 Chained UFCS method calls
@@ -429,20 +431,23 @@ fn test() {
                 receiver: (primary_expression
                   (value_path
                     (identifier)))
-                method: (identifier)
+                method: (value_path
+                  (identifier))
                 (argument_list
                   (primary_expression
                     (value_path
                       (identifier)))))
-              method: (identifier)
+              method: (value_path
+                (identifier))
               (argument_list
                 (primary_expression
                   (value_path
                     (identifier)))))
-            method: (identifier)))))))
+            method: (value_path
+              (identifier))))))))
 
 ================================================================================
-Qualified UFCS method path is rejected
+Qualified UFCS method call
 ================================================================================
 
 fn test() {
@@ -461,11 +466,9 @@ fn test() {
           (method_call_expression
             receiver: (primary_expression
               (nat_literal))
-            method: (identifier)))
-        (ERROR)
-        (expression_statement
-          (call_expression
-            function: (value_path
+            method: (value_path
+              (path_segment
+                (identifier))
               (identifier))))))))
 
 ================================================================================
@@ -1302,7 +1305,8 @@ fn test() {
             receiver: (primary_expression
               (value_path
                 (identifier)))
-            method: (identifier)
+            method: (value_path
+              (identifier))
             (argument_list
               (lambda_expression
                 (keyword_fn)
