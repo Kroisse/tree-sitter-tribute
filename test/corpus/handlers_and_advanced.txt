@@ -1,0 +1,627 @@
+================================================================================
+Handler with op and resume
+================================================================================
+
+fn test() {
+    handle comp() {
+        op State::get() { resume 42 }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      value: (primary_expression
+                        (nat_literal)))))))))))))
+
+================================================================================
+Resume with binary expression
+================================================================================
+
+fn test() {
+    handle comp() {
+        op State::get() { resume a + b + c }
+    }
+}
+
+---------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      value: (binary_expression
+                        left: (binary_expression
+                          left: (primary_expression
+                            (value_path
+                              (identifier)))
+                          right: (primary_expression
+                            (value_path
+                              (identifier))))
+                        right: (primary_expression
+                          (value_path
+                            (identifier)))))))))))))))
+
+================================================================================
+Handler with fn (tail-resumptive)
+================================================================================
+
+fn test() {
+    handle comp() {
+        fn Console::print(msg) { IO::write(stdout, msg) }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))
+            (handler_arm
+              (fn_handler
+                (keyword_fn)
+                operation: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))
+                params: (handler_parameter_list
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (call_expression
+                      function: (value_path
+                        (path_segment
+                          (type_identifier))
+                        (identifier))
+                      (argument_list
+                        (primary_expression
+                          (value_path
+                            (identifier)))
+                        (primary_expression
+                          (value_path
+                            (identifier)))))))))))))))
+
+================================================================================
+Handle expression with multiple handler arms
+================================================================================
+
+fn test() {
+    handle comp() {
+        do result { result }
+        op State::get() { resume 0 }
+        op State::set(v) { resume Nil }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))
+            (handler_arm
+              (completion_handler
+                (keyword_do)
+                binding: (identifier)
+                body: (block
+                  (expression_statement
+                    (primary_expression
+                      (value_path
+                        (identifier)))))))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      value: (primary_expression
+                        (nat_literal)))))))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))
+                params: (handler_parameter_list
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (resume_expression
+                      (keyword_resume)
+                      value: (primary_expression
+                        (keyword_nil)))))))))))))
+
+================================================================================
+Handler with op -> Never (abort pattern)
+================================================================================
+
+fn test() {
+    handle comp() {
+        do result { Some(result) }
+        op Fail::fail(msg) { None }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (handle_expression
+            (keyword_handle)
+            expr: (call_expression
+              function: (value_path
+                (identifier)))
+            (handler_arm
+              (completion_handler
+                (keyword_do)
+                binding: (identifier)
+                body: (block
+                  (expression_statement
+                    (constructor_expression
+                      constructor: (type_path
+                        (type_identifier))
+                      (argument_list
+                        (primary_expression
+                          (value_path
+                            (identifier)))))))))
+            (handler_arm
+              (op_handler
+                (keyword_op)
+                operation: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))
+                params: (handler_parameter_list
+                  (identifier))
+                body: (block
+                  (expression_statement
+                    (constructor_expression
+                      constructor: (type_path
+                        (type_identifier)))))))))))))
+
+================================================================================
+Record expression with fields
+================================================================================
+
+fn test() {
+    User { name: "Alice", age: 30 }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (record_expression
+            type: (type_path
+              (type_identifier))
+            fields: (record_fields
+              (record_field
+                name: (identifier)
+                value: (primary_expression
+                  (string
+                    (string_segment))))
+              (record_field
+                name: (identifier)
+                value: (primary_expression
+                  (nat_literal))))))))))
+
+================================================================================
+Record expression with shorthand
+================================================================================
+
+fn test() {
+    User { name, age }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (record_expression
+            type: (type_path
+              (type_identifier))
+            fields: (record_fields
+              (record_field
+                name: (identifier))
+              (record_field
+                name: (identifier)))))))))
+
+================================================================================
+Record expression with spread
+================================================================================
+
+fn test() {
+    User { ..user, age: 31 }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (record_expression
+            type: (type_path
+              (type_identifier))
+            fields: (record_fields
+              (record_field
+                (spread)
+                value: (primary_expression
+                  (value_path
+                    (identifier))))
+              (record_field
+                name: (identifier)
+                value: (primary_expression
+                  (nat_literal))))))))))
+
+================================================================================
+Record expression mixed
+================================================================================
+
+fn test() {
+    User { ..base, name: "Bob", age }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (record_expression
+            type: (type_path
+              (type_identifier))
+            fields: (record_fields
+              (record_field
+                (spread)
+                value: (primary_expression
+                  (value_path
+                    (identifier))))
+              (record_field
+                name: (identifier)
+                value: (primary_expression
+                  (string
+                    (string_segment))))
+              (record_field
+                name: (identifier)))))))))
+
+================================================================================
+Multiple statements with qualified path calls
+================================================================================
+
+fn test() {
+    foo()
+    Foo::bar()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (call_expression
+            function: (value_path
+              (identifier))))
+        (expression_statement
+          (call_expression
+            function: (value_path
+              (path_segment
+                (type_identifier))
+              (identifier))))))))
+
+================================================================================
+Qualified operator binary expression
+================================================================================
+
+fn test() {
+    1 Int::+ 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (binary_expression
+            left: (primary_expression
+              (nat_literal))
+            operator: (qualified_operator)
+            right: (primary_expression
+              (nat_literal))))))))
+
+================================================================================
+Qualified operator as function
+================================================================================
+
+fn test() {
+    (Int::+)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (operator_fn
+              operator: (qualified_operator))))))))
+
+================================================================================
+Extern function without body
+================================================================================
+
+extern fn len(bytes: Bytes) -> Int
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (extern_function
+      (extern_marker
+        (keyword_extern))
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier))))))
+
+================================================================================
+Pub extern function
+================================================================================
+
+pub extern fn get_or_panic(bytes: Bytes, index: Int) -> Int
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (extern_function
+      (visibility_marker
+        (keyword_pub))
+      (extern_marker
+        (keyword_extern))
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier)))
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier))))))
+
+================================================================================
+Extern function with ABI
+================================================================================
+
+extern "wasm" fn concat(left: Bytes, right: Bytes) -> Bytes
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (extern_function
+      (extern_marker
+        (keyword_extern)
+        abi: (string
+          (string_segment)))
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier)))
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier))))))
+
+================================================================================
+Pub extern with ABI
+================================================================================
+
+pub extern "C" fn foobar() -> Int
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (extern_function
+      (visibility_marker
+        (keyword_pub))
+      (extern_marker
+        (keyword_extern)
+        abi: (string
+          (string_segment)))
+      (keyword_fn)
+      name: (identifier)
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier))))))
+
+================================================================================
+Operator function definition
+================================================================================
+
+fn (+)(a: Int, b: Int) -> Int {
+    a
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (operator_name)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier)))
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier)))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
+
+================================================================================
+Concat operator function in module
+================================================================================
+
+pub mod Bytes {
+    pub fn (<>)(left: Bytes, right: Bytes) -> Bytes {
+        left
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (mod_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_mod)
+    name: (type_identifier)
+    body: (mod_body
+      (function_definition
+        (regular_function
+          (visibility_marker
+            (keyword_pub))
+          (keyword_fn)
+          name: (operator_name)
+          params: (parameter_list
+            (parameter
+              name: (identifier)
+              type: (type_path
+                (type_identifier)))
+            (parameter
+              name: (identifier)
+              type: (type_path
+                (type_identifier))))
+          return_type: (return_type_annotation
+            (type_path
+              (type_identifier)))
+          body: (block
+            (expression_statement
+              (primary_expression
+                (value_path
+                  (identifier))))))))))
