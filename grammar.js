@@ -953,29 +953,21 @@ export default grammar({
         ")",
       ),
 
-    // Number literals with type distinction
-    // Nat: 0, 42, 0b1010, 0o777, 0xc0ffee (no sign)
-    // Int: +1, -1, +0b1010, -0xff (explicit sign required)
-    // Float: 1.0, +1.0, -3.14 (decimal point with digits required)
-    nat_literal: ($) =>
-      token(
-        choice(
-          re`[0-9]+`, // decimal: 0, 42
-          re`0[bB][01]+`, // binary: 0b1010
-          re`0[oO][0-7]+`, // octal: 0o777
-          re`0[xX][0-9a-fA-F]+`, // hexadecimal: 0xc0ffee
-        ),
-      ),
+    // Number literals, classified by lexical shape:
+    //   Nat:   unsigned integer (42, 0xFF, 1_000, 1e10)
+    //   Int:   signed integer (+1, -0b1010, -1e3)
+    //   Float: decimal point with digits on both sides (1.0, -3.14, 1.5e-3)
+    // Identifier characters directly after a literal belong to it, so digit
+    // separators, radix digits, exponents, and type suffixes (42i, 1e3f) are
+    // all part of the token. The compiler validates the token and decides its
+    // final type; unknown suffixes and malformed digits are diagnosed there.
+    // A signed exponent is only lexed directly after decimal digits, so
+    // `0x1e-3` stays `0x1e - 3`.
+    nat_literal: ($) => token(re`[0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*`),
     int_literal: ($) =>
-      token(
-        choice(
-          re`[+-][0-9]+`, // decimal: +1, -1
-          re`[+-]0[bB][01]+`, // binary: +0b1010, -0b1010
-          re`[+-]0[oO][0-7]+`, // octal: +0o777, -0o777
-          re`[+-]0[xX][0-9a-fA-F]+`, // hexadecimal: +0xff, -0xff
-        ),
-      ),
-    float_literal: ($) => re`[+-]?[0-9]+\.[0-9]+`,
+      token(re`[+-][0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*`),
+    float_literal: ($) =>
+      token(re`[+-]?[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*`),
 
     // Rune literal: ?a, ?\n, ?\t, ?\x41, ?\u{41}
     // Matches: ? followed by either:

@@ -4270,54 +4270,23 @@
     "nat_literal": {
       "type": "TOKEN",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[0-9]+"
-          },
-          {
-            "type": "PATTERN",
-            "value": "0[bB][01]+"
-          },
-          {
-            "type": "PATTERN",
-            "value": "0[oO][0-7]+"
-          },
-          {
-            "type": "PATTERN",
-            "value": "0[xX][0-9a-fA-F]+"
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*"
       }
     },
     "int_literal": {
       "type": "TOKEN",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[+-][0-9]+"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[+-]0[bB][01]+"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[+-]0[oO][0-7]+"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[+-]0[xX][0-9a-fA-F]+"
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[+-][0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*"
       }
     },
     "float_literal": {
-      "type": "PATTERN",
-      "value": "[+-]?[0-9]+\\.[0-9]+"
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[+-]?[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*"
+      }
     },
     "rune": {
       "type": "TOKEN",
