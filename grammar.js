@@ -26,6 +26,14 @@ function re(strings, ...values) {
   return new RustRegex(pattern);
 };
 
+// Magnitudes of integer literals, one per radix. See `nat_literal`.
+const NUMBER_MAGNITUDES = [
+  re`[0-9][0-9_]*([eE][+-]?[0-9_]*)?`, // decimal: 42, 1_000, 1e10
+  re`0[xX][0-9a-fA-F_]*`, // hexadecimal: 0xFF, 0x_FF
+  re`0[oO][0-9_]*`, // octal: 0o777
+  re`0[bB][0-9_]*`, // binary: 0b1010
+];
+
 // Helper: common function signature parts (name, params, return type)
 // Name can be identifier (add, len) or operator_name ((+), (<>))
 const functionSignature = ($) => [
@@ -58,6 +66,7 @@ export default grammar({
     $._raw_interpolated_bytes_content,
     $._raw_interpolated_bytes_end,
     $._newline, // Newline token for field separators (Go/Swift style)
+    $.number_suffix, // Identifier characters directly after a numeric literal
     $._error_sentinel,
   ],
 
@@ -957,17 +966,27 @@ export default grammar({
     //   Nat:   unsigned integer (42, 0xFF, 1_000, 1e10)
     //   Int:   signed integer (+1, -0b1010, -1e3)
     //   Float: decimal point with digits on both sides (1.0, -3.14, 1.5e-3)
-    // Identifier characters directly after a literal belong to it, so digit
-    // separators, radix digits, exponents, and type suffixes (42i, 1e3f) are
-    // all part of the token. The compiler validates the token and decides its
-    // final type; unknown suffixes and malformed digits are diagnosed there.
-    // A signed exponent is only lexed directly after decimal digits, so
-    // `0x1e-3` stays `0x1e - 3`.
-    nat_literal: ($) => token(re`[0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*`),
+    // The magnitude token spells out each radix; `_` separators may appear
+    // anywhere after its first character. Binary and octal magnitudes take any
+    // decimal digit so the compiler can report an out-of-radix digit.
+    // Identifier characters directly after the magnitude form a separate
+    // `number_suffix` node (42i, 1e3f, 0xFFi), so any suffix is lexed and new
+    // suffixes stay non-breaking; the compiler rejects unknown ones. The
+    // external scanner lexes the suffix: as an internal token it would overlap
+    // `identifier` and break keyword extraction (`fn_double` → `fn` `_double`). A signed
+    // exponent is only lexed after decimal digits, so `0x1e-3` is `0x1e - 3`.
+    nat_literal: ($) =>
+      seq(token(choice(...NUMBER_MAGNITUDES)), optional($.number_suffix)),
     int_literal: ($) =>
-      token(re`[+-][0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*`),
+      seq(
+        token(seq(/[+-]/, choice(...NUMBER_MAGNITUDES))),
+        optional($.number_suffix),
+      ),
     float_literal: ($) =>
-      token(re`[+-]?[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?[0-9A-Za-z_]*`),
+      seq(
+        token(re`[+-]?[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?`),
+        optional($.number_suffix),
+      ),
 
     // Rune literal: ?a, ?\n, ?\t, ?\x41, ?\u{41}
     // Matches: ? followed by either:

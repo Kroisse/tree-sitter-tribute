@@ -103,28 +103,70 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (int_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (float_literal
+              (number_suffix))))))))
+
+================================================================================
+Numeric literals - hex digits are not a suffix
+================================================================================
+
+fn main() {
+    0xff
+    0x1f
+    0xFFi
+    0z12
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
         (expression_statement
           (primary_expression
             (nat_literal)))
         (expression_statement
           (primary_expression
-            (int_literal)))
-        (expression_statement
-          (primary_expression
             (nat_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (nat_literal
+              (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal)))
-        (expression_statement
-          (primary_expression
-            (nat_literal)))
-        (expression_statement
-          (primary_expression
-            (float_literal)))))))
+            (nat_literal
+              (number_suffix))))))))
 
 ================================================================================
 Numeric literals - malformed tokens stay single literals
@@ -151,7 +193,8 @@ fn main() {
             (nat_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (nat_literal
+              (number_suffix))))
         (expression_statement
           (primary_expression
             (nat_literal)))

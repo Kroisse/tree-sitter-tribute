@@ -28,6 +28,8 @@ enum TokenType {
     RAW_INTERPOLATED_BYTES_END,       // " (with hashes)
     // Newline token for field separators (Go/Swift style)
     NEWLINE,
+    // Type suffix directly after a numeric literal: 42i, 1e3f
+    NUMBER_SUFFIX,
 
     ERROR_SENTINEL
 };
@@ -90,6 +92,14 @@ static uint8_t count_hashes_up_to(TSLexer *lexer, uint8_t limit) {
 
 // Scan raw literal with hash delimiters
 // Used for both raw strings (r"...", r#"..."#) and raw bytes (rb"...", rb#"..."#)
+static bool is_suffix_start(int32_t c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+static bool is_suffix_char(int32_t c) {
+    return is_suffix_start(c) || (c >= '0' && c <= '9');
+}
+
 static bool scan_raw_literal(TSLexer *lexer, enum TokenType token_type) {
     // Count opening hashes
     uint8_t opening_hash_count = count_hashes_up_to(lexer, UINT8_MAX);
@@ -320,6 +330,16 @@ bool tree_sitter_tribute_external_scanner_scan(
             return scan_interpolated_content(lexer, scanner, scanner->mode);
         }
         return false;
+    }
+
+    // Numeric literal suffix. Only valid right after a literal's magnitude,
+    // and whitespace has not been skipped yet, so it must be adjacent.
+    if (valid_symbols[NUMBER_SUFFIX] && is_suffix_start(lexer->lookahead)) {
+        while (is_suffix_char(lexer->lookahead)) {
+            advance(lexer);
+        }
+        lexer->result_symbol = NUMBER_SUFFIX;
+        return true;
     }
 
     // Handle whitespace
