@@ -264,3 +264,59 @@ fn main() {
         (expression_statement
           (primary_expression
             (int_literal)))))))
+
+================================================================================
+Numeric literals - suffix must be adjacent across block comments
+================================================================================
+
+fn main() {
+    1 /* comment */ foo
+    1 /* comment */foo
+    2/**/i
+    3/**/x + 4i
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (binary_expression
+            left: (primary_expression
+              (value_path
+                (identifier)))
+            right: (primary_expression
+              (nat_literal
+                (number_suffix)))))))))

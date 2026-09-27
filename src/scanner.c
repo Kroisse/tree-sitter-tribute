@@ -1,5 +1,6 @@
 #include "tree_sitter/alloc.h"
 #include "tree_sitter/parser.h"
+#include <string.h>
 
 enum TokenType {
     // Raw string (no escape, no interpolation) - single token
@@ -46,6 +47,13 @@ typedef enum {
 typedef struct {
     uint8_t opening_hash_count;
     ScanMode mode;
+    // One past the column where a block comment ended while a numeric literal
+    // suffix was still valid (0 if none). A suffix must be adjacent to its
+    // literal, so none may start right after such a comment: `1/**/foo`.
+    // External scanner state is only saved with external tokens, so this
+    // survives the internal tokens after the comment; comparing the column
+    // keeps it from blocking a later literal's suffix.
+    uint32_t suffix_barrier_column;
 } Scanner;
 
 void *tree_sitter_tribute_external_scanner_create(void) {
@@ -60,16 +68,21 @@ unsigned tree_sitter_tribute_external_scanner_serialize(void *payload, char *buf
     Scanner *scanner = (Scanner *)payload;
     buffer[0] = (char)scanner->opening_hash_count;
     buffer[1] = (char)scanner->mode;
-    return 2;
+    memcpy(&buffer[2], &scanner->suffix_barrier_column, sizeof(uint32_t));
+    return 2 + sizeof(uint32_t);
 }
 
 void tree_sitter_tribute_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
     Scanner *scanner = (Scanner *)payload;
     scanner->opening_hash_count = 0;
     scanner->mode = MODE_NONE;
+    scanner->suffix_barrier_column = 0;
     if (length >= 2) {
         scanner->opening_hash_count = (uint8_t)buffer[0];
         scanner->mode = (ScanMode)buffer[1];
+    }
+    if (length >= 2 + sizeof(uint32_t)) {
+        memcpy(&scanner->suffix_barrier_column, &buffer[2], sizeof(uint32_t));
     }
 }
 
@@ -316,6 +329,10 @@ bool tree_sitter_tribute_external_scanner_scan(
         return false;
     }
 
+    // Only the token right after the comment may see the barrier.
+    uint32_t suffix_barrier_column = scanner->suffix_barrier_column;
+    scanner->suffix_barrier_column = 0;
+
     // If we're inside an interpolated literal, handle content/end
     if (scanner->mode != MODE_NONE) {
         enum TokenType end_token = mode_end_token(scanner->mode);
@@ -334,7 +351,9 @@ bool tree_sitter_tribute_external_scanner_scan(
 
     // Numeric literal suffix. Only valid right after a literal's magnitude,
     // and whitespace has not been skipped yet, so it must be adjacent.
-    if (valid_symbols[NUMBER_SUFFIX] && is_suffix_start(lexer->lookahead)) {
+    if (valid_symbols[NUMBER_SUFFIX] && is_suffix_start(lexer->lookahead) &&
+        !(suffix_barrier_column != 0 &&
+          lexer->get_column(lexer) + 1 == suffix_barrier_column)) {
         while (is_suffix_char(lexer->lookahead)) {
             advance(lexer);
         }
@@ -537,6 +556,7 @@ bool tree_sitter_tribute_external_scanner_scan(
         lexer->mark_end(lexer);
         advance(lexer);
 
+        bool found = false;
         if (lexer->lookahead == '*') {
             advance(lexer);
 
@@ -546,15 +566,18 @@ bool tree_sitter_tribute_external_scanner_scan(
                     advance(lexer);
                     lexer->result_symbol = BLOCK_COMMENT;
                     lexer->mark_end(lexer);
-                    return true;
+                    found = true;
+                } else {
+                    found = scan_block_comment(lexer, true);
                 }
-                return scan_block_comment(lexer, true);
-            }
-
-            if (valid_symbols[BLOCK_COMMENT]) {
-                return scan_block_comment(lexer, false);
+            } else if (valid_symbols[BLOCK_COMMENT]) {
+                found = scan_block_comment(lexer, false);
             }
         }
+        if (found && valid_symbols[NUMBER_SUFFIX]) {
+            scanner->suffix_barrier_column = lexer->get_column(lexer) + 1;
+        }
+        return found;
     }
 
     return false;
