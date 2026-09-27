@@ -977,10 +977,10 @@ export default grammar({
       ),
     float_literal: ($) => re`[+-]?[0-9]+\.[0-9]+`,
 
-    // Rune literal: ?a, ?\n, ?\t, ?\x41, ?\u0041
+    // Rune literal: ?a, ?\n, ?\t, ?\x41, ?\u{41}
     // Matches: ? followed by either:
     //   - A single printable character (not backslash or whitespace)
-    //   - An escape sequence: \n, \r, \t, \0, \\, \xHH, \uHHHH
+    //   - An escape sequence: \n, \r, \t, \0, \\, \xHH, \u{H...} (1-6 hex digits)
     rune: ($) =>
       token(
         choice(
@@ -989,7 +989,7 @@ export default grammar({
           // Escape sequences
           re`\?\\[nrt0\\]`, // ?\n, ?\r, ?\t, ?\0, ?\\
           re`\?\\x[0-9a-fA-F]{2}`, // ?\x41
-          re`\?\\u[0-9a-fA-F]{4}`, // ?\u0041
+          re`\?\\u\{[0-9a-fA-F]{1,6}\}`, // ?\u{41}
         ),
       ),
 
@@ -1002,7 +1002,7 @@ export default grammar({
       ),
 
     string_segment: ($) =>
-      prec(-1, re`([^"\\]|\\[nrt0"\\]|\\x[0-7][0-9a-fA-F]|\\u[0-9a-fA-F]{4})*`),
+      prec(-1, re`([^"\\]|\\[nrt0"\\]|\\x[0-7][0-9a-fA-F]|\\u\{[0-9a-fA-F]{1,6}\})*`),
 
     interpolation: ($) =>
       seq("\\", "{", field("expression", $._expression), "}"),

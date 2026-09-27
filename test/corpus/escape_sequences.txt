@@ -75,9 +75,11 @@ String escape sequences - unicode
 ================================================================================
 
 fn main() {
-    "\u0041"
-    "\u00E9"
-    "\u4E16"
+    "\u{41}"
+    "\u{E9}"
+    "\u{4E16}"
+    "\u{1F600}"
+    "\u{0}\u{10FFFF}"
 }
 
 --------------------------------------------------------------------------------
@@ -99,7 +101,84 @@ fn main() {
         (expression_statement
           (primary_expression
             (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
+              (string_segment))))
+        (expression_statement
+          (primary_expression
+            (string
               (string_segment))))))))
+
+================================================================================
+String escape sequences - fixed-width unicode is rejected
+:error
+================================================================================
+
+fn main() {
+    "\u0041"
+}
+
+--------------------------------------------------------------------------------
+
+================================================================================
+Rune escape sequences - fixed-width unicode is rejected
+:error
+================================================================================
+
+fn main() {
+    ?\u0041
+}
+
+--------------------------------------------------------------------------------
+
+================================================================================
+Rune escape sequences
+================================================================================
+
+fn main() {
+    ?a
+    ?\n
+    ?\x41
+    ?\u{41}
+    ?\u{1F600}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (rune)))
+        (expression_statement
+          (primary_expression
+            (rune)))
+        (expression_statement
+          (primary_expression
+            (rune)))
+        (expression_statement
+          (primary_expression
+            (rune)))
+        (expression_statement
+          (primary_expression
+            (rune)))))))
+
+================================================================================
+Bytes escape sequences - unicode is rejected
+:error
+================================================================================
+
+fn main() {
+    b"\u{41}"
+}
+
+--------------------------------------------------------------------------------
 
 ================================================================================
 Bytes escape sequences - basic
