@@ -970,8 +970,10 @@ export default grammar({
     // anywhere after its first character. Binary and octal magnitudes take any
     // decimal digit so the compiler can report an out-of-radix digit.
     // Identifier characters directly after the magnitude form a separate
-    // `number_suffix` node (42i, 1e3f, 0xFFi), so any suffix is lexed and new
-    // suffixes stay non-breaking; the compiler rejects unknown ones. The
+    // `number_suffix` node (42i, 1e3f, 1.5f), so any suffix is lexed and new
+    // suffixes stay non-breaking; the compiler rejects unknown ones, and any
+    // suffix on a binary, octal, or hexadecimal literal (write +0xFF, not
+    // 0xFFi), so a trailing hex digit is never mistaken for a suffix. The
     // external scanner lexes the suffix: as an internal token it would overlap
     // `identifier` and break keyword extraction (`fn_double` → `fn` `_double`). A signed
     // exponent is only lexed after decimal digits, so `0x1e-3` is `0x1e - 3`.
