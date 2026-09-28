@@ -197,6 +197,10 @@ static enum TokenType mode_start_token(ScanMode mode) {
     }
 }
 
+static bool mode_processes_escapes(ScanMode mode) {
+    return mode == MODE_MULTILINE_STRING || mode == MODE_MULTILINE_BYTES;
+}
+
 // Scan interpolated content until interpolation or end delimiter
 // Returns true if content was found (even empty content before \{ or end)
 static bool scan_interpolated_content(TSLexer *lexer, Scanner *scanner, ScanMode mode) {
@@ -220,6 +224,11 @@ static bool scan_interpolated_content(TSLexer *lexer, Scanner *scanner, ScanMode
             if (lexer->lookahead == '{') {
                 lexer->result_symbol = content_token;
                 return true;
+            }
+            // In literals that process escapes, `\\` is one escape, so the
+            // backslash it produces cannot start an interpolation.
+            if (lexer->lookahead == '\\' && mode_processes_escapes(mode)) {
+                advance(lexer);
             }
             has_content = true;
             continue;

@@ -227,3 +227,70 @@ fn main() {
                   (value_path
                     (identifier))))
               (multiline_bytes_segment))))))))
+
+================================================================================
+Multiline string escaped backslash before brace
+================================================================================
+
+fn main() { #"a\\{x}"# }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_string
+              (multiline_string_segment))))))))
+
+================================================================================
+Multiline bytes escaped backslash before interpolation
+================================================================================
+
+fn main() { b#"\\\{x}"# }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (multiline_bytes
+              (multiline_bytes_segment)
+              (multiline_bytes_interpolation
+                expression: (primary_expression
+                  (value_path
+                    (identifier))))
+              (multiline_bytes_segment))))))))
+
+================================================================================
+Raw interpolated string backslash before interpolation
+================================================================================
+
+fn main() { rs"\\{x}" }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (raw_interpolated_string
+              (raw_interpolated_string_segment)
+              (interpolation
+                expression: (primary_expression
+                  (value_path
+                    (identifier))))
+              (raw_interpolated_string_segment))))))))
