@@ -92,7 +92,7 @@ fn test(opt) {
                     name: (type_path
                       (type_identifier)))))
               value: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Constructor pattern with multiple arguments
@@ -149,7 +149,7 @@ fn test(pair) {
                 (simple_pattern
                   (wildcard_pattern)))
               value: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Nested constructor patterns
@@ -213,7 +213,7 @@ fn test(opt) {
                             name: (type_path
                               (type_identifier)))))))))
               value: (primary_expression
-                (nat_literal)))
+                (number_literal)))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -221,7 +221,7 @@ fn test(opt) {
                     name: (type_path
                       (type_identifier)))))
               value: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Constructor pattern with struct fields
@@ -336,7 +336,7 @@ fn test(pair) {
                 (simple_pattern
                   (wildcard_pattern)))
               value: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Tuple pattern with three elements
@@ -529,7 +529,7 @@ fn test(xs) {
                 (simple_pattern
                   (list_pattern)))
               value: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 List pattern with elements

@@ -32,9 +32,9 @@ fn test(f: fn(Int, Int) -> Int) {
               (identifier))
             (argument_list
               (primary_expression
-                (nat_literal))
+                (number_literal))
               (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Function type - no parameters
@@ -97,7 +97,7 @@ fn test(f: fn(Int) ->{} Int) {
               (identifier))
             (argument_list
               (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Function type - single ability
@@ -265,9 +265,9 @@ fn apply(f: fn(fn(Int) -> Int, Int) -> Int) {
                     (value_path
                       (identifier)))
                   right: (primary_expression
-                    (nat_literal))))
+                    (number_literal))))
               (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Function type - generic parameter types
@@ -347,7 +347,7 @@ fn test(f: fn(Int, String,) -> Bool) {
               (identifier))
             (argument_list
               (primary_expression
-                (nat_literal))
+                (number_literal))
               (primary_expression
                 (string
                   (string_segment))))))))))
@@ -505,7 +505,7 @@ fn counter() ->{State(Int)} Int {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Return type annotation - multiple abilities
@@ -573,7 +573,7 @@ fn run_effect() ->{State(Int), e} Int {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Return type annotation - empty ability row (pure)
@@ -597,7 +597,7 @@ fn pure_fn() ->{} Int {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Return type annotation - generic ability with generic type
@@ -809,7 +809,7 @@ fn example() ->{abilities::Throw(Nat)} Nat {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Ability path - deeply nested module path
@@ -846,4 +846,4 @@ fn example() ->{pkg::std::abilities::Throw(Int)} Int {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))

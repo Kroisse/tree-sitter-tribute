@@ -41,9 +41,9 @@ fn test() {
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (nat_literal))
+              (number_literal))
             right: (primary_expression
-              (nat_literal))))))))
+              (number_literal))))))))
 
 ================================================================================
 Function with string call
@@ -128,9 +128,9 @@ fn test() {
               (identifier))
             (argument_list
               (primary_expression
-                (nat_literal))
+                (number_literal))
               (primary_expression
-                (nat_literal)))))
+                (number_literal)))))
         (expression_statement
           (primary_expression
             (value_path
@@ -155,12 +155,12 @@ fn test() {
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (nat_literal))
+              (number_literal))
             right: (binary_expression
               left: (primary_expression
-                (nat_literal))
+                (number_literal))
               right: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Nested function calls
@@ -192,11 +192,11 @@ fn test() {
                       (identifier))
                     (argument_list
                       (primary_expression
-                        (nat_literal))
+                        (number_literal))
                       (primary_expression
-                        (nat_literal))))
+                        (number_literal))))
                   (primary_expression
-                    (nat_literal)))))))))))
+                    (number_literal)))))))))))
 
 ================================================================================
 Comments
@@ -224,7 +224,7 @@ fn test() {
               (identifier_pattern
                 (identifier))))
           value: (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (line_comment)
         (expression_statement
           (primary_expression
@@ -258,7 +258,7 @@ fn test() {
               (identifier_pattern
                 (identifier))))
           value: (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (let_statement
           (keyword_let)
           pattern: (pattern
@@ -266,7 +266,7 @@ fn test() {
               (identifier_pattern
                 (identifier))))
           value: (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (let_statement
           (keyword_let)
           pattern: (pattern
@@ -327,7 +327,7 @@ fn test_number(n) {
               pattern: (pattern
                 (simple_pattern
                   (literal_pattern
-                    (nat_literal))))
+                    (number_literal))))
               value: (primary_expression
                 (string
                   (string_segment))))
@@ -335,7 +335,7 @@ fn test_number(n) {
               pattern: (pattern
                 (simple_pattern
                   (literal_pattern
-                    (nat_literal))))
+                    (number_literal))))
               value: (primary_expression
                 (string
                   (string_segment))))
@@ -343,7 +343,7 @@ fn test_number(n) {
               pattern: (pattern
                 (simple_pattern
                   (literal_pattern
-                    (nat_literal))))
+                    (number_literal))))
               value: (primary_expression
                 (string
                   (string_segment))))
@@ -464,7 +464,7 @@ fn test() {
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (nat_literal))
+              (number_literal))
             method: (value_path
               (path_segment
                 (identifier))
@@ -649,7 +649,7 @@ const max_size = 1000
     (keyword_const)
     name: (identifier)
     value: (primary_expression
-      (nat_literal))))
+      (number_literal))))
 
 ================================================================================
 Const with type annotation
@@ -666,7 +666,7 @@ const pi: Float = 3.14159
     type: (type_path
       (type_identifier))
     value: (primary_expression
-      (float_literal))))
+      (number_literal))))
 
 ================================================================================
 Pub const with string value
@@ -884,7 +884,7 @@ fn test() {
               (identifier))
             (argument_list
               (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Case with single guard
@@ -926,7 +926,7 @@ fn test(n) {
                     (value_path
                       (identifier)))
                   right: (primary_expression
-                    (nat_literal)))
+                    (number_literal)))
                 value: (primary_expression
                   (string
                     (string_segment)))))
@@ -979,7 +979,7 @@ fn test(n) {
                     (value_path
                       (identifier)))
                   right: (primary_expression
-                    (nat_literal)))
+                    (number_literal)))
                 value: (primary_expression
                   (string
                     (string_segment))))
@@ -990,7 +990,7 @@ fn test(n) {
                     (value_path
                       (identifier)))
                   right: (primary_expression
-                    (nat_literal)))
+                    (number_literal)))
                 value: (primary_expression
                   (string
                     (string_segment)))))

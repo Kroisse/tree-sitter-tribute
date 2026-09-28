@@ -93,9 +93,7 @@
     (type_identifier) @constructor))
 
 ; Numbers
-(nat_literal) @number
-(int_literal) @number
-(float_literal) @number
+(number_literal) @number
 
 ; Strings
 (string) @string

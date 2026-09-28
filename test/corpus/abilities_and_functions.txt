@@ -176,7 +176,7 @@ fn test() {
                 (value_path
                   (identifier)))
               right: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Lambda with multiple parameters
@@ -248,14 +248,14 @@ fn test() {
                       (value_path
                         (identifier)))
                     right: (primary_expression
-                      (nat_literal))))
+                      (number_literal))))
                 (expression_statement
                   (binary_expression
                     left: (primary_expression
                       (value_path
                         (identifier)))
                     right: (primary_expression
-                      (nat_literal))))))))))))
+                      (number_literal))))))))))))
 
 ================================================================================
 Lambda without parameters
@@ -277,7 +277,7 @@ fn test() {
           (lambda_expression
             (keyword_fn)
             body: (primary_expression
-              (nat_literal))))))))
+              (number_literal))))))))
 
 ================================================================================
 Lambda as function argument
@@ -313,7 +313,7 @@ fn test() {
                     (value_path
                       (identifier)))
                   right: (primary_expression
-                    (nat_literal)))))))))))
+                    (number_literal)))))))))))
 
 ================================================================================
 Function with return type annotation
@@ -407,7 +407,7 @@ fn test() {
                 (value_path
                   (identifier)))
               right: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Function with typed parameters
@@ -510,7 +510,7 @@ fn test() {
                 (value_path
                   (identifier)))
               right: (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Mixed typed and untyped parameters

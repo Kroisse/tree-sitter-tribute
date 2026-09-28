@@ -254,7 +254,7 @@ mod utils {
           body: (block
             (expression_statement
               (primary_expression
-                (nat_literal)))))))))
+                (number_literal)))))))))
 
 ================================================================================
 Nested mod declarations
@@ -281,7 +281,7 @@ mod outer {
             (keyword_const)
             name: (identifier)
             value: (primary_expression
-              (nat_literal))))))))
+              (number_literal))))))))
 
 ================================================================================
 Pub function inside mod
@@ -396,7 +396,7 @@ pub(pkg) fn internal_helper() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Visibility pub(super)

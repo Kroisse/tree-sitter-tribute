@@ -21,22 +21,22 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (int_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (float_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Numeric literals - exponents
@@ -61,22 +61,22 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (int_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (float_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (float_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Numeric literals - type suffixes
@@ -103,35 +103,35 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (int_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (float_literal
+            (number_literal
               (number_suffix))))))))
 
 ================================================================================
@@ -155,17 +155,17 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))))))
 
 ================================================================================
@@ -190,20 +190,20 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal
+            (number_literal
               (number_suffix))))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (float_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Numeric literals - method calls on literals
@@ -226,19 +226,19 @@ fn main() {
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (nat_literal))
+              (number_literal))
             method: (value_path
               (identifier))))
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (float_literal))
+              (number_literal))
             method: (value_path
               (identifier))))
         (expression_statement
           (method_call_expression
             receiver: (primary_expression
-              (nat_literal))
+              (number_literal))
             method: (value_path
               (identifier))))))))
 
@@ -260,10 +260,10 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
-            (int_literal)))))))
+            (number_literal)))))))
 
 ================================================================================
 Numeric literals - suffix must be adjacent across block comments
@@ -286,7 +286,7 @@ fn main() {
       body: (block
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (block_comment)
         (expression_statement
           (primary_expression
@@ -294,7 +294,7 @@ fn main() {
               (identifier))))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (block_comment)
         (expression_statement
           (primary_expression
@@ -302,7 +302,7 @@ fn main() {
               (identifier))))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (block_comment)
         (expression_statement
           (primary_expression
@@ -310,7 +310,7 @@ fn main() {
               (identifier))))
         (expression_statement
           (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (block_comment)
         (expression_statement
           (binary_expression
@@ -318,5 +318,5 @@ fn main() {
               (value_path
                 (identifier)))
             right: (primary_expression
-              (nat_literal
+              (number_literal
                 (number_suffix)))))))))

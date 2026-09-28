@@ -62,7 +62,7 @@ fn test(value: std::io::ReadLineResult) {
               (record_field
                 (identifier)
                 (primary_expression
-                  (int_literal)))
+                  (number_literal)))
               (record_field
                 (identifier)
                 (primary_expression
