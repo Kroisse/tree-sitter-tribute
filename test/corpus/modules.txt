@@ -427,3 +427,42 @@ pub(super) struct LocalConfig {
           name: (identifier)
           type: (type_path
             (type_identifier)))))))
+
+================================================================================
+Use with self path keyword
+================================================================================
+
+pub use self::basic::{add, self as basic}
+use self::advanced::power as pow
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_use)
+    tree: (use_tree
+      (path_keyword
+        (keyword_self))
+      (use_tree
+        (identifier)
+        (use_group
+          (use_tree
+            (identifier))
+          (use_tree
+            (path_keyword
+              (keyword_self))
+            (keyword_as)
+            alias: (identifier))))))
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (path_keyword
+        (keyword_self))
+      (use_tree
+        (identifier)
+        (use_tree
+          (identifier)
+          (keyword_as)
+          alias: (identifier))))))

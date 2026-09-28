@@ -114,31 +114,24 @@ export default grammar({
       ),
 
     // Recursive use tree structure supporting:
-    // - self, self as alias
     // - name, name as alias
     // - path::to::item, path::to::item as alias
     // - path::{nested, groups}
+    // - pkg::…, super::…, self::… (module-relative paths)
+    // - self, self as alias (inside a group)
     use_tree: ($) =>
-      choice(
-        // self with optional alias: self, self as foo
-        seq(
-          alias($._self_path_keyword, $.path_keyword),
-          optional(seq($.keyword_as, field("alias", $._name))),
-        ),
-        // path-based trees
-        seq(
-          choice($._name, alias($._outer_path_keyword, $.path_keyword)),
-          optional(
-            choice(
-              // Just an alias: foo as bar
-              seq($.keyword_as, field("alias", $._name)),
-              // Continue with :: followed by more tree or group
-              seq(
-                "::",
-                choice(
-                  $.use_group,
-                  $.use_tree,
-                ),
+      seq(
+        choice($._name, $.path_keyword),
+        optional(
+          choice(
+            // Just an alias: foo as bar
+            seq($.keyword_as, field("alias", $._name)),
+            // Continue with :: followed by more tree or group
+            seq(
+              "::",
+              choice(
+                $.use_group,
+                $.use_tree,
               ),
             ),
           ),
@@ -150,11 +143,10 @@ export default grammar({
       seq("{", $.use_tree, repeat(seq(",", $.use_tree)), optional(","), "}"),
 
     // Path keywords for module-relative paths (used in expressions)
-    path_keyword: ($) => choice($._outer_path_keyword, $._self_path_keyword),
-    // Path keywords by the module they name: an enclosing one (also valid in
-    // restricted visibility), or the current one.
+    path_keyword: ($) => choice($._outer_path_keyword, $.keyword_self),
+    // Path keywords naming an enclosing module, also valid in restricted
+    // visibility: pub(pkg), pub(super)
     _outer_path_keyword: ($) => choice($.keyword_pkg, $.keyword_super),
-    _self_path_keyword: ($) => $.keyword_self,
 
     // struct User { name: String, age: Nat }
     // struct Box(a) { value: a }
