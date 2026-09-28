@@ -4739,7 +4739,7 @@
     },
     "identifier": {
       "type": "PATTERN",
-      "value": "[a-z_][a-zA-Z0-9_]*"
+      "value": "[a-z_][a-zA-Z0-9_]*|r#[a-z_][a-zA-Z0-9_]*"
     },
     "_name": {
       "type": "CHOICE",
@@ -5078,5 +5078,88 @@
   ],
   "inline": [],
   "supertypes": [],
-  "reserved": {}
+  "reserved": {
+    "global": [
+      {
+        "type": "SYMBOL",
+        "name": "keyword_fn"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_op"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_do"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_let"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_const"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_struct"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_enum"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_ability"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_mod"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_pub"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_use"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_extern"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_case"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_handle"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_resume"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_if"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_as"
+      },
+      {
+        "type": "STRING",
+        "value": "pkg"
+      },
+      {
+        "type": "STRING",
+        "value": "super"
+      },
+      {
+        "type": "STRING",
+        "value": "self"
+      }
+    ]
+  }
 }

@@ -1106,7 +1106,8 @@ export default grammar({
 
     // Identifiers start with lowercase letter or underscore (values, functions, constants)
     // Using RustRegex for future Unicode extensibility
-    identifier: ($) => re`[a-z_][a-zA-Z0-9_]*`,
+    // `r#name` is a raw identifier: the same name, even if it is a keyword.
+    identifier: ($) => re`[a-z_][a-zA-Z0-9_]*|r#[a-z_][a-zA-Z0-9_]*`,
 
     // Name can be either identifier or type_identifier (used in paths, modules)
     _name: ($) => choice($.identifier, $.type_identifier),
@@ -1161,6 +1162,34 @@ export default grammar({
   ],
 
   word: ($) => $.identifier,
+
+  // Strict keywords: never an identifier, in any position. `r#name` spells
+  // any of them as an identifier. The words reserved for future use
+  // (`type`, `where`, `in`) are not tokens yet, so the compiler rejects them.
+  reserved: {
+    global: ($) => [
+      $.keyword_fn,
+      $.keyword_op,
+      $.keyword_do,
+      $.keyword_let,
+      $.keyword_const,
+      $.keyword_struct,
+      $.keyword_enum,
+      $.keyword_ability,
+      $.keyword_mod,
+      $.keyword_pub,
+      $.keyword_use,
+      $.keyword_extern,
+      $.keyword_case,
+      $.keyword_handle,
+      $.keyword_resume,
+      $.keyword_if,
+      $.keyword_as,
+      "pkg",
+      "super",
+      "self",
+    ],
+  },
 
   inline: ($) => [],
 });
