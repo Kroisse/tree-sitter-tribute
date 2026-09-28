@@ -306,21 +306,13 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "keyword_pkg"
+          "name": "_outer_path_keyword"
         },
         {
           "type": "SYMBOL",
-          "name": "keyword_super"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "keyword_self"
+          "name": "_self_path_keyword"
         }
       ]
-    },
-    "_self_path_keyword": {
-      "type": "SYMBOL",
-      "name": "keyword_self"
     },
     "_outer_path_keyword": {
       "type": "CHOICE",
@@ -334,6 +326,10 @@
           "name": "keyword_super"
         }
       ]
+    },
+    "_self_path_keyword": {
+      "type": "SYMBOL",
+      "name": "keyword_self"
     },
     "struct_declaration": {
       "type": "SEQ",
@@ -4856,17 +4852,8 @@
                   "value": "("
                 },
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "keyword_pkg"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "keyword_super"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "_outer_path_keyword"
                 },
                 {
                   "type": "STRING",

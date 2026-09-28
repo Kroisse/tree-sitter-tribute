@@ -150,10 +150,11 @@ export default grammar({
       seq("{", $.use_tree, repeat(seq(",", $.use_tree)), optional(","), "}"),
 
     // Path keywords for module-relative paths (used in expressions)
-    path_keyword: ($) => choice($.keyword_pkg, $.keyword_super, $.keyword_self),
-    // Restricted path keywords for `use` trees, aliased to path_keyword
-    _self_path_keyword: ($) => $.keyword_self,
+    path_keyword: ($) => choice($._outer_path_keyword, $._self_path_keyword),
+    // Path keywords by the module they name: an enclosing one (also valid in
+    // restricted visibility), or the current one.
     _outer_path_keyword: ($) => choice($.keyword_pkg, $.keyword_super),
+    _self_path_keyword: ($) => $.keyword_self,
 
     // struct User { name: String, age: Nat }
     // struct Box(a) { value: a }
@@ -1134,7 +1135,7 @@ export default grammar({
     visibility_marker: ($) =>
       seq(
         $.keyword_pub,
-        optional(seq("(", choice($.keyword_pkg, $.keyword_super), ")")),
+        optional(seq("(", $._outer_path_keyword, ")")),
       ),
     keyword_use: ($) => "use",
     keyword_mod: ($) => "mod",
