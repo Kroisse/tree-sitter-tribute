@@ -1,0 +1,322 @@
+================================================================================
+Numeric literals - digit separators
+================================================================================
+
+fn main() {
+    1_000
+    0x_FF_FF
+    1__0
+    1_
+    -1_000
+    1_000.000_1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (int_literal)))
+        (expression_statement
+          (primary_expression
+            (float_literal)))))))
+
+================================================================================
+Numeric literals - exponents
+================================================================================
+
+fn main() {
+    1e10
+    2E+8
+    -1e3
+    1.5e-3
+    +1.0E10
+    1_0e1_0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (int_literal)))
+        (expression_statement
+          (primary_expression
+            (float_literal)))
+        (expression_statement
+          (primary_expression
+            (float_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))))))
+
+================================================================================
+Numeric literals - type suffixes
+================================================================================
+
+fn main() {
+    42n
+    42i
+    -42i
+    42f
+    1e3f
+    0xFFi
+    1_000_i
+    1.5f
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (int_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (float_literal
+              (number_suffix))))))))
+
+================================================================================
+Numeric literals - hex digits are not a suffix
+================================================================================
+
+fn main() {
+    0xff
+    0x1f
+    0xFFi
+    0z12
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))))))
+
+================================================================================
+Numeric literals - malformed tokens stay single literals
+================================================================================
+
+fn main() {
+    0b102
+    42u8
+    1e
+    0x
+    1.0e
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal
+              (number_suffix))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (float_literal)))))))
+
+================================================================================
+Numeric literals - method calls on literals
+================================================================================
+
+fn main() {
+    1.abs
+    1.0.abs
+    1e3.abs
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (method_call_expression
+            receiver: (primary_expression
+              (nat_literal))
+            method: (value_path
+              (identifier))))
+        (expression_statement
+          (method_call_expression
+            receiver: (primary_expression
+              (float_literal))
+            method: (value_path
+              (identifier))))
+        (expression_statement
+          (method_call_expression
+            receiver: (primary_expression
+              (nat_literal))
+            method: (value_path
+              (identifier))))))))
+
+================================================================================
+Numeric literals - hex digit e is not an exponent
+================================================================================
+
+fn main() {
+    0x1e-3
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (expression_statement
+          (primary_expression
+            (int_literal)))))))
+
+================================================================================
+Numeric literals - suffix must be adjacent across block comments
+================================================================================
+
+fn main() {
+    1 /* comment */ foo
+    1 /* comment */foo
+    2/**/i
+    3/**/x + 4i
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (nat_literal)))
+        (block_comment)
+        (expression_statement
+          (binary_expression
+            left: (primary_expression
+              (value_path
+                (identifier)))
+            right: (primary_expression
+              (nat_literal
+                (number_suffix)))))))))
