@@ -146,8 +146,8 @@
             {
               "type": "ALIAS",
               "content": {
-                "type": "STRING",
-                "value": "self"
+                "type": "SYMBOL",
+                "name": "_self_path_keyword"
               },
               "named": true,
               "value": "path_keyword"
@@ -192,17 +192,8 @@
                 {
                   "type": "ALIAS",
                   "content": {
-                    "type": "CHOICE",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "pkg"
-                      },
-                      {
-                        "type": "STRING",
-                        "value": "super"
-                      }
-                    ]
+                    "type": "SYMBOL",
+                    "name": "_outer_path_keyword"
                   },
                   "named": true,
                   "value": "path_keyword"
@@ -314,16 +305,33 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "STRING",
-          "value": "pkg"
+          "type": "SYMBOL",
+          "name": "keyword_pkg"
         },
         {
-          "type": "STRING",
-          "value": "super"
+          "type": "SYMBOL",
+          "name": "keyword_super"
         },
         {
-          "type": "STRING",
-          "value": "self"
+          "type": "SYMBOL",
+          "name": "keyword_self"
+        }
+      ]
+    },
+    "_self_path_keyword": {
+      "type": "SYMBOL",
+      "name": "keyword_self"
+    },
+    "_outer_path_keyword": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "keyword_pkg"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "keyword_super"
         }
       ]
     },
@@ -4851,12 +4859,12 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "STRING",
-                      "value": "pkg"
+                      "type": "SYMBOL",
+                      "name": "keyword_pkg"
                     },
                     {
-                      "type": "STRING",
-                      "value": "super"
+                      "type": "SYMBOL",
+                      "name": "keyword_super"
                     }
                   ]
                 },
@@ -4892,6 +4900,18 @@
     "keyword_as": {
       "type": "STRING",
       "value": "as"
+    },
+    "keyword_pkg": {
+      "type": "STRING",
+      "value": "pkg"
+    },
+    "keyword_super": {
+      "type": "STRING",
+      "value": "super"
+    },
+    "keyword_self": {
+      "type": "STRING",
+      "value": "self"
     },
     "keyword_true": {
       "type": "TOKEN",
@@ -5149,16 +5169,16 @@
         "name": "keyword_as"
       },
       {
-        "type": "STRING",
-        "value": "pkg"
+        "type": "SYMBOL",
+        "name": "keyword_pkg"
       },
       {
-        "type": "STRING",
-        "value": "super"
+        "type": "SYMBOL",
+        "name": "keyword_super"
       },
       {
-        "type": "STRING",
-        "value": "self"
+        "type": "SYMBOL",
+        "name": "keyword_self"
       }
     ]
   }

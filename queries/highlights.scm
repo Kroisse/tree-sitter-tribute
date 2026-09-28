@@ -3,6 +3,8 @@
 ; Keywords
 [
   (keyword_fn)
+  (keyword_op)
+  (keyword_do)
   (keyword_let)
   (keyword_case)
   (keyword_struct)
@@ -15,7 +17,11 @@
   (keyword_mod)
   (keyword_if)
   (keyword_handle)
+  (keyword_resume)
   (keyword_as)
+  (keyword_pkg)
+  (keyword_super)
+  (keyword_self)
 ] @keyword
 
 ; Boolean and nil literals (keyword-like constants)

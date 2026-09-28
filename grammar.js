@@ -122,12 +122,12 @@ export default grammar({
       choice(
         // self with optional alias: self, self as foo
         seq(
-          alias("self", $.path_keyword),
+          alias($._self_path_keyword, $.path_keyword),
           optional(seq($.keyword_as, field("alias", $._name))),
         ),
         // path-based trees
         seq(
-          choice($._name, alias(choice("pkg", "super"), $.path_keyword)),
+          choice($._name, alias($._outer_path_keyword, $.path_keyword)),
           optional(
             choice(
               // Just an alias: foo as bar
@@ -150,7 +150,10 @@ export default grammar({
       seq("{", $.use_tree, repeat(seq(",", $.use_tree)), optional(","), "}"),
 
     // Path keywords for module-relative paths (used in expressions)
-    path_keyword: ($) => choice("pkg", "super", "self"),
+    path_keyword: ($) => choice($.keyword_pkg, $.keyword_super, $.keyword_self),
+    // Restricted path keywords for `use` trees, aliased to path_keyword
+    _self_path_keyword: ($) => $.keyword_self,
+    _outer_path_keyword: ($) => choice($.keyword_pkg, $.keyword_super),
 
     // struct User { name: String, age: Nat }
     // struct Box(a) { value: a }
@@ -1131,13 +1134,16 @@ export default grammar({
     visibility_marker: ($) =>
       seq(
         $.keyword_pub,
-        optional(seq("(", choice("pkg", "super"), ")")),
+        optional(seq("(", choice($.keyword_pkg, $.keyword_super), ")")),
       ),
     keyword_use: ($) => "use",
     keyword_mod: ($) => "mod",
     keyword_if: ($) => "if",
     keyword_handle: ($) => "handle",
     keyword_as: ($) => "as",
+    keyword_pkg: ($) => "pkg",
+    keyword_super: ($) => "super",
+    keyword_self: ($) => "self",
     keyword_true: ($) => token(prec(1, "True")),
     keyword_false: ($) => token(prec(1, "False")),
     keyword_nil: ($) => token(prec(1, "Nil")),
@@ -1185,9 +1191,9 @@ export default grammar({
       $.keyword_resume,
       $.keyword_if,
       $.keyword_as,
-      "pkg",
-      "super",
-      "self",
+      $.keyword_pkg,
+      $.keyword_super,
+      $.keyword_self,
     ],
   },
 
