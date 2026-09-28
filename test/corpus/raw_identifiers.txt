@@ -1,0 +1,136 @@
+================================================================================
+Raw identifier binding and use
+================================================================================
+
+fn main() { let r#op = 1
+r#op }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (number_literal)))
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
+
+================================================================================
+Raw identifier as function name, parameter, and field
+================================================================================
+
+fn r#handle(r#case: Int) { x.r#type }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      body: (block
+        (expression_statement
+          (method_call_expression
+            receiver: (primary_expression
+              (value_path
+                (identifier)))
+            method: (value_path
+              (identifier))))))))
+
+================================================================================
+Raw identifier in struct declaration and use path
+================================================================================
+
+use foo::r#op
+struct T { r#as: Int }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier))))
+  (struct_declaration
+    (keyword_struct)
+    name: (type_identifier)
+    body: (struct_body
+      (struct_fields
+        (struct_field
+          name: (identifier)
+          type: (type_path
+            (type_identifier)))))))
+
+================================================================================
+Raw string next to a raw identifier
+================================================================================
+
+fn main() { r#"x"# == r#y }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (binary_expression
+            left: (primary_expression
+              (raw_string
+                (raw_string_literal)))
+            right: (primary_expression
+              (value_path
+                (identifier)))))))))
+
+================================================================================
+Keyword as a let binding is an error
+:error
+================================================================================
+
+fn main() { let op = 1 }
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Keyword as a field name is an error
+:error
+================================================================================
+
+struct T { case: Int }
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+Keyword after a dot is an error
+:error
+================================================================================
+
+fn main() { x.as }
+
+--------------------------------------------------------------------------------
+
+

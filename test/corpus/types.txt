@@ -831,7 +831,8 @@ fn example() ->{pkg::std::abilities::Throw(Int)} Int {
           (ability_list
             (ability_item
               name: (ability_path
-                (path_keyword)
+                (path_keyword
+                  (keyword_pkg))
                 (path_segment
                   (identifier))
                 (path_segment

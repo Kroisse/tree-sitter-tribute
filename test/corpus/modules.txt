@@ -119,7 +119,8 @@ use pkg::utils::helper
   (use_declaration
     (keyword_use)
     tree: (use_tree
-      (path_keyword)
+      (path_keyword
+        (keyword_pkg))
       (use_tree
         (identifier)
         (use_tree
@@ -137,7 +138,8 @@ use super::parent_func
   (use_declaration
     (keyword_use)
     tree: (use_tree
-      (path_keyword)
+      (path_keyword
+        (keyword_super))
       (use_tree
         (identifier)))))
 
@@ -182,7 +184,8 @@ use a::{b::{self, c as d, e as f}, g::h as i, j as k}
           (identifier)
           (use_group
             (use_tree
-              (path_keyword))
+              (path_keyword
+                (keyword_self)))
             (use_tree
               (identifier)
               (keyword_as)
@@ -349,7 +352,8 @@ fn test() {
         (expression_statement
           (call_expression
             function: (value_path
-              (path_keyword)
+              (path_keyword
+                (keyword_pkg))
               (path_segment
                 (identifier))
               (identifier))))))))
@@ -373,7 +377,8 @@ fn test() {
         (expression_statement
           (call_expression
             function: (value_path
-              (path_keyword)
+              (path_keyword
+                (keyword_super))
               (identifier))))))))
 
 ================================================================================
@@ -390,7 +395,8 @@ pub(pkg) fn internal_helper() {
   (function_definition
     (regular_function
       (visibility_marker
-        (keyword_pub))
+        (keyword_pub)
+        (keyword_pkg))
       (keyword_fn)
       name: (identifier)
       body: (block
@@ -411,7 +417,8 @@ pub(super) struct LocalConfig {
 (source_file
   (struct_declaration
     (visibility_marker
-      (keyword_pub))
+      (keyword_pub)
+      (keyword_super))
     (keyword_struct)
     name: (type_identifier)
     body: (struct_body

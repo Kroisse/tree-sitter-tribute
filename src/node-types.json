@@ -2348,7 +2348,25 @@
   {
     "type": "path_keyword",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_pkg",
+          "named": true
+        },
+        {
+          "type": "keyword_self",
+          "named": true
+        },
+        {
+          "type": "keyword_super",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "path_segment",
@@ -3595,11 +3613,19 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
+          "type": "keyword_pkg",
+          "named": true
+        },
+        {
           "type": "keyword_pub",
+          "named": true
+        },
+        {
+          "type": "keyword_super",
           "named": true
         }
       ]
@@ -3788,6 +3814,10 @@
     "named": true
   },
   {
+    "type": "keyword_pkg",
+    "named": true
+  },
+  {
     "type": "keyword_pub",
     "named": true
   },
@@ -3796,7 +3826,15 @@
     "named": true
   },
   {
+    "type": "keyword_self",
+    "named": true
+  },
+  {
     "type": "keyword_struct",
+    "named": true
+  },
+  {
+    "type": "keyword_super",
     "named": true
   },
   {
@@ -3826,10 +3864,6 @@
     "named": true
   },
   {
-    "type": "pkg",
-    "named": false
-  },
-  {
     "type": "qualified_operator",
     "named": true
   },
@@ -3850,16 +3884,8 @@
     "named": false
   },
   {
-    "type": "self",
-    "named": false
-  },
-  {
     "type": "spread",
     "named": true
-  },
-  {
-    "type": "super",
-    "named": false
   },
   {
     "type": "type_identifier",
