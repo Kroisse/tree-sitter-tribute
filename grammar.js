@@ -26,7 +26,7 @@ function re(strings, ...values) {
   return new RustRegex(pattern);
 };
 
-// Magnitudes of integer literals, one per radix. See `nat_literal`.
+// Magnitudes of integer literals, one per radix. See `number_literal`.
 const NUMBER_MAGNITUDES = [
   re`[0-9][0-9_]*([eE][+-]?[0-9_]*)?`, // decimal: 42, 1_000, 1e10
   re`0[xX][0-9a-fA-F_]*`, // hexadecimal: 0xFF, 0x_FF
@@ -669,9 +669,7 @@ export default grammar({
 
     literal_pattern: ($) =>
       choice(
-        $.float_literal,
-        $.int_literal,
-        $.nat_literal,
+        $.number_literal,
         $.string,
         $.raw_string,
         $.raw_interpolated_string,
@@ -768,9 +766,7 @@ export default grammar({
         $.keyword_true,
         $.keyword_false,
         $.keyword_nil,
-        $.float_literal,
-        $.int_literal,
-        $.nat_literal,
+        $.number_literal,
         $.string,
         $.raw_string,
         $.raw_interpolated_string,
@@ -962,31 +958,31 @@ export default grammar({
         ")",
       ),
 
-    // Number literals, classified by lexical shape:
-    //   Nat:   unsigned integer (42, 0xFF, 1_000, 1e10)
-    //   Int:   signed integer (+1, -0b1010, -1e3)
-    //   Float: decimal point with digits on both sides (1.0, -3.14, 1.5e-3)
-    // The magnitude token spells out each radix; `_` separators may appear
-    // anywhere after its first character. Binary and octal magnitudes take any
-    // decimal digit so the compiler can report an out-of-radix digit.
-    // Identifier characters directly after the magnitude form a separate
+    // Number literal: an optionally signed integer magnitude (42, -0b1010,
+    // 1_000, 1e10) or a decimal with a fractional part (1.0, -3.14, 1.5e-3),
+    // followed by an optional suffix. One node covers them all because the
+    // literal's type depends on its sign, decimal point, and suffix together
+    // (`42f` is a Float); the compiler decides it from the text.
+    // The magnitude spells out each radix; `_` separators may appear anywhere
+    // after its first character. Binary and octal magnitudes take any decimal
+    // digit so the compiler can report an out-of-radix digit.
+    // Identifier characters directly after the number form a separate
     // `number_suffix` node (42i, 1e3f, 1.5f), so any suffix is lexed and new
     // suffixes stay non-breaking; the compiler rejects unknown ones, and any
     // suffix on a binary, octal, or hexadecimal literal (write +0xFF, not
     // 0xFFi), so a trailing hex digit is never mistaken for a suffix. The
     // external scanner lexes the suffix: as an internal token it would overlap
-    // `identifier` and break keyword extraction (`fn_double` → `fn` `_double`). A signed
-    // exponent is only lexed after decimal digits, so `0x1e-3` is `0x1e - 3`.
-    nat_literal: ($) =>
-      seq(token(choice(...NUMBER_MAGNITUDES)), optional($.number_suffix)),
-    int_literal: ($) =>
+    // `identifier` and break keyword extraction (`fn_double` → `fn` `_double`).
+    // A signed exponent is only lexed after decimal digits, so `0x1e-3` is
+    // `0x1e - 3`.
+    number_literal: ($) =>
       seq(
-        token(seq(/[+-]/, choice(...NUMBER_MAGNITUDES))),
-        optional($.number_suffix),
-      ),
-    float_literal: ($) =>
-      seq(
-        token(re`[+-]?[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?`),
+        token(
+          choice(
+            seq(optional(/[+-]/), choice(...NUMBER_MAGNITUDES)),
+            re`[+-]?[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?`,
+          ),
+        ),
         optional($.number_suffix),
       ),
 

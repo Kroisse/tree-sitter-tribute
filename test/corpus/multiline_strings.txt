@@ -140,7 +140,7 @@ fn main() {
               (identifier_pattern
                 (identifier))))
           value: (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (let_statement
           (keyword_let)
           pattern: (pattern
@@ -148,7 +148,7 @@ fn main() {
               (identifier_pattern
                 (identifier))))
           value: (primary_expression
-            (nat_literal)))
+            (number_literal)))
         (expression_statement
           (primary_expression
             (multiline_string

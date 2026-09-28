@@ -34,7 +34,7 @@ fn test() {
                     (resume_expression
                       (keyword_resume)
                       value: (primary_expression
-                        (nat_literal)))))))))))))
+                        (number_literal)))))))))))))
 
 ================================================================================
 Resume with binary expression
@@ -178,7 +178,7 @@ fn test() {
                     (resume_expression
                       (keyword_resume)
                       value: (primary_expression
-                        (nat_literal)))))))
+                        (number_literal)))))))
             (handler_arm
               (op_handler
                 (keyword_op)
@@ -277,7 +277,7 @@ fn test() {
               (record_field
                 name: (identifier)
                 value: (primary_expression
-                  (nat_literal))))))))))
+                  (number_literal))))))))))
 
 ================================================================================
 Record expression with shorthand
@@ -334,7 +334,7 @@ fn test() {
               (record_field
                 name: (identifier)
                 value: (primary_expression
-                  (nat_literal))))))))))
+                  (number_literal))))))))))
 
 ================================================================================
 Record expression mixed
@@ -417,10 +417,10 @@ fn test() {
         (expression_statement
           (binary_expression
             left: (primary_expression
-              (nat_literal))
+              (number_literal))
             operator: (qualified_operator)
             right: (primary_expression
-              (nat_literal))))))))
+              (number_literal))))))))
 
 ================================================================================
 Qualified operator as function

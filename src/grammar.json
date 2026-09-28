@@ -3045,15 +3045,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "float_literal"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "int_literal"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "nat_literal"
+          "name": "number_literal"
         },
         {
           "type": "SYMBOL",
@@ -3535,15 +3527,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "float_literal"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "int_literal"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "nat_literal"
+          "name": "number_literal"
         },
         {
           "type": "SYMBOL",
@@ -4267,7 +4251,7 @@
         }
       ]
     },
-    "nat_literal": {
+    "number_literal": {
       "type": "SEQ",
       "members": [
         {
@@ -4276,96 +4260,48 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "PATTERN",
-                "value": "[0-9][0-9_]*([eE][+-]?[0-9_]*)?"
-              },
-              {
-                "type": "PATTERN",
-                "value": "0[xX][0-9a-fA-F_]*"
-              },
-              {
-                "type": "PATTERN",
-                "value": "0[oO][0-9_]*"
-              },
-              {
-                "type": "PATTERN",
-                "value": "0[bB][0-9_]*"
-              }
-            ]
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "number_suffix"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        }
-      ]
-    },
-    "int_literal": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "PATTERN",
-                "value": "[+-]"
-              },
-              {
-                "type": "CHOICE",
+                "type": "SEQ",
                 "members": [
                   {
-                    "type": "PATTERN",
-                    "value": "[0-9][0-9_]*([eE][+-]?[0-9_]*)?"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "PATTERN",
+                        "value": "[+-]"
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
                   },
                   {
-                    "type": "PATTERN",
-                    "value": "0[xX][0-9a-fA-F_]*"
-                  },
-                  {
-                    "type": "PATTERN",
-                    "value": "0[oO][0-9_]*"
-                  },
-                  {
-                    "type": "PATTERN",
-                    "value": "0[bB][0-9_]*"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "PATTERN",
+                        "value": "[0-9][0-9_]*([eE][+-]?[0-9_]*)?"
+                      },
+                      {
+                        "type": "PATTERN",
+                        "value": "0[xX][0-9a-fA-F_]*"
+                      },
+                      {
+                        "type": "PATTERN",
+                        "value": "0[oO][0-9_]*"
+                      },
+                      {
+                        "type": "PATTERN",
+                        "value": "0[bB][0-9_]*"
+                      }
+                    ]
                   }
                 ]
+              },
+              {
+                "type": "PATTERN",
+                "value": "[+-]?[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?"
               }
             ]
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "number_suffix"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        }
-      ]
-    },
-    "float_literal": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PATTERN",
-            "value": "[+-]?[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+-]?[0-9_]*)?"
           }
         },
         {
