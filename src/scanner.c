@@ -409,7 +409,8 @@ bool tree_sitter_tribute_external_scanner_scan(
             lexer->lookahead == '[' ||
             lexer->lookahead == '{' ||
             lexer->lookahead == '(' ||
-            lexer->lookahead == '#') {
+            lexer->lookahead == '#' ||
+            lexer->lookahead == '?') {  // rune literal
             lexer->result_symbol = NEWLINE;
             lexer->mark_end(lexer);
             return true;

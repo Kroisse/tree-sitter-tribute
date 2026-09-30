@@ -887,3 +887,53 @@ fn test(xs) {
               value: (primary_expression
                 (value_path
                   (identifier))))))))))
+
+================================================================================
+Rune literal patterns after newline separators
+================================================================================
+
+fn test(c) {
+    case c {
+        ?a -> ?b
+        ?\n -> ?c
+        _ -> ?d
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (literal_pattern
+                    (rune))))
+              value: (primary_expression
+                (rune)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (literal_pattern
+                    (rune))))
+              value: (primary_expression
+                (rune)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (wildcard_pattern)))
+              value: (primary_expression
+                (rune)))))))))
