@@ -45,6 +45,14 @@ const functionSignature = ($) => [
   optional(field("return_type", $.return_type_annotation)),
 ];
 
+// Helper: comma-separated items ending with an optional rest, which may also
+// stand alone: `item (, item)* (, rest)? ,?` or `rest ,?`.
+const withRest = (item, rest) =>
+  choice(
+    seq(rest, optional(",")),
+    seq(item, repeat(seq(",", item)), optional(seq(",", rest)), optional(",")),
+  );
+
 export default grammar({
   name: "tribute",
 
@@ -700,13 +708,9 @@ export default grammar({
     pattern_list: ($) =>
       seq($.pattern, repeat(seq(",", $.pattern)), optional(",")),
 
-    pattern_fields: ($) =>
-      seq(
-        $.pattern_field,
-        repeat(seq(",", $.pattern_field)),
-        optional(seq(",", $.spread)), // trailing .. to ignore rest
-        optional(","),
-      ),
+    // Fields, then an optional trailing `..` that ignores the rest:
+    // { a, b: p }, { a, .. }, { .. }
+    pattern_fields: ($) => withRest($.pattern_field, $.spread),
 
     // Spread operator: ..
     spread: ($) => "..",
@@ -724,23 +728,7 @@ export default grammar({
 
     // List pattern: [], [a, b, c], [head, ..tail], [first, ..]
     list_pattern: ($) =>
-      seq(
-        "[",
-        optional(
-          choice(
-            // [a, b, c] or [head, ..tail] or [first, ..]
-            seq(
-              $.pattern,
-              repeat(seq(",", $.pattern)),
-              optional(seq(",", $.rest_pattern)),
-              optional(","),
-            ),
-            // [..tail] - rest only
-            $.rest_pattern,
-          ),
-        ),
-        "]",
-      ),
+      seq("[", optional(withRest($.pattern, $.rest_pattern)), "]"),
 
     // Rest pattern: ..tail or ..
     rest_pattern: ($) => seq($.spread, optional(field("name", $.identifier))),
