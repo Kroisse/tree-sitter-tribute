@@ -701,11 +701,15 @@ export default grammar({
       seq($.pattern, repeat(seq(",", $.pattern)), optional(",")),
 
     pattern_fields: ($) =>
-      seq(
-        $.pattern_field,
-        repeat(seq(",", $.pattern_field)),
-        optional(seq(",", $.spread)), // trailing .. to ignore rest
-        optional(","),
+      choice(
+        // Only `..`: ignore every field
+        seq($.spread, optional(",")),
+        seq(
+          $.pattern_field,
+          repeat(seq(",", $.pattern_field)),
+          optional(seq(",", $.spread)), // trailing .. to ignore rest
+          optional(","),
+        ),
       ),
 
     // Spread operator: ..

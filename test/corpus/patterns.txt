@@ -937,3 +937,52 @@ fn test(c) {
                   (wildcard_pattern)))
               value: (primary_expression
                 (rune)))))))))
+
+================================================================================
+Constructor pattern with only a spread
+================================================================================
+
+fn test(shape) {
+    case shape {
+        Circle { .. } -> 1
+        Rect { .., } -> 2
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (spread)))))
+              value: (primary_expression
+                (number_literal)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (type_identifier))
+                    fields: (pattern_fields
+                      (spread)))))
+              value: (primary_expression
+                (number_literal)))))))))
