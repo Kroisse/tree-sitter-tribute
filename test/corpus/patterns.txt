@@ -986,3 +986,41 @@ fn test(shape) {
                       (spread)))))
               value: (primary_expression
                 (number_literal)))))))))
+
+================================================================================
+List pattern with only a rest and a trailing comma
+================================================================================
+
+fn test(xs) {
+    case xs {
+        [..rest,] -> rest
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern
+                    (rest_pattern
+                      (spread)
+                      name: (identifier)))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))

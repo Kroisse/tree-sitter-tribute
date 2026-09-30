@@ -3338,6 +3338,27 @@
                   "members": [
                     {
                       "type": "SYMBOL",
+                      "name": "rest_pattern"
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": ","
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
                       "name": "pattern"
                     },
                     {
@@ -3390,10 +3411,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "rest_pattern"
                 }
               ]
             },
