@@ -604,17 +604,7 @@
     "type": "case_arm",
     "named": true,
     "fields": {
-      "pattern": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "pattern",
-            "named": true
-          }
-        ]
-      },
-      "value": {
+      "guard": {
         "multiple": false,
         "required": false,
         "types": [
@@ -659,17 +649,63 @@
             "named": true
           }
         ]
+      },
+      "pattern": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "pattern",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "call_expression",
+            "named": true
+          },
+          {
+            "type": "case_expression",
+            "named": true
+          },
+          {
+            "type": "constructor_expression",
+            "named": true
+          },
+          {
+            "type": "handle_expression",
+            "named": true
+          },
+          {
+            "type": "lambda_expression",
+            "named": true
+          },
+          {
+            "type": "method_call_expression",
+            "named": true
+          },
+          {
+            "type": "primary_expression",
+            "named": true
+          },
+          {
+            "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "guarded_branch",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1332,114 +1368,6 @@
         },
         {
           "type": "type_variable",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "guarded_branch",
-    "named": true,
-    "fields": {
-      "guard": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "binary_expression",
-            "named": true
-          },
-          {
-            "type": "call_expression",
-            "named": true
-          },
-          {
-            "type": "case_expression",
-            "named": true
-          },
-          {
-            "type": "constructor_expression",
-            "named": true
-          },
-          {
-            "type": "handle_expression",
-            "named": true
-          },
-          {
-            "type": "lambda_expression",
-            "named": true
-          },
-          {
-            "type": "method_call_expression",
-            "named": true
-          },
-          {
-            "type": "primary_expression",
-            "named": true
-          },
-          {
-            "type": "record_expression",
-            "named": true
-          },
-          {
-            "type": "resume_expression",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "binary_expression",
-            "named": true
-          },
-          {
-            "type": "call_expression",
-            "named": true
-          },
-          {
-            "type": "case_expression",
-            "named": true
-          },
-          {
-            "type": "constructor_expression",
-            "named": true
-          },
-          {
-            "type": "handle_expression",
-            "named": true
-          },
-          {
-            "type": "lambda_expression",
-            "named": true
-          },
-          {
-            "type": "method_call_expression",
-            "named": true
-          },
-          {
-            "type": "primary_expression",
-            "named": true
-          },
-          {
-            "type": "record_expression",
-            "named": true
-          },
-          {
-            "type": "resume_expression",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "keyword_if",
           "named": true
         }
       ]
@@ -3791,10 +3719,6 @@
   },
   {
     "type": "keyword_handle",
-    "named": true
-  },
-  {
-    "type": "keyword_if",
     "named": true
   },
   {

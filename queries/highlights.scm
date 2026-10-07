@@ -15,7 +15,6 @@
   (keyword_extern)
   (keyword_use)
   (keyword_mod)
-  (keyword_if)
   (keyword_handle)
   (keyword_resume)
   (keyword_as)

@@ -78,7 +78,7 @@ export default grammar({
     $._error_sentinel,
   ],
 
-  conflicts: ($) => [[$.constructor_expression], [$.case_arm]],
+  conflicts: ($) => [[$.constructor_expression]],
 
   rules: {
     source_file: ($) => repeat($._item),
@@ -577,19 +577,7 @@ export default grammar({
     case_arm: ($) =>
       seq(
         field("pattern", $.pattern),
-        choice(
-          seq("->", field("value", $._expression)), // no guard
-          seq(
-            $.guarded_branch,
-            repeat(seq($._newline, $.guarded_branch)),
-          ), // with guards
-        ),
-      ),
-
-    guarded_branch: ($) =>
-      seq(
-        $.keyword_if,
-        field("guard", $._expression),
+        optional(seq("&&", field("guard", $._expression))),
         "->",
         field("value", $._expression),
       ),
@@ -1119,7 +1107,6 @@ export default grammar({
       ),
     keyword_use: ($) => "use",
     keyword_mod: ($) => "mod",
-    keyword_if: ($) => "if",
     keyword_handle: ($) => "handle",
     keyword_as: ($) => "as",
     keyword_pkg: ($) => "pkg",
@@ -1170,7 +1157,6 @@ export default grammar({
       $.keyword_case,
       $.keyword_handle,
       $.keyword_resume,
-      $.keyword_if,
       $.keyword_as,
       $.keyword_pkg,
       $.keyword_super,
