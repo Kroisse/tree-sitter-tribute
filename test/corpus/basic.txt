@@ -892,7 +892,7 @@ Case with single guard
 
 fn test(n) {
     case n {
-        x if x > 0 -> "positive",
+        x && x > 0 -> "positive",
         _ -> "non-positive"
     }
 }
@@ -919,17 +919,15 @@ fn test(n) {
                 (simple_pattern
                   (identifier_pattern
                     (identifier))))
-              (guarded_branch
-                (keyword_if)
-                guard: (binary_expression
-                  left: (primary_expression
-                    (value_path
-                      (identifier)))
-                  right: (primary_expression
-                    (number_literal)))
-                value: (primary_expression
-                  (string
-                    (string_segment)))))
+              guard: (binary_expression
+                left: (primary_expression
+                  (value_path
+                    (identifier)))
+                right: (primary_expression
+                  (number_literal)))
+              value: (primary_expression
+                (string
+                  (string_segment))))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -939,14 +937,13 @@ fn test(n) {
                   (string_segment))))))))))
 
 ================================================================================
-Case with multiple guards
+Case with chained guard
 ================================================================================
 
 fn test(n) {
     case n {
-        x if x > 0 -> "positive"
-          if x < 0 -> "negative",
-        _ -> "zero"
+        x && x > 0 && x < 10 -> "small",
+        _ -> "other"
     }
 }
 
@@ -972,28 +969,22 @@ fn test(n) {
                 (simple_pattern
                   (identifier_pattern
                     (identifier))))
-              (guarded_branch
-                (keyword_if)
-                guard: (binary_expression
+              guard: (binary_expression
+                left: (binary_expression
                   left: (primary_expression
                     (value_path
                       (identifier)))
                   right: (primary_expression
                     (number_literal)))
-                value: (primary_expression
-                  (string
-                    (string_segment))))
-              (guarded_branch
-                (keyword_if)
-                guard: (binary_expression
+                right: (binary_expression
                   left: (primary_expression
                     (value_path
                       (identifier)))
                   right: (primary_expression
-                    (number_literal)))
-                value: (primary_expression
-                  (string
-                    (string_segment)))))
+                    (number_literal))))
+              value: (primary_expression
+                (string
+                  (string_segment))))
             (case_arm
               pattern: (pattern
                 (simple_pattern
@@ -1001,3 +992,27 @@ fn test(n) {
               value: (primary_expression
                 (string
                   (string_segment))))))))))
+
+================================================================================
+If is an ordinary identifier
+================================================================================
+
+fn test(if) {
+    if
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)))
+      body: (block
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))

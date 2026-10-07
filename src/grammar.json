@@ -2632,11 +2632,11 @@
               "members": [
                 {
                   "type": "STRING",
-                  "value": "->"
+                  "value": "&&"
                 },
                 {
                   "type": "FIELD",
-                  "name": "value",
+                  "name": "guard",
                   "content": {
                     "type": "SYMBOL",
                     "name": "_expression"
@@ -2645,48 +2645,9 @@
               ]
             },
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "guarded_branch"
-                },
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "SYMBOL",
-                        "name": "_newline"
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "guarded_branch"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "BLANK"
             }
           ]
-        }
-      ]
-    },
-    "guarded_branch": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "keyword_if"
-        },
-        {
-          "type": "FIELD",
-          "name": "guard",
-          "content": {
-            "type": "SYMBOL",
-            "name": "_expression"
-          }
         },
         {
           "type": "STRING",
@@ -4866,10 +4827,6 @@
       "type": "STRING",
       "value": "mod"
     },
-    "keyword_if": {
-      "type": "STRING",
-      "value": "if"
-    },
     "keyword_handle": {
       "type": "STRING",
       "value": "handle"
@@ -4989,9 +4946,6 @@
   "conflicts": [
     [
       "constructor_expression"
-    ],
-    [
-      "case_arm"
     ]
   ],
   "precedences": [],
@@ -5136,10 +5090,6 @@
       {
         "type": "SYMBOL",
         "name": "keyword_resume"
-      },
-      {
-        "type": "SYMBOL",
-        "name": "keyword_if"
       },
       {
         "type": "SYMBOL",
