@@ -1,0 +1,135 @@
+================================================================================
+Become in a case arm
+================================================================================
+
+fn sum(n: Int, acc: Int) -> Int {
+    case n == +0 {
+        True -> acc
+        False -> become sum(n - +1, acc + n)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier)))
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier)))
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (binary_expression
+              left: (primary_expression
+                (value_path
+                  (identifier)))
+              right: (primary_expression
+                (number_literal)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (literal_pattern
+                    (keyword_true))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (literal_pattern
+                    (keyword_false))))
+              value: (become_expression
+                (keyword_become)
+                call: (call_expression
+                  function: (value_path
+                    (identifier))
+                  (argument_list
+                    (binary_expression
+                      left: (primary_expression
+                        (value_path
+                          (identifier)))
+                      right: (primary_expression
+                        (number_literal)))
+                    (binary_expression
+                      left: (primary_expression
+                        (value_path
+                          (identifier)))
+                      right: (primary_expression
+                        (value_path
+                          (identifier))))))))))))))
+
+================================================================================
+Become with a method call
+================================================================================
+
+fn f(x: Int) -> Int { become x.g(+1) }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (type_path
+            (type_identifier))))
+      return_type: (return_type_annotation
+        (type_path
+          (type_identifier)))
+      body: (block
+        (expression_statement
+          (become_expression
+            (keyword_become)
+            call: (method_call_expression
+              receiver: (primary_expression
+                (value_path
+                  (identifier)))
+              method: (value_path
+                (identifier))
+              (argument_list
+                (primary_expression
+                  (number_literal))))))))))
+
+================================================================================
+Raw identifier become
+================================================================================
+
+fn main() { let r#become = 1
+r#become }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (number_literal)))
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
