@@ -460,6 +460,7 @@ export default grammar({
         $.constructor_expression,
         $.call_expression,
         $.resume_expression,
+        $.become_expression,
         $.method_call_expression,
         $.case_expression,
         $.handle_expression,
@@ -476,6 +477,10 @@ export default grammar({
           optional(field("value", $._expression)),
         ),
       ),
+
+    // become f(x) — proper tail call; the operand must be a call in tail position
+    become_expression: ($) =>
+      prec.right(0, seq($.keyword_become, field("call", $._expression))),
 
     binary_expression: ($) => {
       const binop = (precedence, op) =>
@@ -1089,6 +1094,7 @@ export default grammar({
     keyword_op: ($) => token(prec(2, "op")),
     keyword_do: ($) => token(prec(2, "do")),
     keyword_resume: ($) => token(prec(2, "resume")),
+    keyword_become: ($) => token(prec(2, "become")),
     keyword_let: ($) => "let",
     keyword_case: ($) => "case",
     keyword_struct: ($) => "struct",
@@ -1157,6 +1163,7 @@ export default grammar({
       $.keyword_case,
       $.keyword_handle,
       $.keyword_resume,
+      $.keyword_become,
       $.keyword_as,
       $.keyword_pkg,
       $.keyword_super,

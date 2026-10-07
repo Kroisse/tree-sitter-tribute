@@ -237,6 +237,10 @@
       "required": true,
       "types": [
         {
+          "type": "become_expression",
+          "named": true
+        },
+        {
           "type": "binary_expression",
           "named": true
         },
@@ -316,6 +320,72 @@
     }
   },
   {
+    "type": "become_expression",
+    "named": true,
+    "fields": {
+      "call": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "call_expression",
+            "named": true
+          },
+          {
+            "type": "case_expression",
+            "named": true
+          },
+          {
+            "type": "constructor_expression",
+            "named": true
+          },
+          {
+            "type": "handle_expression",
+            "named": true
+          },
+          {
+            "type": "lambda_expression",
+            "named": true
+          },
+          {
+            "type": "method_call_expression",
+            "named": true
+          },
+          {
+            "type": "primary_expression",
+            "named": true
+          },
+          {
+            "type": "record_expression",
+            "named": true
+          },
+          {
+            "type": "resume_expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_become",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "binary_expression",
     "named": true,
     "fields": {
@@ -323,6 +393,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -436,6 +510,10 @@
         "required": true,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -506,6 +584,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -609,6 +691,10 @@
         "required": false,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -665,6 +751,10 @@
         "required": true,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -716,6 +806,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -854,6 +948,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -1088,6 +1186,10 @@
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "become_expression",
+          "named": true
+        },
         {
           "type": "binary_expression",
           "named": true
@@ -1382,6 +1484,10 @@
         "required": true,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -1501,6 +1607,10 @@
         "required": true,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -1552,6 +1662,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -1645,6 +1759,10 @@
         "required": true,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -1706,6 +1824,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "become_expression",
+          "named": true
+        },
         {
           "type": "binary_expression",
           "named": true
@@ -1841,6 +1963,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -2006,6 +2132,10 @@
         "required": true,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -2062,6 +2192,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -2600,6 +2734,10 @@
         "required": false,
         "types": [
           {
+            "type": "become_expression",
+            "named": true
+          },
+          {
             "type": "binary_expression",
             "named": true
           },
@@ -2766,6 +2904,10 @@
         "multiple": false,
         "required": false,
         "types": [
+          {
+            "type": "become_expression",
+            "named": true
+          },
           {
             "type": "binary_expression",
             "named": true
@@ -3106,6 +3248,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "become_expression",
+          "named": true
+        },
         {
           "type": "binary_expression",
           "named": true
@@ -3687,6 +3833,10 @@
   },
   {
     "type": "keyword_as",
+    "named": true
+  },
+  {
+    "type": "keyword_become",
     "named": true
   },
   {

@@ -1824,6 +1824,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "become_expression"
+        },
+        {
+          "type": "SYMBOL",
           "name": "method_call_expression"
         },
         {
@@ -1869,6 +1873,27 @@
                 "type": "BLANK"
               }
             ]
+          }
+        ]
+      }
+    },
+    "become_expression": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "keyword_become"
+          },
+          {
+            "type": "FIELD",
+            "name": "call",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_expression"
+            }
           }
         ]
       }
@@ -4753,6 +4778,17 @@
         }
       }
     },
+    "keyword_become": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "become"
+        }
+      }
+    },
     "keyword_let": {
       "type": "STRING",
       "value": "let"
@@ -5090,6 +5126,10 @@
       {
         "type": "SYMBOL",
         "name": "keyword_resume"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "keyword_become"
       },
       {
         "type": "SYMBOL",

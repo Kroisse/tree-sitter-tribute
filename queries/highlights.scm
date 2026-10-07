@@ -17,6 +17,7 @@
   (keyword_mod)
   (keyword_handle)
   (keyword_resume)
+  (keyword_become)
   (keyword_as)
   (keyword_pkg)
   (keyword_super)
