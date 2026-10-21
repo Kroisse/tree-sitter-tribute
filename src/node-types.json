@@ -3685,21 +3685,43 @@
   {
     "type": "visibility_marker",
     "named": true,
+    "fields": {
+      "scope": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "visibility_path",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_pub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "visibility_path",
+    "named": true,
     "fields": {},
     "children": {
       "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "keyword_pkg",
+          "type": "path_keyword",
           "named": true
         },
         {
-          "type": "keyword_pub",
-          "named": true
-        },
-        {
-          "type": "keyword_super",
+          "type": "path_segment",
           "named": true
         }
       ]
