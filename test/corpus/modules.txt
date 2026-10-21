@@ -451,8 +451,8 @@ pub(super::sibling) mod nested {}
           (path_keyword
             (keyword_self))))
       (keyword_fn)
-      (identifier)
-      (block)))
+      name: (identifier)
+      body: (block)))
   (enum_declaration
     (visibility_marker
       (keyword_pub)
@@ -464,11 +464,11 @@ pub(super::sibling) mod nested {}
         (path_segment
           (type_identifier))))
     (keyword_enum)
-    (type_identifier)
-    (enum_body
+    name: (type_identifier)
+    body: (enum_body
       (enum_variants
         (enum_variant
-          (type_identifier)))))
+          name: (type_identifier)))))
   (mod_declaration
     (visibility_marker
       (keyword_pub)
@@ -478,8 +478,8 @@ pub(super::sibling) mod nested {}
         (path_segment
           (identifier))))
     (keyword_mod)
-    (identifier)
-    (mod_body)))
+    name: (identifier)
+    body: (mod_body)))
 
 ================================================================================
 Use with self path keyword
