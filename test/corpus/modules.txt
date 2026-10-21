@@ -396,7 +396,9 @@ pub(pkg) fn internal_helper() {
     (regular_function
       (visibility_marker
         (keyword_pub)
-        (keyword_pkg))
+        scope: (visibility_path
+          (path_keyword
+            (keyword_pkg))))
       (keyword_fn)
       name: (identifier)
       body: (block
@@ -418,7 +420,9 @@ pub(super) struct LocalConfig {
   (struct_declaration
     (visibility_marker
       (keyword_pub)
-      (keyword_super))
+      scope: (visibility_path
+        (path_keyword
+          (keyword_super))))
     (keyword_struct)
     name: (type_identifier)
     body: (struct_body
@@ -427,6 +431,55 @@ pub(super) struct LocalConfig {
           name: (identifier)
           type: (type_path
             (type_identifier)))))))
+
+================================================================================
+Visibility restricted to a module path
+================================================================================
+
+pub(self) fn own() {}
+pub(pkg::outer::Inner) enum Mode { Quiet }
+pub(super::sibling) mod nested {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (visibility_marker
+        (keyword_pub)
+        scope: (visibility_path
+          (path_keyword
+            (keyword_self))))
+      (keyword_fn)
+      (identifier)
+      (block)))
+  (enum_declaration
+    (visibility_marker
+      (keyword_pub)
+      scope: (visibility_path
+        (path_keyword
+          (keyword_pkg))
+        (path_segment
+          (identifier))
+        (path_segment
+          (type_identifier))))
+    (keyword_enum)
+    (type_identifier)
+    (enum_body
+      (enum_variants
+        (enum_variant
+          (type_identifier)))))
+  (mod_declaration
+    (visibility_marker
+      (keyword_pub)
+      scope: (visibility_path
+        (path_keyword
+          (keyword_super))
+        (path_segment
+          (identifier))))
+    (keyword_mod)
+    (identifier)
+    (mod_body)))
 
 ================================================================================
 Use with self path keyword
