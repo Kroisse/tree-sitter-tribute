@@ -38131,7 +38131,7 @@ TS_PUBLIC const TSLanguage *tree_sitter_tribute(void) {
     .max_reserved_word_set_size = 20,
     .metadata = {
       .major_version = 0,
-      .minor_version = 14,
+      .minor_version = 15,
       .patch_version = 0,
     },
   };
