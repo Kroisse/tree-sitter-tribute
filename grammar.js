@@ -81,6 +81,10 @@ export default grammar({
     // two lines are two.
     $.path_root,
     "::",
+    // A `.` that starts an implicit constructor (.Some): one followed by an
+    // uppercase name that no `::` follows. It never continues a method call,
+    // since a method name always ends in a lowercase identifier.
+    $._implicit_constructor_dot,
     $._error_sentinel,
   ],
 
@@ -544,11 +548,12 @@ export default grammar({
         ),
       ),
 
+    // Some(1), Option::None, .Some(1), .None
     constructor_expression: ($) =>
       prec(
         10,
         seq(
-          field("constructor", $.type_path),
+          field("constructor", choice($.type_path, $.implicit_constructor)),
           optional(seq("(", optional($.argument_list), ")")),
         ),
       ),
@@ -696,10 +701,11 @@ export default grammar({
 
     wildcard_pattern: ($) => "_",
 
-    // Constructor pattern: None, Some(x), Pair(a, b), Ok { value: x }
+    // Constructor pattern: None, Some(x), Pair(a, b), Ok { value: x },
+    // .Some(x), .Ok { value: x }
     constructor_pattern: ($) =>
       seq(
-        field("name", $.type_path),
+        field("name", choice($.type_path, $.implicit_constructor)),
         optional(
           choice(
             // Tuple-style: Some(x), Pair(a, b)
@@ -843,11 +849,12 @@ export default grammar({
     // Record expression: User { name: "Alice", age: 30 }
     // Record with shorthand: User { name, age }
     // Record with spread: User { ..user, age: 31 }
+    // Implicit constructor: .Ok { value: x }
     record_expression: ($) =>
       prec(
         11,
         seq(
-          field("type", $.type_path),
+          field("type", choice($.type_path, $.implicit_constructor)),
           "{",
           optional(field("fields", $.record_fields)),
           "}",
@@ -924,6 +931,13 @@ export default grammar({
           ),
         ),
       ),
+
+    // A constructor named without its type: .Some, .None. The compiler looks
+    // the name up in the namespace of the expected type. A statement may
+    // start with one: `x` then `.Some(1)` on the next line are two
+    // statements, while `x` then `.map(f)` is one method call.
+    implicit_constructor: ($) =>
+      seq($._implicit_constructor_dot, field("name", $.type_identifier)),
 
     // [1, 2, 3]
     list_expression: ($) =>

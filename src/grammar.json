@@ -2469,8 +2469,17 @@
             "type": "FIELD",
             "name": "constructor",
             "content": {
-              "type": "SYMBOL",
-              "name": "type_path"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "type_path"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "implicit_constructor"
+                }
+              ]
             }
           },
           {
@@ -3061,8 +3070,17 @@
           "type": "FIELD",
           "name": "name",
           "content": {
-            "type": "SYMBOL",
-            "name": "type_path"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "type_path"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "implicit_constructor"
+              }
+            ]
           }
         },
         {
@@ -3834,8 +3852,17 @@
             "type": "FIELD",
             "name": "type",
             "content": {
-              "type": "SYMBOL",
-              "name": "type_path"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "type_path"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "implicit_constructor"
+                }
+              ]
             }
           },
           {
@@ -4116,6 +4143,23 @@
                 "name": "type_identifier"
               }
             ]
+          }
+        }
+      ]
+    },
+    "implicit_constructor": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_implicit_constructor_dot"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_identifier"
           }
         }
       ]
@@ -5095,6 +5139,10 @@
     {
       "type": "STRING",
       "value": "::"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_implicit_constructor_dot"
     },
     {
       "type": "SYMBOL",
