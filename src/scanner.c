@@ -376,10 +376,9 @@ bool tree_sitter_tribute_external_scanner_scan(
 
     // Handle whitespace
     // Skip spaces and tabs always
-    bool spaced = false;
+    bool newlined = false;
     while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
         skip(lexer);
-        spaced = true;
     }
 
     // If NEWLINE token is valid, emit it when the next token looks like a field or pattern.
@@ -432,24 +431,23 @@ bool tree_sitter_tribute_external_scanner_scan(
             return true;
         }
         // Not followed by an item/pattern start - don't emit NEWLINE.
-        spaced = true;
+        newlined = true;
     }
 
     // Otherwise skip newlines as normal whitespace
     while (lexer->lookahead == '\n' || lexer->lookahead == '\r') {
         skip(lexer);
-        spaced = true;
+        newlined = true;
     }
     // Skip any remaining spaces/tabs after newlines
     while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
         skip(lexer);
-        spaced = true;
     }
 
     // A `::` that may either start a path or continue the one before it
-    // starts a path only after whitespace.
+    // starts a path only at the start of a line.
     if (valid_symbols[PATH_ROOT] && lexer->lookahead == ':' &&
-        (spaced || !valid_symbols[PATH_SEPARATOR])) {
+        (newlined || !valid_symbols[PATH_SEPARATOR])) {
         advance(lexer);
         if (lexer->lookahead != ':') {
             return false;

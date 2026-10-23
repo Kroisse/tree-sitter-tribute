@@ -77,7 +77,8 @@ export default grammar({
     $.number_suffix, // Identifier characters directly after a numeric literal
     // A leading `::`: the path starts from a dependency package's name.
     // Where a `::` may also continue the path before it, it starts a path
-    // only after whitespace: `a ::b` is two paths, `a::b` one.
+    // only at the start of a line: `a ::b` is one path, `a` and `::b` on
+    // two lines are two.
     $.path_root,
     "::",
     $._error_sentinel,
