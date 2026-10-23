@@ -105,3 +105,140 @@ fn test(value: std::io::ReadLineResult) {
               (primary_expression
                 (bytes_string
                   (bytes_segment))))))))))
+
+================================================================================
+Paths that start with a leading separator
+================================================================================
+
+use ::std::io::print_line
+use ::std::{Option, Result}
+
+fn f(x: ::std::Option(Int)) ->{::std::abilities::Abort} Int {
+    let y = ::std::Option::Some(1)
+    ::std::io::print_line("a")
+    case x {
+        ::std::Option::None -> 0
+        ::std::Option::Some(v) -> v
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    (keyword_use)
+    (path_root)
+    tree: (use_tree
+      (identifier)
+      (use_tree
+        (identifier)
+        (use_tree
+          (identifier)))))
+  (use_declaration
+    (keyword_use)
+    (path_root)
+    tree: (use_tree
+      (identifier)
+      (use_group
+        (use_tree
+          (type_identifier))
+        (use_tree
+          (type_identifier)))))
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      params: (parameter_list
+        (parameter
+          name: (identifier)
+          type: (generic_type
+            (type_path
+              (path_root)
+              (path_segment
+                (identifier))
+              (type_identifier))
+            (type_path
+              (type_identifier)))))
+      return_type: (return_type_annotation
+        abilities: (ability_row
+          (ability_list
+            (ability_item
+              name: (ability_path
+                (path_root)
+                (path_segment
+                  (identifier))
+                (path_segment
+                  (identifier))
+                (path_segment
+                  (type_identifier))))))
+        (type_path
+          (type_identifier)))
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (constructor_expression
+            constructor: (type_path
+              (path_root)
+              (path_segment
+                (identifier))
+              (path_segment
+                (type_identifier))
+              (type_identifier))
+            (argument_list
+              (primary_expression
+                (number_literal)))))
+        (expression_statement
+          (call_expression
+            function: (value_path
+              (path_root)
+              (path_segment
+                (identifier))
+              (path_segment
+                (identifier))
+              (identifier))
+            (argument_list
+              (primary_expression
+                (string
+                  (string_segment))))))
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (path_root)
+                      (path_segment
+                        (identifier))
+                      (path_segment
+                        (type_identifier))
+                      (type_identifier)))))
+              value: (primary_expression
+                (number_literal)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (type_path
+                      (path_root)
+                      (path_segment
+                        (identifier))
+                      (path_segment
+                        (type_identifier))
+                      (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))

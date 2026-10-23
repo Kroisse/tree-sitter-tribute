@@ -75,6 +75,12 @@ export default grammar({
     $._raw_interpolated_bytes_end,
     $._newline, // Newline token for field separators (Go/Swift style)
     $.number_suffix, // Identifier characters directly after a numeric literal
+    // A leading `::`: the path starts from a dependency package's name.
+    // Where a `::` may also continue the path before it, it starts a path
+    // only at the start of a line: `a ::b` is one path, `a` and `::b` on
+    // two lines are two.
+    $.path_root,
+    "::",
     $._error_sentinel,
   ],
 
@@ -112,12 +118,14 @@ export default grammar({
     // use std::collections::List
     // use std::math::{sin, cos, tan}
     // use foo::bar as baz
+    // use ::std::io::print_line
     // use a::{b::{self, c as d}, e::f as g}
     // pub use internal::api
     use_declaration: ($) =>
       seq(
         optional($.visibility_marker),
         $.keyword_use,
+        optional($.path_root),
         field("tree", $.use_tree),
       ),
 
@@ -149,6 +157,15 @@ export default grammar({
     // Use group: {A, B::C, self as me, D as E}
     use_group: ($) =>
       seq("{", $.use_tree, repeat(seq(",", $.use_tree)), optional(","), "}"),
+
+    // The first segment of a multi-segment path: a name, a name after a
+    // leading `::` that names a dependency package (::std::Option), or a
+    // path keyword.
+    _path_start: ($) =>
+      choice(
+        seq(optional($.path_root), alias($._name, $.path_segment)),
+        $.path_keyword,
+      ),
 
     // Path keywords for module-relative paths (used in expressions)
     path_keyword: ($) =>
@@ -249,7 +266,7 @@ export default grammar({
         optional($.type_arguments),
       ),
 
-    // Ability path: Abort, abilities::Abort, pkg::std::Throw
+    // Ability path: Abort, abilities::Abort, pkg::std::Throw, ::std::Throw
     // Single segment must be type_identifier (ability names are uppercase).
     // Multi-segment paths can start with lowercase (module names) or path keywords.
     ability_path: ($) =>
@@ -258,7 +275,7 @@ export default grammar({
         prec.right(
           11,
           seq(
-            choice(alias($._name, $.path_segment), $.path_keyword),
+            $._path_start,
             repeat1(seq("::", alias($._name, $.path_segment))),
           ),
         ),
@@ -873,7 +890,7 @@ export default grammar({
       ),
 
     // A path whose final segment names a value: print, std::io::print,
-    // Int::to_string. Value references use this rule in every expression role.
+    // ::std::io::print, Int::to_string. Value references use this rule in every expression role.
     // Also supports: pkg::module, super::item, self::helper
     // Keywords (True, False, Nil) won't match because identifier is lowercase-only
     // Note: path_segment wraps identifier/type_identifier due to tree-sitter lexer limitations
@@ -883,7 +900,7 @@ export default grammar({
         prec.right(
           11,
           seq(
-            choice(alias($._name, $.path_segment), $.path_keyword),
+            $._path_start,
             repeat(seq("::", alias($._name, $.path_segment))),
             "::",
             $.identifier,
@@ -900,7 +917,7 @@ export default grammar({
         prec.right(
           11,
           seq(
-            choice(alias($._name, $.path_segment), $.path_keyword),
+            $._path_start,
             repeat(seq("::", alias($._name, $.path_segment))),
             "::",
             $.type_identifier,
