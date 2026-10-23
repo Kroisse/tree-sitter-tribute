@@ -35,6 +35,8 @@ enum TokenType {
     PATH_ROOT,
     // A `::` between path segments, lexed by the internal lexer
     PATH_SEPARATOR,
+    // A `.` that starts an implicit constructor: .Some, .None
+    IMPLICIT_CONSTRUCTOR_DOT,
 
     ERROR_SENTINEL
 };
@@ -299,6 +301,23 @@ static bool scan_interpolated_start(
     return true;
 }
 
+// Whether the text after a `.` starts an implicit constructor: an uppercase
+// name that no `::` follows. Otherwise the `.` continues a method call
+// (`.map`, `.Option::map`) or starts a spread (`..`). Advances past the name;
+// the caller marks where its token ends.
+static bool implicit_constructor_follows(TSLexer *lexer) {
+    if (!(lexer->lookahead >= 'A' && lexer->lookahead <= 'Z')) {
+        return false;
+    }
+    while (is_suffix_char(lexer->lookahead)) {
+        advance(lexer);
+    }
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+        advance(lexer);
+    }
+    return lexer->lookahead != ':';
+}
+
 // Scan block comment with nesting support
 static bool scan_block_comment(TSLexer *lexer, bool is_doc_comment) {
     int nesting_depth = 1;
@@ -414,6 +433,17 @@ bool tree_sitter_tribute_external_scanner_scan(
             return true;
         }
 
+        // An implicit constructor after the newline starts a pattern or an
+        // expression, while any other `.` continues the expression before it.
+        if (lexer->lookahead == '.') {
+            advance(lexer);
+            if (!implicit_constructor_follows(lexer)) {
+                return false;
+            }
+            lexer->result_symbol = NEWLINE;
+            return true;
+        }
+
         // Accept newline as separator if the next token can start an item/pattern.
         if ((lexer->lookahead >= 'a' && lexer->lookahead <= 'z') ||
             (lexer->lookahead >= 'A' && lexer->lookahead <= 'Z') ||
@@ -456,6 +486,16 @@ bool tree_sitter_tribute_external_scanner_scan(
         advance(lexer);
         lexer->mark_end(lexer);
         lexer->result_symbol = PATH_ROOT;
+        return true;
+    }
+
+    if (valid_symbols[IMPLICIT_CONSTRUCTOR_DOT] && lexer->lookahead == '.') {
+        advance(lexer);
+        lexer->mark_end(lexer);
+        if (!implicit_constructor_follows(lexer)) {
+            return false;
+        }
+        lexer->result_symbol = IMPLICIT_CONSTRUCTOR_DOT;
         return true;
     }
 

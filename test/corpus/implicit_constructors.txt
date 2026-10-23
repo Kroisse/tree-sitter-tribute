@@ -1,0 +1,626 @@
+===
+Implicit constructor in let
+===
+
+fn main() {
+  let x = .Some(1)
+  let y = .None
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (constructor_expression
+            constructor: (implicit_constructor
+              name: (type_identifier))
+            (argument_list
+              (primary_expression
+                (number_literal)))))
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (constructor_expression
+            constructor: (implicit_constructor
+              name: (type_identifier))))))))
+
+===
+Implicit constructor arguments
+===
+
+fn main() {
+  f(.Some(1), .None, .Ok { value: 1 })
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (call_expression
+            function: (value_path
+              (identifier))
+            (argument_list
+              (constructor_expression
+                constructor: (implicit_constructor
+                  name: (type_identifier))
+                (argument_list
+                  (primary_expression
+                    (number_literal))))
+              (constructor_expression
+                constructor: (implicit_constructor
+                  name: (type_identifier)))
+              (record_expression
+                type: (implicit_constructor
+                  name: (type_identifier))
+                fields: (record_fields
+                  (record_field
+                    name: (identifier)
+                    value: (primary_expression
+                      (number_literal))))))))))))
+
+===
+Implicit constructor in operands and lambdas
+===
+
+fn main() {
+  let b = x == .None
+  let g = fn(v) .Some(v)
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (binary_expression
+            left: (primary_expression
+              (value_path
+                (identifier)))
+            right: (constructor_expression
+              constructor: (implicit_constructor
+                name: (type_identifier)))))
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (lambda_expression
+            (keyword_fn)
+            params: (parameter_list
+              (parameter
+                name: (identifier)))
+            body: (constructor_expression
+              constructor: (implicit_constructor
+                name: (type_identifier))
+              (argument_list
+                (primary_expression
+                  (value_path
+                    (identifier)))))))))))
+
+===
+Implicit constructor with a method call
+===
+
+fn main() {
+  .Some(1).map(f)
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (method_call_expression
+            receiver: (constructor_expression
+              constructor: (implicit_constructor
+                name: (type_identifier))
+              (argument_list
+                (primary_expression
+                  (number_literal))))
+            method: (value_path
+              (identifier))
+            (argument_list
+              (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+===
+Implicit constructor in block tail
+===
+
+fn main() {
+  let x = 1
+  .Some(x)
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (number_literal)))
+        (expression_statement
+          (constructor_expression
+            constructor: (implicit_constructor
+              name: (type_identifier))
+            (argument_list
+              (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+===
+Implicit record in block tail
+===
+
+fn main() {
+  let x = 1
+  .Ok { value: x }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (identifier_pattern
+                (identifier))))
+          value: (primary_expression
+            (number_literal)))
+        (expression_statement
+          (record_expression
+            type: (implicit_constructor
+              name: (type_identifier))
+            fields: (record_fields
+              (record_field
+                name: (identifier)
+                value: (primary_expression
+                  (value_path
+                    (identifier)))))))))))
+
+===
+Implicit constructor statement after an expression
+===
+
+fn main() {
+  x
+  .None
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (constructor_expression
+            constructor: (implicit_constructor
+              name: (type_identifier))))))))
+
+===
+Implicit constructors in case arms
+===
+
+fn main() {
+  case x {
+    .Some(n) && n > 0 -> .Some(n)
+    .Some(_) -> .None
+    .None -> .None
+  }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (implicit_constructor
+                      name: (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (identifier_pattern
+                            (identifier))))))))
+              guard: (binary_expression
+                left: (primary_expression
+                  (value_path
+                    (identifier)))
+                right: (primary_expression
+                  (number_literal)))
+              value: (constructor_expression
+                constructor: (implicit_constructor
+                  name: (type_identifier))
+                (argument_list
+                  (primary_expression
+                    (value_path
+                      (identifier))))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (implicit_constructor
+                      name: (type_identifier))
+                    args: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (wildcard_pattern)))))))
+              value: (constructor_expression
+                constructor: (implicit_constructor
+                  name: (type_identifier))))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (implicit_constructor
+                      name: (type_identifier)))))
+              value: (constructor_expression
+                constructor: (implicit_constructor
+                  name: (type_identifier))))))))))
+
+===
+Implicit constructor arm after a call
+===
+
+fn main() {
+  case x {
+    .Ok { value } -> f(value)
+    .Error { error: e } as r -> g(e)
+  }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (constructor_pattern
+                    name: (implicit_constructor
+                      name: (type_identifier))
+                    fields: (pattern_fields
+                      (pattern_field
+                        name: (identifier))))))
+              value: (call_expression
+                function: (value_path
+                  (identifier))
+                (argument_list
+                  (primary_expression
+                    (value_path
+                      (identifier))))))
+            (case_arm
+              pattern: (pattern
+                (as_pattern
+                  pattern: (simple_pattern
+                    (constructor_pattern
+                      name: (implicit_constructor
+                        name: (type_identifier))
+                      fields: (pattern_fields
+                        (pattern_field
+                          name: (identifier)
+                          pattern: (pattern
+                            (simple_pattern
+                              (identifier_pattern
+                                (identifier))))))))
+                  (keyword_as)
+                  binding: (identifier)))
+              value: (call_expression
+                function: (value_path
+                  (identifier))
+                (argument_list
+                  (primary_expression
+                    (value_path
+                      (identifier))))))))))))
+
+===
+Implicit constructor in let pattern
+===
+
+fn main() {
+  let .Some(y) = x
+  y
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (let_statement
+          (keyword_let)
+          pattern: (pattern
+            (simple_pattern
+              (constructor_pattern
+                name: (implicit_constructor
+                  name: (type_identifier))
+                args: (pattern_list
+                  (pattern
+                    (simple_pattern
+                      (identifier_pattern
+                        (identifier))))))))
+          value: (primary_expression
+            (value_path
+              (identifier))))
+        (expression_statement
+          (primary_expression
+            (value_path
+              (identifier))))))))
+
+===
+Implicit constructor in nested patterns
+===
+
+fn main() {
+  case x {
+    #(.Some(a), [.None, ..]) -> a
+  }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (tuple_pattern
+                    elements: (pattern_list
+                      (pattern
+                        (simple_pattern
+                          (constructor_pattern
+                            name: (implicit_constructor
+                              name: (type_identifier))
+                            args: (pattern_list
+                              (pattern
+                                (simple_pattern
+                                  (identifier_pattern
+                                    (identifier))))))))
+                      (pattern
+                        (simple_pattern
+                          (list_pattern
+                            (pattern
+                              (simple_pattern
+                                (constructor_pattern
+                                  name: (implicit_constructor
+                                    name: (type_identifier)))))
+                            (rest_pattern
+                              (spread)))))))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))
+
+===
+Lowercase newline chain is still a method call
+===
+
+fn main() {
+  case x {
+    a -> b
+    .c
+  }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (identifier_pattern
+                    (identifier))))
+              value: (method_call_expression
+                receiver: (primary_expression
+                  (value_path
+                    (identifier)))
+                method: (value_path
+                  (identifier))))))))))
+
+===
+Qualified newline chain is still a method call
+===
+
+fn main() {
+  a
+  .Option::map(f)
+  case x {
+    a -> b
+    .Option::unwrap
+  }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (method_call_expression
+            receiver: (primary_expression
+              (value_path
+                (identifier)))
+            method: (value_path
+              (path_segment
+                (type_identifier))
+              (identifier))
+            (argument_list
+              (primary_expression
+                (value_path
+                  (identifier))))))
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (identifier_pattern
+                    (identifier))))
+              value: (method_call_expression
+                receiver: (primary_expression
+                  (value_path
+                    (identifier)))
+                method: (value_path
+                  (path_segment
+                    (type_identifier))
+                  (identifier))))))))))
+
+===
+Spread after an expression is not an implicit constructor
+===
+
+fn main() {
+  User { ..u, age: 1 }
+  case xs {
+    [a, ..rest] -> a
+  }
+}
+
+---
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      name: (identifier)
+      body: (block
+        (expression_statement
+          (record_expression
+            type: (type_path
+              (type_identifier))
+            fields: (record_fields
+              (record_field
+                (spread)
+                value: (primary_expression
+                  (value_path
+                    (identifier))))
+              (record_field
+                name: (identifier)
+                value: (primary_expression
+                  (number_literal))))))
+        (expression_statement
+          (case_expression
+            (keyword_case)
+            value: (primary_expression
+              (value_path
+                (identifier)))
+            (case_arm
+              pattern: (pattern
+                (simple_pattern
+                  (list_pattern
+                    (pattern
+                      (simple_pattern
+                        (identifier_pattern
+                          (identifier))))
+                    (rest_pattern
+                      (spread)
+                      name: (identifier)))))
+              value: (primary_expression
+                (value_path
+                  (identifier))))))))))

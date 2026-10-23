@@ -1023,6 +1023,10 @@
         "required": true,
         "types": [
           {
+            "type": "implicit_constructor",
+            "named": true
+          },
+          {
             "type": "type_path",
             "named": true
           }
@@ -1068,6 +1072,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "implicit_constructor",
+            "named": true
+          },
           {
             "type": "type_path",
             "named": true
@@ -1600,6 +1608,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "implicit_constructor",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2711,6 +2735,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "implicit_constructor",
+            "named": true
+          },
           {
             "type": "type_path",
             "named": true
