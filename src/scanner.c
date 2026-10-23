@@ -404,6 +404,7 @@ bool tree_sitter_tribute_external_scanner_scan(
         }
 
         // A leading `::` after the newline starts a path.
+        lexer->mark_end(lexer);
         if (lexer->lookahead == ':') {
             advance(lexer);
             if (lexer->lookahead != ':') {
