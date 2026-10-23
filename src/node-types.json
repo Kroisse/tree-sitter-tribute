@@ -188,6 +188,10 @@
           "named": true
         },
         {
+          "type": "path_root",
+          "named": true
+        },
+        {
           "type": "path_segment",
           "named": true
         },
@@ -3463,6 +3467,10 @@
           "named": true
         },
         {
+          "type": "path_root",
+          "named": true
+        },
+        {
           "type": "path_segment",
           "named": true
         },
@@ -3569,6 +3577,10 @@
           "named": true
         },
         {
+          "type": "path_root",
+          "named": true
+        },
+        {
           "type": "visibility_marker",
           "named": true
         }
@@ -3654,6 +3666,10 @@
         },
         {
           "type": "path_keyword",
+          "named": true
+        },
+        {
+          "type": "path_root",
           "named": true
         },
         {
@@ -3957,6 +3973,10 @@
   },
   {
     "type": "operator",
+    "named": true
+  },
+  {
+    "type": "path_root",
     "named": true
   },
   {

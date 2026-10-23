@@ -31,6 +31,10 @@ enum TokenType {
     NEWLINE,
     // Type suffix directly after a numeric literal: 42i, 1e3f
     NUMBER_SUFFIX,
+    // A leading `::` that starts a path: ::std::Option
+    PATH_ROOT,
+    // A `::` between path segments, lexed by the internal lexer
+    PATH_SEPARATOR,
 
     ERROR_SENTINEL
 };
@@ -372,8 +376,10 @@ bool tree_sitter_tribute_external_scanner_scan(
 
     // Handle whitespace
     // Skip spaces and tabs always
+    bool spaced = false;
     while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
         skip(lexer);
+        spaced = true;
     }
 
     // If NEWLINE token is valid, emit it when the next token looks like a field or pattern.
@@ -398,6 +404,16 @@ bool tree_sitter_tribute_external_scanner_scan(
             advance(lexer);
         }
 
+        // A leading `::` after the newline starts a path.
+        if (lexer->lookahead == ':') {
+            advance(lexer);
+            if (lexer->lookahead != ':') {
+                return false;
+            }
+            lexer->result_symbol = NEWLINE;
+            return true;
+        }
+
         // Accept newline as separator if the next token can start an item/pattern.
         if ((lexer->lookahead >= 'a' && lexer->lookahead <= 'z') ||
             (lexer->lookahead >= 'A' && lexer->lookahead <= 'Z') ||
@@ -416,15 +432,32 @@ bool tree_sitter_tribute_external_scanner_scan(
             return true;
         }
         // Not followed by an item/pattern start - don't emit NEWLINE.
+        spaced = true;
     }
 
     // Otherwise skip newlines as normal whitespace
     while (lexer->lookahead == '\n' || lexer->lookahead == '\r') {
         skip(lexer);
+        spaced = true;
     }
     // Skip any remaining spaces/tabs after newlines
     while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
         skip(lexer);
+        spaced = true;
+    }
+
+    // A `::` that may either start a path or continue the one before it
+    // starts a path only after whitespace.
+    if (valid_symbols[PATH_ROOT] && lexer->lookahead == ':' &&
+        (spaced || !valid_symbols[PATH_SEPARATOR])) {
+        advance(lexer);
+        if (lexer->lookahead != ':') {
+            return false;
+        }
+        advance(lexer);
+        lexer->mark_end(lexer);
+        lexer->result_symbol = PATH_ROOT;
+        return true;
     }
 
     if (lexer->lookahead == 'b' &&

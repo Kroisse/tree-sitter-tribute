@@ -190,6 +190,8 @@
   "#"
 ] @punctuation.delimiter
 
+(path_root) @punctuation.delimiter
+
 ; Identifiers (variables)
 (identifier) @variable
 
