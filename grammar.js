@@ -187,14 +187,22 @@ export default grammar({
         field("body", $.struct_body),
       ),
 
+    // Type parameters: (a, b) or with row parameters ({e}, a).
+    // Rows may appear in any position here; AST lowering rejects a row after
+    // a type and a row parameter on an ability.
     type_parameters: ($) =>
       seq(
         "(",
-        $.identifier,
-        repeat(seq(",", $.identifier)),
+        $._type_parameter,
+        repeat(seq(",", $._type_parameter)),
         optional(","),
         ")",
       ),
+
+    _type_parameter: ($) => choice($.identifier, $.row_parameter),
+
+    // Row parameter: {e}
+    row_parameter: ($) => seq("{", field("name", $.identifier), "}"),
 
     struct_body: ($) => seq("{", optional($.struct_fields), "}"),
 
@@ -297,19 +305,24 @@ export default grammar({
     // Type variables are lowercase: a, b, elem
     type_variable: ($) => $.identifier,
 
-    // Generic type like List(a) or Option(String)
+    // Generic type like List(a), Option(String), or with row arguments
+    // Callback({State(Int)}, Int). Rows may appear in any position here;
+    // AST lowering rejects a row after a type.
     generic_type: ($) =>
       prec(
         1,
         seq(
           $.type_path,
           "(",
-          $._type,
-          repeat(seq(",", $._type)),
+          $._type_argument,
+          repeat(seq(",", $._type_argument)),
           optional(","),
           ")",
         ),
       ),
+
+    // A row argument is written exactly as a row: {}, {State(Int), e}
+    _type_argument: ($) => choice($._type, $.ability_row),
 
     // Type names start with uppercase: User, String, List
     // Using RustRegex for future Unicode extensibility

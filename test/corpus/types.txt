@@ -848,3 +848,128 @@ fn example() ->{pkg::std::abilities::Throw(Int)} Int {
         (expression_statement
           (primary_expression
             (number_literal)))))))
+
+================================================================================
+Struct with a row parameter
+================================================================================
+
+struct Callback({e}, a) { run: fn(a) ->{e} a }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (keyword_struct)
+    (type_identifier)
+    (type_parameters
+      (row_parameter
+        (identifier))
+      (identifier))
+    (struct_body
+      (struct_fields
+        (struct_field
+          (identifier)
+          (function_type
+            (keyword_fn)
+            (type_list
+              (type_variable
+                (identifier)))
+            (ability_row
+              (ability_list
+                (ability_tail
+                  (type_variable
+                    (identifier)))))
+            (type_variable
+              (identifier))))))))
+
+================================================================================
+Enum with a row parameter passed on as a row argument
+================================================================================
+
+enum Step({e}) { Next(fn() ->{e} Step({e})), Done }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (enum_declaration
+    (keyword_enum)
+    (type_identifier)
+    (type_parameters
+      (row_parameter
+        (identifier)))
+    (enum_body
+      (enum_variants
+        (enum_variant
+          (type_identifier)
+          (variant_fields
+            (tuple_fields
+              (function_type
+                (keyword_fn)
+                (ability_row
+                  (ability_list
+                    (ability_tail
+                      (type_variable
+                        (identifier)))))
+                (generic_type
+                  (type_path
+                    (type_identifier))
+                  (ability_row
+                    (ability_list
+                      (ability_tail
+                        (type_variable
+                          (identifier))))))))))
+        (enum_variant
+          (type_identifier))))))
+
+================================================================================
+Row arguments in parameter types
+================================================================================
+
+fn run(pure: Callback({}, Int), cb: Callback({State(Int), e}, Int)) ->{e} Int { 1 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (regular_function
+      (keyword_fn)
+      (identifier)
+      (parameter_list
+        (parameter
+          (identifier)
+          (generic_type
+            (type_path
+              (type_identifier))
+            (ability_row)
+            (type_path
+              (type_identifier))))
+        (parameter
+          (identifier)
+          (generic_type
+            (type_path
+              (type_identifier))
+            (ability_row
+              (ability_list
+                (ability_item
+                  (ability_path
+                    (type_identifier))
+                  (type_arguments
+                    (type_path
+                      (type_identifier))))
+                (ability_tail
+                  (type_variable
+                    (identifier)))))
+            (type_path
+              (type_identifier)))))
+      (return_type_annotation
+        (ability_row
+          (ability_list
+            (ability_tail
+              (type_variable
+                (identifier)))))
+        (type_path
+          (type_identifier)))
+      (block
+        (expression_statement
+          (primary_expression
+            (number_literal)))))))

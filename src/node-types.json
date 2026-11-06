@@ -1465,6 +1465,10 @@
       "required": true,
       "types": [
         {
+          "type": "ability_row",
+          "named": true
+        },
+        {
           "type": "function_type",
           "named": true
         },
@@ -3037,6 +3041,22 @@
     }
   },
   {
+    "type": "row_parameter",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "simple_pattern",
     "named": true,
     "fields": {},
@@ -3477,6 +3497,10 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "row_parameter",
           "named": true
         }
       ]
