@@ -217,8 +217,15 @@ export default grammar({
         optional(","),
       ),
 
+    // Per-field visibility: `pub start: Nat`. Named enum variant fields share
+    // this node; the compiler rejects a visibility marker there.
     struct_field: ($) =>
-      seq(field("name", $.identifier), ":", field("type", $._type)),
+      seq(
+        optional($.visibility_marker),
+        field("name", $.identifier),
+        ":",
+        field("type", $._type),
+      ),
 
     // Type reference
     // Can be: String (type_path), a (type_variable), List(a) (generic_type),
