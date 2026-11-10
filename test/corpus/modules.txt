@@ -482,6 +482,83 @@ pub(super::sibling) mod nested {}
     body: (mod_body)))
 
 ================================================================================
+Visibility on struct fields
+================================================================================
+
+pub struct Bytes {
+    data: ByteArray
+    pub start: Nat
+    pub(pkg::io) len: Nat
+}
+pub struct Point { pub x: Int, y: Int }
+enum Shape { Dot { pub x: Int } }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_struct)
+    (type_identifier)
+    (struct_body
+      (struct_fields
+        (struct_field
+          (identifier)
+          (type_path
+            (type_identifier)))
+        (struct_field
+          (visibility_marker
+            (keyword_pub))
+          (identifier)
+          (type_path
+            (type_identifier)))
+        (struct_field
+          (visibility_marker
+            (keyword_pub)
+            (visibility_path
+              (path_keyword
+                (keyword_pkg))
+              (path_segment
+                (identifier))))
+          (identifier)
+          (type_path
+            (type_identifier))))))
+  (struct_declaration
+    (visibility_marker
+      (keyword_pub))
+    (keyword_struct)
+    (type_identifier)
+    (struct_body
+      (struct_fields
+        (struct_field
+          (visibility_marker
+            (keyword_pub))
+          (identifier)
+          (type_path
+            (type_identifier)))
+        (struct_field
+          (identifier)
+          (type_path
+            (type_identifier))))))
+  (enum_declaration
+    (keyword_enum)
+    (type_identifier)
+    (enum_body
+      (enum_variants
+        (enum_variant
+          (type_identifier)
+          (variant_fields
+            (struct_fields_block
+              (struct_fields
+                (struct_field
+                  (visibility_marker
+                    (keyword_pub))
+                  (identifier)
+                  (type_path
+                    (type_identifier)))))))))))
+
+================================================================================
 Use with self path keyword
 ================================================================================
 
