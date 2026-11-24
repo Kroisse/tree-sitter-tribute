@@ -450,6 +450,7 @@ bool tree_sitter_tribute_external_scanner_scan(
             (lexer->lookahead >= '0' && lexer->lookahead <= '9') ||
             lexer->lookahead == '_' ||
             lexer->lookahead == '-' ||
+            lexer->lookahead == '+' ||
             lexer->lookahead == '"' ||
             lexer->lookahead == '\'' ||
             lexer->lookahead == '[' ||
